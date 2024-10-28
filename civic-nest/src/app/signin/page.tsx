@@ -11,7 +11,6 @@ const SignIn = () => {
             {isRegistering ? 'Create an Account' : 'Sign In'}
           </h2>
           <form>
-            {isRegistering && (
               <div className="mb-4">
                 <label className="block text-foregroundLight dark:text-foregroundDark mb-2">Username</label>
                 <input
@@ -20,8 +19,8 @@ const SignIn = () => {
                   placeholder="Enter your username"
                 />
               </div>
-            )}
-            <div className="mb-4">
+            {isRegistering && (
+              <div className="mb-4">
               <label className="block text-foregroundLight dark:text-foregroundDark mb-2">Email Address</label>
               <input
                 type="email"
@@ -29,6 +28,8 @@ const SignIn = () => {
                 placeholder="Enter your email"
               />
             </div>
+            )}
+
             <div className="mb-4">
               <label className="block text-foregroundLight dark:text-foregroundDark mb-2">Password</label>
               <input
