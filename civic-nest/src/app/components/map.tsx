@@ -38,6 +38,6 @@ export function Map() {
     }, []);
 
     return (
-        <div style={{ height: '725px' }} ref={mapRef} />
+        <div style={{ height: '700px'}} ref={mapRef} />
     );
 }

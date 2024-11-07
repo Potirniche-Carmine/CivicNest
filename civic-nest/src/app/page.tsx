@@ -5,7 +5,7 @@ import { Map } from '@/app/components/map';
 
 const Home: NextPage = () => {
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto px-12 py-4">
         <Map />
     </div>
   );
