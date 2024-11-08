@@ -1,18 +1,10 @@
 "use client";
 
-import { useState, useEffect } from 'react';
 import { FaSun, FaMoon } from 'react-icons/fa';
+import { useDarkMode } from '../DarkModeContext';
 
 const Footer = () => {
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
+  const {darkMode, toggleDarkMode} = useDarkMode();
 
   return (
     <footer className="w-full bg-blueLight dark:bg-blueDark p-4 text-foregroundLight dark:text-foregroundDark flex justify-between items-center">
@@ -21,7 +13,7 @@ const Footer = () => {
       </div>
       <button
         className="text-black dark:text-yellow-500 focus:outline-none transition-colors mr-6"
-        onClick={() => setDarkMode(!darkMode)}
+        onClick={toggleDarkMode}
       >
         {darkMode ? <FaSun size={24} /> : <FaMoon size={24} />}
       </button>
