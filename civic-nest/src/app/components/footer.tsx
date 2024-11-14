@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { FaSun, FaMoon } from 'react-icons/fa';
 import { useDarkMode } from '../DarkModeContext';
