@@ -32,7 +32,7 @@ const SignIn = () => {
 
           <button
             onClick={handleGoogleSignIn}
-            className="w-full bg-blueLight dark:bg-blueDark text-white my-5 py-2 px-4 rounded hover:bg-blueDark dark:hover:bg-blueLight transition duration-200 flex items-center justify-center"
+            className="w-full bg-blueLight dark:bg-blueDark text-foregroundLight dark:text-foregroundDark my-5 py-2 px-4 rounded hover:bg-blueDark dark:hover:bg-blueLight transition duration-200 flex items-center justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
