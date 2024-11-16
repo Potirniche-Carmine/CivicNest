@@ -24,10 +24,6 @@ const SignIn = () => {
     await signIn("github", { callbackUrl: "/" });
   };
 
-  const handleFacebookSignIn = async () => {
-    await signIn("facebook", { callbackUrl: "/" });
-  };
-
   return (
     <div className="pt-10 flex flex-col bg-backgroundLight dark:bg-backgroundDark">
       <div className="flex-grow flex items-center justify-center p-4">
@@ -54,7 +50,7 @@ const SignIn = () => {
           
           <button
             onClick={handleGitHubSignIn}
-            className="w-full bg-blueLight dark:bg-blueDark text-white py-2 px-4 rounded hover:bg-blueDark dark:hover:bg-blueLight transition duration-200 flex items-center justify-center"
+            className="w-full bg-blueLight dark:bg-blueDark text-foregroundLight dark:text-foregroundDark py-2 px-4 rounded hover:bg-blueDark dark:hover:bg-blueLight transition duration-200 flex items-center justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -66,22 +62,7 @@ const SignIn = () => {
             </svg>
             Sign in using GitHub
           </button>
-
-          <button
-            onClick={handleFacebookSignIn}
-            className="w-full bg-blueLight dark:bg-blueDark text-white my-5 py-2 px-4 rounded hover:bg-blueDark dark:hover:bg-blueLight transition duration-200 flex items-center justify-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="w-5 h-5 mr-2"
-            >
-              <path d="M22.675 0H1.325C.594 0 0 .594 0 1.326v21.348C0 23.406.594 24 1.325 24h11.495v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.787 4.656-4.787 1.325 0 2.463.098 2.795.143v3.24l-1.918.001c-1.504 0-1.796.715-1.796 1.763v2.313h3.588l-.467 3.622h-3.121V24h6.116c.73 0 1.325-.594 1.325-1.326V1.326C24 .594 23.406 0 22.675 0z"/>
-            </svg>
-            Sign in using Facebook
-          </button>
-          
+                 
         </div>
       </div>
     </div>
