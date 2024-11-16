@@ -50,7 +50,7 @@ const SignIn = () => {
           
           <button
             onClick={handleGitHubSignIn}
-            className="w-full bg-blueLight dark:bg-blueDark text-white py-2 px-4 rounded hover:bg-blueDark dark:hover:bg-blueLight transition duration-200 flex items-center justify-center"
+            className="w-full bg-blueLight dark:bg-blueDark text-foregroundLight dark:text-foregroundDark py-2 px-4 rounded hover:bg-blueDark dark:hover:bg-blueLight transition duration-200 flex items-center justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
