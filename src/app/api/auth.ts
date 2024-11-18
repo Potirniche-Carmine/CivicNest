@@ -8,19 +8,6 @@ export const { handlers, auth } = NextAuth({
     pages: {
         signIn: "/auth/signin",
     },
-    callbacks: {
-        authorized({ auth, request: { nextUrl } }) {
-          const isLoggedIn = !!auth?.user;
-          const isOnProfile = nextUrl.pathname.startsWith('/profile');
-          if (isOnProfile) {
-            if (isLoggedIn) return true;
-            return false; // Redirect unauthenticated users to login page
-          } else if (isLoggedIn) {
-            return Response.redirect(new URL('/profile', nextUrl));
-          }
-          return true;
-        },
-      },
     providers: [
         GitHubProvider({
             clientId: process.env.AUTH_GITHUB_ID,
