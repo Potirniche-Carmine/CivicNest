@@ -1,4 +1,5 @@
 import psycopg2
+import houses_API
 
 # Connect to the database server
 conn = psycopg2.connect(
@@ -7,6 +8,9 @@ conn = psycopg2.connect(
     user="brand",
     password="Admit#762SQL"
 )
+
+properties = houses_API.houses()
+
 
 cur = conn.cursor() # Cursor object
 
@@ -27,20 +31,33 @@ cur.execute('''CREATE TABLE IF NOT EXISTS crimes (
                 )''')
 
 cur.execute('''CREATE TABLE IF NOT EXISTS houses (
-                    house_address TEXT PRIMARY KEY,
-                    type TEXT,
-                    num_rooms INT,
-                    size FLOAT,
-                    price FLOAT
+                    zpid SERIAL UNIQUE PRIMARY KEY,
+                    address VARCHAR(255) NOT NULL,
+                    price NUMERIC NOT NULL,
+                    lat FLOAT,
+                    long FLOAT
                 )''')
 
 cur.execute('''CREATE TABLE IF NOT EXISTS schools (
-                    school_address TEXT PRIMARY KEY,
-                    type TEXT,
+                    zpid SERIAL UNIQUE PRIMARY KEY,
+                    school_name VARCHAR(200),
                     isPublic BOOLEAN,
-                    rating FLOAT,
-                    location TEXT
+                    rating INT,
+                    GradeLevel VARCHAR(20)
                 )''')
+
+#Go through house API contents
+for property in properties:
+    zpid = property["zpid"]
+    address = property["address"]
+    price = property["price"]
+
+    # lat = property["latitude"]
+    # long = property["longitude"]
+    cur.execute('''INSERT INTO houses (zpid, address, price)
+            VALUES (%s, %s, %s)
+            ON CONFLICT (zpid) DO NOTHING''', # This is incase we have no zpid
+            (zpid, address, price))
 
 # Commit the changes
 conn.commit()
