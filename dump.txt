@@ -1,0 +1,344 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 16.0
+-- Dumped by pg_dump version 16.0
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: crimes; Type: TABLE; Schema: public; Owner: brand
+--
+
+CREATE TABLE public.crimes (
+    crime_id integer NOT NULL,
+    type text,
+    location text,
+    date_reported date
+);
+
+
+ALTER TABLE public.crimes OWNER TO brand;
+
+--
+-- Name: crimes_crime_id_seq; Type: SEQUENCE; Schema: public; Owner: brand
+--
+
+CREATE SEQUENCE public.crimes_crime_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.crimes_crime_id_seq OWNER TO brand;
+
+--
+-- Name: crimes_crime_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: brand
+--
+
+ALTER SEQUENCE public.crimes_crime_id_seq OWNED BY public.crimes.crime_id;
+
+
+--
+-- Name: houses; Type: TABLE; Schema: public; Owner: brand
+--
+
+CREATE TABLE public.houses (
+    zpid integer NOT NULL,
+    address character varying(255) NOT NULL,
+    price numeric NOT NULL,
+    lat double precision,
+    long double precision
+);
+
+
+ALTER TABLE public.houses OWNER TO brand;
+
+--
+-- Name: houses_zpid_seq; Type: SEQUENCE; Schema: public; Owner: brand
+--
+
+CREATE SEQUENCE public.houses_zpid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.houses_zpid_seq OWNER TO brand;
+
+--
+-- Name: houses_zpid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: brand
+--
+
+ALTER SEQUENCE public.houses_zpid_seq OWNED BY public.houses.zpid;
+
+
+--
+-- Name: schools; Type: TABLE; Schema: public; Owner: brand
+--
+
+CREATE TABLE public.schools (
+    zpid integer NOT NULL,
+    school_name character varying(200),
+    ispublic boolean,
+    rating integer,
+    gradelevel character varying(20)
+);
+
+
+ALTER TABLE public.schools OWNER TO brand;
+
+--
+-- Name: schools_zpid_seq; Type: SEQUENCE; Schema: public; Owner: brand
+--
+
+CREATE SEQUENCE public.schools_zpid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.schools_zpid_seq OWNER TO brand;
+
+--
+-- Name: schools_zpid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: brand
+--
+
+ALTER SEQUENCE public.schools_zpid_seq OWNED BY public.schools.zpid;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    email character varying(255) NOT NULL,
+    name character varying(255),
+    provider character varying(50) NOT NULL,
+    provider_id character varying(255) NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.users_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.users_id_seq OWNER TO postgres;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: crimes crime_id; Type: DEFAULT; Schema: public; Owner: brand
+--
+
+ALTER TABLE ONLY public.crimes ALTER COLUMN crime_id SET DEFAULT nextval('public.crimes_crime_id_seq'::regclass);
+
+
+--
+-- Name: houses zpid; Type: DEFAULT; Schema: public; Owner: brand
+--
+
+ALTER TABLE ONLY public.houses ALTER COLUMN zpid SET DEFAULT nextval('public.houses_zpid_seq'::regclass);
+
+
+--
+-- Name: schools zpid; Type: DEFAULT; Schema: public; Owner: brand
+--
+
+ALTER TABLE ONLY public.schools ALTER COLUMN zpid SET DEFAULT nextval('public.schools_zpid_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Data for Name: crimes; Type: TABLE DATA; Schema: public; Owner: brand
+--
+
+COPY public.crimes (crime_id, type, location, date_reported) FROM stdin;
+\.
+
+
+--
+-- Data for Name: houses; Type: TABLE DATA; Schema: public; Owner: brand
+--
+
+COPY public.houses (zpid, address, price, lat, long) FROM stdin;
+20473769	2241 Virginia Ave APT 14	599990.0	\N	\N
+20470612	2711 Colorado Ave	1065000.0	\N	\N
+95531394	1525 San Vicente Blvd	59950000.0	\N	\N
+20485843	966 Palisades Beach Rd	22000000.0	\N	\N
+20473726	2213 Virginia Ave	1695000.0	\N	\N
+20485330	1040 4th St #112	649900.0	\N	\N
+20475172	1926 Idaho Ave	1495000.0	\N	\N
+20478180	1142 16th St	1995000.0	\N	\N
+20477929	620 11th St	3999000.0	\N	\N
+20475748	1032 19th St APT 2	700000.0	\N	\N
+20486602	538 Palisades Ave	4099000.0	\N	\N
+20484071	636 Bay St	1775000.0	\N	\N
+20479726	1314 17th St APT 18	1175000.0	\N	\N
+20484015	707 Grant St APT 13	1479000.0	\N	\N
+20478685	1012 1/2 Euclid St	1242000.0	\N	\N
+20474968	814 18th St UNIT C	1395000.0	\N	\N
+20476401	416 21st Pl	10895000.0	\N	\N
+20477646	814 Georgina Ave	4250000.0	\N	\N
+2122725124	828 Lincoln Blvd APT 1	549500.0	\N	\N
+20478000	633 12th St	6500000.0	\N	\N
+2124204252	2308 Schader Dr UNIT 314	995000.0	\N	\N
+20485737	101 California Ave UNIT 805	975000.0	\N	\N
+20484816	914 Lincoln Blvd APT 103	949000.0	\N	\N
+20474861	2021 Idaho Ave	1945000.0	\N	\N
+20475495	1029 24th St	3999000.0	\N	\N
+67420571	838 16th St APT 4	2050000.0	\N	\N
+20539645	552 Stassi Ln	5250000.0	\N	\N
+20477175	330 16th St	3950000.0	\N	\N
+20479707	1314 16th St APT E	1070000.0	\N	\N
+20473617	1921 17th St UNIT 3	949000.0	\N	\N
+20476413	459 21st St	12795000.0	\N	\N
+20479942	1850 9th St	1375000.0	\N	\N
+20474316	1138 20th St APT 7	1335000.0	\N	\N
+20476405	409 21st St	9990000.0	\N	\N
+20478407	1411 Washington Ave	1725000.0	\N	\N
+20485605	826 2nd St APT 103	1399000.0	\N	\N
+2088231565	1428 12th St APT E	10995000.0	\N	\N
+20473948	2308 Schader Dr UNIT 203	639000.0	\N	\N
+20485602	833 Ocean Ave APT 306	3150000.0	\N	\N
+20486091	404 San Vicente Blvd UNIT 101	1849000.0	\N	\N
+20485053	818 6th St UNIT 101	1298000.0	\N	\N
+\.
+
+
+--
+-- Data for Name: schools; Type: TABLE DATA; Schema: public; Owner: brand
+--
+
+COPY public.schools (zpid, school_name, ispublic, rating, gradelevel) FROM stdin;
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.users (id, email, name, provider, provider_id, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- Name: crimes_crime_id_seq; Type: SEQUENCE SET; Schema: public; Owner: brand
+--
+
+SELECT pg_catalog.setval('public.crimes_crime_id_seq', 1, false);
+
+
+--
+-- Name: houses_zpid_seq; Type: SEQUENCE SET; Schema: public; Owner: brand
+--
+
+SELECT pg_catalog.setval('public.houses_zpid_seq', 1, false);
+
+
+--
+-- Name: schools_zpid_seq; Type: SEQUENCE SET; Schema: public; Owner: brand
+--
+
+SELECT pg_catalog.setval('public.schools_zpid_seq', 1, false);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 1, false);
+
+
+--
+-- Name: crimes crimes_pkey; Type: CONSTRAINT; Schema: public; Owner: brand
+--
+
+ALTER TABLE ONLY public.crimes
+    ADD CONSTRAINT crimes_pkey PRIMARY KEY (crime_id);
+
+
+--
+-- Name: houses houses_pkey; Type: CONSTRAINT; Schema: public; Owner: brand
+--
+
+ALTER TABLE ONLY public.houses
+    ADD CONSTRAINT houses_pkey PRIMARY KEY (zpid);
+
+
+--
+-- Name: schools schools_pkey; Type: CONSTRAINT; Schema: public; Owner: brand
+--
+
+ALTER TABLE ONLY public.schools
+    ADD CONSTRAINT schools_pkey PRIMARY KEY (zpid);
+
+
+--
+-- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_email_key UNIQUE (email);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
