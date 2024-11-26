@@ -1,8 +1,10 @@
-from API import houses
+import houses_API
 import requests
 
+
+
 def schools():
-    properties = houses()
+    properties = houses_API.houses()
     i = 0
     for i in properties:
         zpid = i.get("zpid")
