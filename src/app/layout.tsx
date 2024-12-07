@@ -5,7 +5,7 @@ import Header from '@/app/components/header'
 import Footer from '@/app/components/footer'
 
 import { DarkModeProvider } from "./DarkModeContext";
-import { SessionProvider } from "next-auth/react";
+import MyClientWrapper from "./clientWrapper";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,13 +32,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-backgroundLight dark:bg-backgroundDark text-foregroundLight dark:text-foregroundDark transition-colors min-h-screen flex flex-col`}>
         <DarkModeProvider>
-        <SessionProvider>
+        <MyClientWrapper>
         <Header />
         <div className="flex-grow">
           {children}
         </div>
         <Footer />
-        </SessionProvider>
+        </MyClientWrapper>
         </DarkModeProvider>
       </body>
     </html>
