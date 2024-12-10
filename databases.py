@@ -55,7 +55,7 @@ for property in properties:
     long = property["longitude"]
     cur.execute('''INSERT INTO houses (zpid, address, price,lat,long)
             VALUES (%s, %s, %s)
-            ON CONFLICT (zpid) DO NOTHING''', # This is incase we have no zpid
+            ON CONFLICT (zpid) DO UPDATE''', # This is incase we have no zpid
             (zpid, address, price,lat,long))
 
 
