@@ -3,7 +3,6 @@
 import React, { useEffect, useMemo } from "react";
 import { Loader } from '@googlemaps/js-api-loader';
 import { useDarkMode } from "../DarkModeContext";
-import SingleMap from "src/components/singleMap";
 
 export function Map({ houses }) {
     const mapRef = React.useRef<HTMLDivElement>(null);
