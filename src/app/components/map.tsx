@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo } from "react";
 import { Loader } from '@googlemaps/js-api-loader';
 import { useDarkMode } from "../DarkModeContext";
+import SingleMap from "src/components/singleMap";
 
 export function Map({ houses }) {
     const mapRef = React.useRef<HTMLDivElement>(null);
@@ -72,19 +73,6 @@ export function Map({ houses }) {
 
             const googleMap = new google.maps.Map(mapRef.current as HTMLDivElement, mapOptions);
             
-            houses.forEach(({latitude,longitude,price}) => {
-                const marker = new google.maps.Marker({
-                    position: { lat: latitude, lng: longitude },
-                    map,
-                });
-
-            const infoWindow = new google.maps.InfoWindow({
-                content: '<div><strong>Price:</strong? $${price.toLocaleString()}</div>',
-            });
-
-            marker.addListener("click",() => {
-                infoWindow.open(map,marker);
-            });
                             
             return () => {
                 // Cleanup if necessary
