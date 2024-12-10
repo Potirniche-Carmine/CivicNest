@@ -4,6 +4,8 @@ import React, { useEffect, useMemo } from "react";
 import { Loader } from '@googlemaps/js-api-loader';
 import { useDarkMode } from "../DarkModeContext";
 
+
+
 export function Map({ houses }) {
     const mapRef = React.useRef<HTMLDivElement>(null);
     const { darkMode } = useDarkMode();
