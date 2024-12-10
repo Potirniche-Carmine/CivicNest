@@ -53,9 +53,10 @@ for property in properties:
     price = property["price"]
     lat = property["latitude"]
     long = property["longitude"]
-    cur.execute('''INSERT INTO houses (zpid, address, price,lat,long)
-            VALUES (%s, %s, %s)
-            ON CONFLICT (zpid) DO UPDATE''', # This is incase we have no zpid
+    cur.execute('''INSERT INTO houses (zpid, address, price, lat, long)
+            VALUES (%s, %s, %s, %s, %s)
+            ON CONFLICT (zpid) DO UPDATE SET 
+            address = EXCLUDED.address, price = EXCLUDED.price, lat = EXCLUDED.lat, long = EXCLUDED.long''', # This is incase we have no zpid
             (zpid, address, price,lat,long))
 
 
