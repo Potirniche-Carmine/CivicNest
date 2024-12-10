@@ -23,7 +23,7 @@ def houses():
                 latitude = i.get("latitude",None)
                 longitude = i.get("longitude",None)
                 if zpid and address and price and latitude and longitude:  
-                    properties.append({"zpid": zpid, "address": address, "price": price, "latitude":latitude, "longitude":longitude})
+                    properties.append({"zpid": zpid, "address": address, "price": price, "latitude": latitude, "longitude": longitude})
 
     #print(properties)      
     return properties
