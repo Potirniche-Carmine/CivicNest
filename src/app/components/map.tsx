@@ -73,7 +73,21 @@ export function Map({ houses }) {
             };
 
             const googleMap = new google.maps.Map(mapRef.current as HTMLDivElement, mapOptions);
-            
+
+             houses.forEach(({ latitude, longitude, price }) => {
+            const marker = new google.maps.Marker({
+              position: { lat: latitude, lng: longitude },
+              map,
+            });
+    
+            const infoWindow = new google.maps.InfoWindow({
+              content: `<div><strong>Price:</strong> $${price.toLocaleString()}</div>`,
+            });
+    
+            marker.addListener("click", () => {
+              infoWindow.open(map, marker);
+            });
+          });
                             
             return () => {
                 // Cleanup if necessary
