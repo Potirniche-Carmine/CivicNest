@@ -20,10 +20,10 @@ def houses():
                 zpid = i.get("zpid", None) 
                 address = i.get("streetAddress", None)
                 price = i.get("price",None)
-                lat = i.get("latitude",None)
-                long = i.get("longitude",None)
-                if zpid and address and price and lat and long:  
-                    properties.append({"zpid": zpid, "address": address, "price": price, "lat":lat, "long":long})
+                latitude = i.get("latitude",None)
+                longitude = i.get("longitude",None)
+                if zpid and address and price and latitude and longitude:  
+                    properties.append({"zpid": zpid, "address": address, "price": price, "latitude":latitude, "longitude":longitude})
 
     #print(properties)      
     return properties
