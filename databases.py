@@ -51,13 +51,12 @@ for property in properties:
     zpid = property["zpid"]
     address = property["address"]
     price = property["price"]
-
-    # lat = property["latitude"]
-    # long = property["longitude"]
-    cur.execute('''INSERT INTO houses (zpid, address, price)
+    lat = property["latitude"]
+    long = property["longitude"]
+    cur.execute('''INSERT INTO houses (zpid, address, price,lat,long)
             VALUES (%s, %s, %s)
             ON CONFLICT (zpid) DO NOTHING''', # This is incase we have no zpid
-            (zpid, address, price))
+            (zpid, address, price,lat,long))
 
 
 for school in schools:
