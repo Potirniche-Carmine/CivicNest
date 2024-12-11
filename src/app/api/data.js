@@ -1,4 +1,4 @@
-import pool from '../../api/db';
+import pool from '@/app/api/db';
 
 export default async function handler(req, res){
   try{
@@ -6,5 +6,7 @@ export default async function handler(req, res){
     const result = await client.query('SELECT lat, long, price FROM houses');
     client.release();
     res.status(200).json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }
