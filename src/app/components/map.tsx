@@ -4,10 +4,15 @@ import React, { useEffect, useState,useMemo } from "react";
 import { Loader } from '@googlemaps/js-api-loader';
 import { useDarkMode } from "../DarkModeContext";
 
+interface Location {
+    lat: number;
+    lng: number;
+}
+
 export function Map() {
     const mapRef = React.useRef<HTMLDivElement>(null);
     const { darkMode } = useDarkMode();
-
+    const [locations, setLocations] = useState<Location[]>([]);
     const [houses, setHouses] = useState<{ latitude: number; longitude: number, price: number}[]>([]);
     const darkModeStyles: google.maps.MapTypeStyle[] = useMemo(() => [
         {
@@ -52,6 +57,15 @@ export function Map() {
     const lightModeStyles: google.maps.MapTypeStyle[] = useMemo(() => [], []);
 
     useEffect(() => {
+        async function fetchLocations() {
+            const res = await fetch('/api/locations');
+            const data = await res.json();
+            setLocations(data);
+        }
+        fetchLocations();
+    }, []);
+
+    useEffect(() => {
         const initMap = async () => {
             const loader = new Loader({
                 apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY!,
@@ -73,12 +87,18 @@ export function Map() {
 
             const googleMap = new google.maps.Map(mapRef.current as HTMLDivElement, mapOptions);
             
+            locations.forEach((Location) => {
+                new google.maps.Marker({
+                    position: {lat: Location.lat, lng: Location.lng},
+                    map: googleMap,
+                });
+            });
             return () => {
                 // Cleanup if necessary
             };
         }
         initMap();
-    }, [darkMode, darkModeStyles, lightModeStyles]);
+    }, [darkMode, darkModeStyles, lightModeStyles,locations]);
 
     return (
         <div style={{ height: '700px' }} ref={mapRef} />
