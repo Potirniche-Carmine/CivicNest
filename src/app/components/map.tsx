@@ -13,7 +13,7 @@ export function Map() {
     const mapRef = React.useRef<HTMLDivElement>(null);
     const { darkMode } = useDarkMode();
     const [locations, setLocations] = useState<Location[]>([]);
-    const [houses, setHouses] = useState<{ latitude: number; longitude: number, price: number}[]>([]);
+    //const [houses, setHouses] = useState<{ latitude: number; longitude: number, price: number}[]>([]);
     const darkModeStyles: google.maps.MapTypeStyle[] = useMemo(() => [
         {
             "elementType": "geometry",
