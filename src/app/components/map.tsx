@@ -1,15 +1,15 @@
 "use client"
 
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useState,useMemo } from "react";
 import { Loader } from '@googlemaps/js-api-loader';
 import { useDarkMode } from "../DarkModeContext";
 
 
-
-export function Map({ houses }) {
+export function Map() {
     const mapRef = React.useRef<HTMLDivElement>(null);
     const { darkMode } = useDarkMode();
 
+    const [houses, setHouses] = useState<{ latitude: number; longitude: number, price: number}[]>([]);
     const darkModeStyles: google.maps.MapTypeStyle[] = useMemo(() => [
         {
             "elementType": "geometry",
@@ -53,6 +53,24 @@ export function Map({ houses }) {
     const lightModeStyles: google.maps.MapTypeStyle[] = useMemo(() => [], []);
 
     useEffect(() => {
+      const fetchHouses = async () => {
+        try {
+          const response = await fetch("/api/data"); 
+          if (!response.ok){
+            throw new Error('HTTP error! status: ${response.status}')
+          }
+          const data = await response.json();
+          setHouses(data);
+        } catch (error) {
+          console.error("Error fetching houses:", error);
+        }
+      };
+
+      fetchHouses();
+    }, []);
+
+
+    useEffect(() => {
         const initMap = async () => {
             const loader = new Loader({
                 apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY!,
@@ -73,27 +91,18 @@ export function Map({ houses }) {
             };
 
             const googleMap = new google.maps.Map(mapRef.current as HTMLDivElement, mapOptions);
-
-             houses.forEach(({ latitude, longitude, price }) => {
-            const marker = new google.maps.Marker({
-              position: { lat: latitude, lng: longitude },
-              map,
+            
+            houses.forEach(house => {
+              const marker = new google.maps.Marker({
+                position: {lat: house.latitude, lng: house.longitude},
+                map: googleMap,
+                title: 'House'
+              });
             });
-    
-            const infoWindow = new google.maps.InfoWindow({
-              content: `<div><strong>Price:</strong> $${price.toLocaleString()}</div>`,
-            });
-    
-            marker.addListener("click", () => {
-              infoWindow.open(map, marker);
-            });
-          });
-                            
             return () => {
                 // Cleanup if necessary
             };
         }
-
         initMap();
     }, [darkMode, darkModeStyles, lightModeStyles]);
 
