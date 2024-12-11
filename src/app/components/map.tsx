@@ -4,7 +4,6 @@ import React, { useEffect, useState,useMemo } from "react";
 import { Loader } from '@googlemaps/js-api-loader';
 import { useDarkMode } from "../DarkModeContext";
 
-
 export function Map() {
     const mapRef = React.useRef<HTMLDivElement>(null);
     const { darkMode } = useDarkMode();
@@ -53,24 +52,6 @@ export function Map() {
     const lightModeStyles: google.maps.MapTypeStyle[] = useMemo(() => [], []);
 
     useEffect(() => {
-      const fetchHouses = async () => {
-        try {
-          const response = await fetch("/api/data"); 
-          if (!response.ok){
-            throw new Error('HTTP error! status: ${response.status}')
-          }
-          const data = await response.json();
-          setHouses(data);
-        } catch (error) {
-          console.error("Error fetching houses:", error);
-        }
-      };
-
-      fetchHouses();
-    }, []);
-
-
-    useEffect(() => {
         const initMap = async () => {
             const loader = new Loader({
                 apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY!,
@@ -92,13 +73,6 @@ export function Map() {
 
             const googleMap = new google.maps.Map(mapRef.current as HTMLDivElement, mapOptions);
             
-            houses.forEach(house => {
-              const marker = new google.maps.Marker({
-                position: {lat: house.latitude, lng: house.longitude},
-                map: googleMap,
-                title: 'House'
-              });
-            });
             return () => {
                 // Cleanup if necessary
             };
