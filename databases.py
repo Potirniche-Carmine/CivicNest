@@ -16,6 +16,8 @@ schools = schools_API.schools()
 
 cur = conn.cursor() # Cursor object
 
+
+#Kaleo Sanchez helped with the queries for Table Creation
 # Tables:
 cur.execute('''CREATE TABLE IF NOT EXISTS users (
                     account TEXT PRIMARY KEY,
