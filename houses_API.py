@@ -1,6 +1,7 @@
 import requests
 import time
 
+#Code from URL down to response were provided by RapidApi itself.
 def houses():
     url = "https://zillow56.p.rapidapi.com/search"
 
