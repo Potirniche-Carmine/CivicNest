@@ -2,7 +2,7 @@ import houses_API
 import requests
 
 
-
+#Code from URL down to response were provided by RapidApi itself.
 def schools():
     properties = houses_API.houses()
     i = 0
