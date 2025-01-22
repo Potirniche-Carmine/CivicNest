@@ -52,7 +52,7 @@ export function Map() {
     useEffect(() => {
         const initMap = async () => {
             const loader = new Loader({
-@@ -19,9 +60,8 @@ export function Map() {
+        export function Map() {
             await loader.load();
 
             const position = {
@@ -63,7 +63,7 @@ export function Map() {
             };
 
             const mapOptions = {
-@@ -30,56 +70,18 @@ export function Map() {
+             export function Map() {
                 styles: darkMode ? darkModeStyles : lightModeStyles
             };
 
