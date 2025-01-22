@@ -1,45 +1,129 @@
 "use client"
 
-import React, { useEffect,useMemo } from "react";
-import mapboxgl from 'mapbox-gl';
+import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
+import { Loader } from '@googlemaps/js-api-loader';
 import { useDarkMode } from "../DarkModeContext";
-
-mapboxgl.accessToken = 'pk.eyJ1IjoidG5vcnJpczU1IiwiYSI6ImNtNWxpdjVrOTB4b3gyam9xNGJpbml3YnQifQ.xAv-Vz7lcSjlya4TuFScYA'
 
 export function Map() {
     const mapRef = React.useRef<HTMLDivElement>(null);
-    const mapInstanceRef = React.useRef<mapboxgl.Map | null>(null);
     const { darkMode } = useDarkMode();
 
+    const darkModeStyles: google.maps.MapTypeStyle[] = useMemo(() => [
+        {
+            "elementType": "geometry",
+            "stylers": [{ "color": "#242f3e" }]
+        },
+        {
+            "elementType": "labels.text.fill",
+            "stylers": [{ "color": "#746855" }]
+        },
+        {
+            "elementType": "labels.text.stroke",
+            "stylers": [{ "color": "#242f3e" }]
+        },
+        {
+            "featureType": "poi",
+            "elementType": "labels.text.fill",
+            "stylers": [{ "color": "#d59563" }]
+        },
+        {
+            "featureType": "poi.park",
+            "elementType": "geometry",
+            "stylers": [{ "color": "#263c3f" }]
+        },
+        {
+            "featureType": "road",
+            "elementType": "geometry",
+            "stylers": [{ "color": "#38414e" }]
+        },
+        {
+            "featureType": "road.highway",
+            "elementType": "geometry",
+            "stylers": [{ "color": "#746855" }]
+        },
+        {
+            "featureType": "water",
+            "elementType": "geometry",
+            "stylers": [{ "color": "#17263c" }]
+        }
+    ], []);
+    const lightModeStyles: google.maps.MapTypeStyle[] = useMemo(() => [], []);
     useEffect(() => {
-      if(!mapRef.current) return;
-    
-      if (!mapInstanceRef.current) {
-        mapInstanceRef.current = new mapboxgl.Map({
-          container: mapRef.current,
-          style: darkMode
-            ? "mapbox://styles/mapbox/dark-v11"
-            : "mapbox://styles/mapbox/light-v11",
-          center: [-119.816326, 39.543627], // Initial map center [lng, lat]
-          zoom: 15, // Initial zoom level
-        });
-      } else {
-        // Update the map style dynamically when darkMode changes
-        mapInstanceRef.current.setStyle(
-          darkMode
-            ? "mapbox://styles/mapbox/dark-v11"
-            : "mapbox://styles/mapbox/light-v11"
-        );
-      }
-  
-      // Cleanup on unmount
-      return () => {
-        mapInstanceRef.current?.remove();
-        mapInstanceRef.current = null;
-      };
-    },[darkMode]);
+        const initMap = async () => {
+            const loader = new Loader({
+@@ -19,9 +60,8 @@ export function Map() {
+            await loader.load();
+
+            const position = {
+                //UNR position
+                lat: 39.543949300371295,
+                lng:  -119.81691931136118 
+                lng: -119.81691931136118
+            };
+
+            const mapOptions = {
+@@ -30,56 +70,18 @@ export function Map() {
+                styles: darkMode ? darkModeStyles : lightModeStyles
+            };
+
+            // Initialize the map
+            const map = new google.maps.Map(mapRef.current as HTMLDivElement, mapOptions);
+            const googleMap = new google.maps.Map(mapRef.current as HTMLDivElement, mapOptions);
+            
+            
+            return () => {
+                // Cleanup if necessary
+            };
+        }
+
+        initMap();
+    }, [darkMode]);
+    const darkModeStyles : google.maps.MapTypeStyle[] = [
+        {
+          "elementType": "geometry",
+          "stylers": [{ "color": "#242f3e" }]
+        },
+        {
+          "elementType": "labels.text.fill",
+          "stylers": [{ "color": "#746855" }]
+        },
+        {
+          "elementType": "labels.text.stroke",
+          "stylers": [{ "color": "#242f3e" }]
+        },
+        {
+          "featureType": "poi",
+          "elementType": "labels.text.fill",
+          "stylers": [{ "color": "#d59563" }]
+        },
+        {
+          "featureType": "poi.park",
+          "elementType": "geometry",
+          "stylers": [{ "color": "#263c3f" }]
+        },
+        {
+          "featureType": "road",
+          "elementType": "geometry",
+          "stylers": [{ "color": "#38414e" }]
+        },
+        {
+          "featureType": "road.highway",
+          "elementType": "geometry",
+          "stylers": [{ "color": "#746855" }]
+        },
+        {
+          "featureType": "water",
+          "elementType": "geometry",
+          "stylers": [{ "color": "#17263c" }]
+        }
+      ];
+    const lightModeStyles: google.maps.MapTypeStyle[] = [];
+    }, [darkMode, darkModeStyles, lightModeStyles]);
 
     return (
+        <div style={{ height: '700px'}} ref={mapRef} />
         <div style={{ height: '700px' }} ref={mapRef} />
     );
+}
 }
