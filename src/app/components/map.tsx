@@ -66,6 +66,8 @@ export function Map() {
             // Wait for the map to load before adding sources and layers
             mapInstanceRef.current.on('load', () => {
                 // Add the GeoJSON source
+                if(!mapInstanceRef.current) return;
+                
                 mapInstanceRef.current?.addSource('polygons', {
                     type: 'geojson',
                     data: polygons,
