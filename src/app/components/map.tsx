@@ -1,104 +1,102 @@
 "use client"
 
-import React, { useEffect, useState,useMemo } from "react";
-import { Loader } from '@googlemaps/js-api-loader';
+import React, { useEffect, useRef } from "react";
+import mapboxgl from 'mapbox-gl';
 import { useDarkMode } from "../DarkModeContext";
 
-interface Location {
-    lat: number;
-    lng: number;
-}
+mapboxgl.accessToken = 'pk.eyJ1IjoidG5vcnJpczU1IiwiYSI6ImNtNWxpdjVrOTB4b3gyam9xNGJpbml3YnQifQ.xAv-Vz7lcSjlya4TuFScYA';
 
 export function Map() {
-    const mapRef = React.useRef<HTMLDivElement>(null);
+    const mapRef = useRef<HTMLDivElement>(null);
+    const mapInstanceRef = useRef<mapboxgl.Map | null>(null);
     const { darkMode } = useDarkMode();
-    const [locations, setLocations] = useState<Location[]>([]);
-    //const [houses, setHouses] = useState<{ latitude: number; longitude: number, price: number}[]>([]);
-    const darkModeStyles: google.maps.MapTypeStyle[] = useMemo(() => [
-        {
-            "elementType": "geometry",
-            "stylers": [{ "color": "#242f3e" }]
-        },
-        {
-            "elementType": "labels.text.fill",
-            "stylers": [{ "color": "#746855" }]
-        },
-        {
-            "elementType": "labels.text.stroke",
-            "stylers": [{ "color": "#242f3e" }]
-        },
-        {
-            "featureType": "poi",
-            "elementType": "labels.text.fill",
-            "stylers": [{ "color": "#d59563" }]
-        },
-        {
-            "featureType": "poi.park",
-            "elementType": "geometry",
-            "stylers": [{ "color": "#263c3f" }]
-        },
-        {
-            "featureType": "road",
-            "elementType": "geometry",
-            "stylers": [{ "color": "#38414e" }]
-        },
-        {
-            "featureType": "road.highway",
-            "elementType": "geometry",
-            "stylers": [{ "color": "#746855" }]
-        },
-        {
-            "featureType": "water",
-            "elementType": "geometry",
-            "stylers": [{ "color": "#17263c" }]
-        }
-    ], []);
 
-    const lightModeStyles: google.maps.MapTypeStyle[] = useMemo(() => [], []);
+    const polygons: GeoJSON.FeatureCollection<GeoJSON.Polygon> = {
+        type: "FeatureCollection",
+        features: [
+            {
+                type: "Feature",
+                properties: { id: 1, color: "Blue" }, // Initial color
+                geometry: {
+                    type: "Polygon",
+                    coordinates: [
+                        [
+                            [-119.82, 39.54],
+                            [-119.81, 39.54],
+                            [-119.81, 39.55],
+                            [-119.82, 39.55],
+                            [-119.82, 39.54],
+                        ],
+                    ],
+                },
+            },
+            {
+                type: "Feature",
+                properties: { id: 2, color: "#00FF00" }, // Initial color
+                geometry: {
+                    type: "Polygon",
+                    coordinates: [
+                        [
+                            [-119.83, 39.53],
+                            [-119.82, 39.53],
+                            [-119.82, 39.54],
+                            [-119.83, 39.54],
+                            [-119.83, 39.53],
+                        ],
+                    ],
+                },
+            },
+        ],
+    };
 
     useEffect(() => {
-        async function fetchLocations() {
-            const res = await fetch('/api/locations');
-            const data = await res.json();
-            setLocations(data);
-        }
-        fetchLocations();
-    }, []);
+        if (!mapRef.current) return;
 
-    useEffect(() => {
-        const initMap = async () => {
-            const loader = new Loader({
-                apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY!,
-                version: 'weekly',
+        if (!mapInstanceRef.current) {
+            mapInstanceRef.current = new mapboxgl.Map({
+                container: mapRef.current,
+                style: darkMode
+                    ? "mapbox://styles/mapbox/dark-v11"
+                    : "mapbox://styles/mapbox/light-v11",
+                center: [-119.816326, 39.543627], // Initial map center [lng, lat]
+                zoom: 15, // Initial zoom level
             });
 
-            await loader.load();
+            // Wait for the map to load before adding sources and layers
+            mapInstanceRef.current.on('load', () => {
+                if(!mapInstanceRef.current) return;
+                
+                mapInstanceRef.current?.addSource('polygons', {
+                    type: 'geojson',
+                    data: polygons,
+                });
 
-            const position = {
-                lat: 39.543949300371295,
-                lng: -119.81691931136118
-            };
-
-            const mapOptions = {
-                center: position,
-                zoom: 15,
-                styles: darkMode ? darkModeStyles : lightModeStyles
-            };
-
-            const googleMap = new google.maps.Map(mapRef.current as HTMLDivElement, mapOptions);
-            
-            locations.forEach((Location) => {
-                new google.maps.Marker({
-                    position: {lat: Location.lat, lng: Location.lng},
-                    map: googleMap,
+                // Add the polygon layer
+                mapInstanceRef.current?.addLayer({
+                    id: 'polygons-layer',
+                    type: 'fill',
+                    source: 'polygons',
+                    paint: {
+                        'fill-color': ['get', 'color'], // Use the 'color' property from the GeoJSON
+                        'fill-opacity': 0.5,
+                    },
                 });
             });
-            return () => {
-                // Cleanup if necessary
-            };
+        } else {
+            // Update the map style dynamically when darkMode changes
+            mapInstanceRef.current.setStyle(
+                darkMode
+                    ? "mapbox://styles/mapbox/dark-v11"
+                    : "mapbox://styles/mapbox/light-v11"
+            );
         }
-        initMap();
-    }, [darkMode, darkModeStyles, lightModeStyles,locations]);
+
+        // Cleanup on unmount
+        return () => {
+            mapInstanceRef.current?.remove();
+            mapInstanceRef.current = null;
+        };
+    }, [darkMode]);
 
     return (
         <div style={{ height: '700px' }} ref={mapRef} />
