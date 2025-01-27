@@ -5,7 +5,8 @@ import Header from '@/app/components/header'
 import Footer from '@/app/components/footer'
 
 import { DarkModeProvider } from "./DarkModeContext";
-import MyClientWrapper from "./clientWrapper";
+import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import './globals.css'
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,18 +30,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-backgroundLight dark:bg-backgroundDark text-foregroundLight dark:text-foregroundDark transition-colors min-h-screen flex flex-col`}>
-        <DarkModeProvider>
-        <MyClientWrapper>
-        <Header />
-        <div className="flex-grow">
-          {children}
-        </div>
-        <Footer />
-        </MyClientWrapper>
-        </DarkModeProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-backgroundLight dark:bg-backgroundDark text-foregroundLight dark:text-foregroundDark transition-colors min-h-screen flex flex-col`}>
+          <DarkModeProvider>
+            <Header />
+            <SignedOut>
+              <SignInButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+            <div className="flex-grow">
+              {children}
+            </div>
+            <Footer />
+          </DarkModeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
