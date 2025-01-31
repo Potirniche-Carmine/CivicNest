@@ -9,8 +9,8 @@ export function Header () {
   const { user, isSignedIn } = useUser();
 
   return (
-    <header className="bg-blueLight dark:bg-blueDark p-6 flex justify-between">
-      <div className="flex-1 flex items-start">
+    <header className="bg-blueLight dark:bg-blueDark p-1 flex justify-between">
+      <div className="p-6">
         <Link href="/" className="flex items-center">
           <Image
             src="/logo.png"
@@ -38,7 +38,7 @@ export function Header () {
               }}
             />
             <span className="font-semibold text-sm hidden md:block">
-              {user?.fullName || user?.username}
+              {user?.username}
             </span>
           </div>
       </div>
