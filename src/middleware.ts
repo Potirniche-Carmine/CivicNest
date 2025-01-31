@@ -1,3 +1,6 @@
+//Official Middleware from Clerk
+//https://docs.clerk.dev/nextjs/middleware
+
 import { clerkMiddleware } from '@clerk/nextjs/server'
 
 export default clerkMiddleware()
