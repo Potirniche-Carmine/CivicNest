@@ -1,22 +1,9 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
-import Header from '@/app/components/header'
-import Footer from '@/app/components/footer'
+import { Header } from "./components/header";
+import { Footer } from './components/footer';
 
-import { DarkModeProvider } from "./DarkModeContext";
-import MyClientWrapper from "./clientWrapper";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import { ClerkProvider, SignIn, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import './globals.css'
 
 export const metadata: Metadata = {
   title: "CivicNest",
@@ -29,18 +16,34 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-backgroundLight dark:bg-backgroundDark text-foregroundLight dark:text-foregroundDark transition-colors min-h-screen flex flex-col`}>
-        <DarkModeProvider>
-        <MyClientWrapper>
-        <Header />
-        <div className="flex-grow">
-          {children}
-        </div>
-        <Footer />
-        </MyClientWrapper>
-        </DarkModeProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className="min-h-screen flex flex-col">
+          <SignedOut>
+            <div className="fixed inset-0 flex items-center justify-center p-4 bg-gray-50">
+              <SignIn
+                routing="hash"
+                appearance={{
+                  variables: {
+                    colorPrimary: '#2563eb',
+                    colorText: '#000000',
+                    borderRadius: '8px'
+                  },
+                  elements: {
+                    card: 'shadow-lg'
+                  }
+                }}/>
+            </div>
+          </SignedOut>
+          <SignedIn>
+            <Header />
+            <div className="flex-grow">
+              {children}
+            </div>
+            <Footer />
+          </SignedIn>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

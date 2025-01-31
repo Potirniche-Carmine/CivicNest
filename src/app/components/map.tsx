@@ -11,7 +11,6 @@ export function Map() {
     const mapInstanceRef = useRef<mapboxgl.Map | null>(null);
     const { darkMode } = useDarkMode();
 
-    // Pre-defined polygons as GeoJSON data
     const polygons: GeoJSON.FeatureCollection<GeoJSON.Polygon> = {
         type: "FeatureCollection",
         features: [
@@ -65,7 +64,6 @@ export function Map() {
 
             // Wait for the map to load before adding sources and layers
             mapInstanceRef.current.on('load', () => {
-                // Add the GeoJSON source
                 if(!mapInstanceRef.current) return;
                 
                 mapInstanceRef.current?.addSource('polygons', {

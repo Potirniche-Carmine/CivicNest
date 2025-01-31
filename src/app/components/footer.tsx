@@ -4,7 +4,7 @@ import { FaSun, FaMoon } from 'react-icons/fa';
 import { useDarkMode } from '../DarkModeContext';
 import Link from 'next/link';
 
-const Footer = () => {
+export function Footer (){
   const {darkMode, toggleDarkMode} = useDarkMode();
 
   return (
@@ -24,4 +24,3 @@ const Footer = () => {
   );
 };
 
-export default Footer;
