@@ -3,14 +3,13 @@
 import { UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "./ui/button";
 
-export function Header () {
+export function Header() {
   const { user, isSignedIn } = useUser();
 
   return (
-    <header className="bg-blueLight dark:bg-blueDark p-1 flex justify-between">
-      <div className="p-6">
+    <header className="bg-zinc-400 dark:bg-zinc-800 text-white p-4 flex justify-between shadow-sm">
+      <div className="p-4">
         <Link href="/" className="flex items-center">
           <Image
             src="/logo.png"
@@ -19,30 +18,24 @@ export function Header () {
             height={40}
             className="mr-3"
           />
-          <h1 className="text-2xl font-bold">CivicNest</h1>
+          <h1 className="text-2xl font-bold text-white dark:text-white">CivicNest</h1>
         </Link>
       </div>
       <div className="flex justify-end items-center gap-4">
-          <div className="flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors px-4 py-2">
-            <UserButton
-              appearance={{
-                variables: {
-                  colorPrimary: "#3B82F6",
-                  colorText: "hsl(224 71% 4%)",
-                  colorBackground: "hsl(0 0% 100%)",
-                },
-                elements: {
-                  avatarBox: "h-10 w-10",
-                  userButtonPopoverCard: "shadow-xl rounded-xl",
-                }
-              }}
-            />
-            <span className="font-semibold text-sm hidden md:block">
-              {user?.username}
-            </span>
-          </div>
+        <div className="flex items-center gap-3 hover:bg-sky-500/50 dark:hover:bg-sky-800/50 rounded-lg transition-colors px-4 py-2">
+          <UserButton
+            appearance={{
+              elements: {
+                avatarBox: "h-10 w-10",
+                userButtonPopoverCard: "shadow-xl rounded-xl",
+              }
+            }}
+          />
+          <span className="font-semibold text-sm hidden md:block text-white dark:text-white">
+            {user?.username}
+          </span>
+        </div>
       </div>
     </header>
   );
-};
-
+}
