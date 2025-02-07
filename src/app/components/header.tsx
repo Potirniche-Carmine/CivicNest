@@ -1,66 +1,59 @@
-"use client"
+'use client'
 
-import { useSession, signOut } from "next-auth/react";
+import { UserButton, SignedIn, SignedOut, useUser} from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "./ui/button";
 
-const Header = () => {
-  const { data: session } = useSession();
+export function Header() {
+  const { user, isLoaded } = useUser();
 
   return (
-    <header className="bg-blueLight dark:bg-blueDark p-6 flex justify-between">
-      <div className="flex-1 flex items-start">
-        <Link href="/" className="flex items-center">
-          <Image
-            src="/logo.png"
-            alt="CivicNest Logo"
-            width={40}
-            height={40}
-            className="mr-3"
-          />
-          <h1 className="text-2xl font-bold">CivicNest</h1>
-        </Link>
-      </div>
-      <div className="flex justify-end items-center">
-        {session?.user ? (
-          <>
-          <Link href="/profile">
+    <header className="bg-zinc-600 dark:bg-zinc-800 text-white p-5">
+      <div className="relative w-full max-w-[2560px] mx-auto flex items-center">
+        <div>
+          <Link href="/home" className="flex items-center px-5">
             <Image
-              src={session.user.image || "/default-profile.png"} 
-              alt="Profile Picture"
+              src="/logo.png"
+              alt="CivicNest Logo"
               width={40}
               height={40}
-              className="rounded-full mr-3"
+              className="mr-3"
             />
+            <h1 className="text-2xl font-bold">CivicNest</h1>
           </Link>
-            <button
-              onClick={() => signOut()}
-              className="
-                bg-backgroundLight text-blueLight font-semibold rounded-md
-                hover:bg-blueDark dark:hover:bg-blueLight dark:hover:text-foregroundDark
-                py-2 px-4 mx-1 md:mx-7
-              "
-            >
-              Sign Out
-            </button>
-          </>
-        ) : (
-          // Display "Sign In" button if user is not signed in
-          <Link href="/signin">
-            <button
-              className="
-                bg-backgroundLight text-blueLight font-semibold rounded-md
-                hover:bg-blueDark dark:hover:bg-blueLight dark:hover:text-foregroundDark
-                py-2 px-4 mx-1 md:mx-7
-              "
-            >
-              Sign In
-            </button>
-          </Link>
-        )}
+        </div>
+        <div className="flex justify-end items-center ml-auto">
+          <SignedIn>
+            {isLoaded && (
+              <div className="flex items-center gap-3 hover:bg-sky-500/50 dark:hover:bg-sky-800/50 rounded-lg transition-colors px-4 py-2">
+                <span className="text-sm font-medium whitespace-nowrap">
+                  Welcome, {user?.firstName}!
+                </span>
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: "h-10 w-10",
+                      userButtonPopoverCard: "shadow-xl rounded-xl",
+                    }
+                  }}
+                />
+              </div>
+            )}
+          </SignedIn>
+          <SignedOut>
+            <div>
+              <Button
+                className="text-black dark:text-white whitespace-nowrap"
+                variant={'outline'}
+                size={'lg'}
+              >
+                <Link href="/auth/sign-in">Sign In</Link>
+              </Button>
+            </div>
+          </SignedOut>
+        </div>
       </div>
     </header>
   );
-};
-
-export default Header;
+}

@@ -1,106 +1,138 @@
 "use client"
 
-import React, { useEffect, useState,useMemo } from "react";
-import { Loader } from '@googlemaps/js-api-loader';
-import { useDarkMode } from "../DarkModeContext";
+import React, { useEffect, useRef } from "react";
+import mapboxgl from 'mapbox-gl';
+import { useTheme } from "next-themes";
 
-interface Location {
-    lat: number;
-    lng: number;
-}
+mapboxgl.accessToken = 'pk.eyJ1IjoidG5vcnJpczU1IiwiYSI6ImNtNWxpdjVrOTB4b3gyam9xNGJpbml3YnQifQ.xAv-Vz7lcSjlya4TuFScYA';
 
 export function Map() {
-    const mapRef = React.useRef<HTMLDivElement>(null);
-    const { darkMode } = useDarkMode();
-    const [locations, setLocations] = useState<Location[]>([]);
-    //const [houses, setHouses] = useState<{ latitude: number; longitude: number, price: number}[]>([]);
-    const darkModeStyles: google.maps.MapTypeStyle[] = useMemo(() => [
-        {
-            "elementType": "geometry",
-            "stylers": [{ "color": "#242f3e" }]
-        },
-        {
-            "elementType": "labels.text.fill",
-            "stylers": [{ "color": "#746855" }]
-        },
-        {
-            "elementType": "labels.text.stroke",
-            "stylers": [{ "color": "#242f3e" }]
-        },
-        {
-            "featureType": "poi",
-            "elementType": "labels.text.fill",
-            "stylers": [{ "color": "#d59563" }]
-        },
-        {
-            "featureType": "poi.park",
-            "elementType": "geometry",
-            "stylers": [{ "color": "#263c3f" }]
-        },
-        {
-            "featureType": "road",
-            "elementType": "geometry",
-            "stylers": [{ "color": "#38414e" }]
-        },
-        {
-            "featureType": "road.highway",
-            "elementType": "geometry",
-            "stylers": [{ "color": "#746855" }]
-        },
-        {
-            "featureType": "water",
-            "elementType": "geometry",
-            "stylers": [{ "color": "#17263c" }]
-        }
-    ], []);
+    const mapRef = useRef<HTMLDivElement>(null);
+    const mapInstanceRef = useRef<mapboxgl.Map | null>(null);
+    const { theme, systemTheme } = useTheme();
 
-    const lightModeStyles: google.maps.MapTypeStyle[] = useMemo(() => [], []);
+    const isDarkMode = theme === "system" 
+        ? systemTheme === "dark"
+        : theme === "dark";
 
-    useEffect(() => {
-        async function fetchLocations() {
-            const res = await fetch('/api/locations');
-            const data = await res.json();
-            setLocations(data);
-        }
-        fetchLocations();
-    }, []);
+    const polygons: GeoJSON.FeatureCollection<GeoJSON.Polygon> = {
+        type: "FeatureCollection",
+        features: [
+            {
+                type: "Feature",
+                properties: { 
+                    id: 1, 
+                    color: isDarkMode ? "#4a9eff" : "#2b6cb0"
+                },
+                geometry: {
+                    type: "Polygon",
+                    coordinates: [
+                        [
+                            [-119.82, 39.54],
+                            [-119.81, 39.54],
+                            [-119.81, 39.55],
+                            [-119.82, 39.55],
+                            [-119.82, 39.54],
+                        ],
+                    ],
+                },
+            },
+            {
+                type: "Feature",
+                properties: { 
+                    id: 2, 
+                    color: isDarkMode ? "#48bb78" : "#2f855a"
+                },
+                geometry: {
+                    type: "Polygon",
+                    coordinates: [
+                        [
+                            [-119.83, 39.53],
+                            [-119.82, 39.53],
+                            [-119.82, 39.54],
+                            [-119.83, 39.54],
+                            [-119.83, 39.53],
+                        ],
+                    ],
+                },
+            },
+        ],
+    };
 
     useEffect(() => {
-        const initMap = async () => {
-            const loader = new Loader({
-                apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY!,
-                version: 'weekly',
-            });
+        if (!mapRef.current) return;
 
-            await loader.load();
-
-            const position = {
-                lat: 39.543949300371295,
-                lng: -119.81691931136118
-            };
-
-            const mapOptions = {
-                center: position,
-                zoom: 15,
-                styles: darkMode ? darkModeStyles : lightModeStyles
-            };
-
-            const googleMap = new google.maps.Map(mapRef.current as HTMLDivElement, mapOptions);
-            
-            locations.forEach((Location) => {
-                new google.maps.Marker({
-                    position: {lat: Location.lat, lng: Location.lng},
-                    map: googleMap,
+        const initializeMap = () => {
+            if (!mapInstanceRef.current) {
+                mapInstanceRef.current = new mapboxgl.Map({
+                    container: mapRef.current as HTMLElement,
+                    style: isDarkMode
+                        ? "mapbox://styles/mapbox/dark-v11"
+                        : "mapbox://styles/mapbox/light-v11",
+                    center: [-119.816326, 39.543627],
+                    zoom: 15,
                 });
-            });
-            return () => {
-                // Cleanup if necessary
-            };
-        }
-        initMap();
-    }, [darkMode, darkModeStyles, lightModeStyles,locations]);
+
+                mapInstanceRef.current.on('load', () => {
+                    if (!mapInstanceRef.current) return;
+
+                    mapInstanceRef.current.addSource('polygons', {
+                        type: 'geojson',
+                        data: polygons,
+                    });
+
+                    mapInstanceRef.current.addLayer({
+                        id: 'polygons-layer',
+                        type: 'fill',
+                        source: 'polygons',
+                        paint: {
+                            'fill-color': ['get', 'color'],
+                            'fill-opacity': isDarkMode ? 0.6 : 0.5, // Slightly higher opacity for dark mode
+                        },
+                    });
+                });
+            } else {
+                mapInstanceRef.current.setStyle(
+                    isDarkMode
+                        ? "mapbox://styles/mapbox/dark-v11"
+                        : "mapbox://styles/mapbox/light-v11"
+                );
+
+                mapInstanceRef.current.once('style.load', () => {
+                    if (!mapInstanceRef.current) return;
+
+                    if (!mapInstanceRef.current.getSource('polygons')) {
+                        mapInstanceRef.current.addSource('polygons', {
+                            type: 'geojson',
+                            data: polygons,
+                        });
+
+                        mapInstanceRef.current.addLayer({
+                            id: 'polygons-layer',
+                            type: 'fill',
+                            source: 'polygons',
+                            paint: {
+                                'fill-color': ['get', 'color'],
+                                'fill-opacity': isDarkMode ? 0.6 : 0.5,
+                            },
+                        });
+                    } else {
+                        (mapInstanceRef.current.getSource('polygons') as mapboxgl.GeoJSONSource)
+                            .setData(polygons);
+                    }
+                });
+            }
+        };
+
+        initializeMap();
+
+        return () => {
+            mapInstanceRef.current?.remove();
+            mapInstanceRef.current = null;
+        };
+    }, [isDarkMode]);
 
     return (
-        <div style={{ height: '700px' }} ref={mapRef} />
+        <div className="w-full h-[700px] rounded-lg overflow-hidden border border-border" ref={mapRef} />
     );
 }

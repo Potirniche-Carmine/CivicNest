@@ -1,22 +1,10 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
-import Header from '@/app/components/header'
-import Footer from '@/app/components/footer'
+import { Header } from "./components/header";
+import { Footer } from './components/footer';
+import { ThemeProvider } from "./components/theme-provider";
 
-import { DarkModeProvider } from "./DarkModeContext";
-import { SessionProvider } from "next-auth/react";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import { ClerkProvider } from '@clerk/nextjs'
+import './globals.css'
 
 export const metadata: Metadata = {
   title: "CivicNest",
@@ -29,17 +17,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-backgroundLight dark:bg-backgroundDark text-foregroundLight dark:text-foregroundDark transition-colors min-h-screen flex flex-col`}>
-        <DarkModeProvider>
-        <SessionProvider>
-        <Header />
-        <div className="flex-grow">
-          {children}
-        </div>
-        <Footer />
-        </SessionProvider>
-        </DarkModeProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className="min-h-screen flex flex-col">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ClerkProvider
+          afterSignOutUrl={'/'}>
+            <Header />
+            <div className="flex-grow">
+              {children}
+            </div>
+            <Footer />
+          </ClerkProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
