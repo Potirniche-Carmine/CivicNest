@@ -1,9 +1,19 @@
 //Official Middleware from Clerk
 //https://docs.clerk.dev/nextjs/middleware
 
-import { clerkMiddleware } from '@clerk/nextjs/server'
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
-export default clerkMiddleware()
+
+const isProtectedRoute = createRouteMatcher([
+  '/home(.*)'  
+]);
+
+export default clerkMiddleware(async (auth, request) => {
+
+  if (isProtectedRoute(request)) {
+    await auth.protect()
+  }
+})
 
 export const config = {
   matcher: [

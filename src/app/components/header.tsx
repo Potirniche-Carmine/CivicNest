@@ -1,48 +1,59 @@
 'use client'
 
-import { UserButton, useUser } from "@clerk/nextjs";
+import { UserButton, SignedIn, SignedOut, useUser} from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
 
-export function Header () {
-  const { user, isSignedIn } = useUser();
+export function Header() {
+  const { user, isLoaded } = useUser();
 
   return (
-    <header className="bg-blueLight dark:bg-blueDark p-1 flex justify-between">
-      <div className="p-6">
-        <Link href="/" className="flex items-center">
-          <Image
-            src="/logo.png"
-            alt="CivicNest Logo"
-            width={40}
-            height={40}
-            className="mr-3"
-          />
-          <h1 className="text-2xl font-bold">CivicNest</h1>
-        </Link>
-      </div>
-      <div className="flex justify-end items-center gap-4">
-          <div className="flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors px-4 py-2">
-            <UserButton
-              appearance={{
-                variables: {
-                  colorPrimary: "#3B82F6",
-                  colorText: "hsl(224 71% 4%)",
-                  colorBackground: "hsl(0 0% 100%)",
-                },
-                elements: {
-                  avatarBox: "h-10 w-10",
-                  userButtonPopoverCard: "shadow-xl rounded-xl",
-                }
-              }}
+    <header className="bg-zinc-600 dark:bg-zinc-800 text-white p-5">
+      <div className="relative w-full max-w-[2560px] mx-auto flex items-center">
+        <div>
+          <Link href="/home" className="flex items-center px-5">
+            <Image
+              src="/logo.png"
+              alt="CivicNest Logo"
+              width={40}
+              height={40}
+              className="mr-3"
             />
-            <span className="font-semibold text-sm hidden md:block">
-              {user?.username}
-            </span>
-          </div>
+            <h1 className="text-2xl font-bold">CivicNest</h1>
+          </Link>
+        </div>
+        <div className="flex justify-end items-center ml-auto">
+          <SignedIn>
+            {isLoaded && (
+              <div className="flex items-center gap-3 hover:bg-sky-500/50 dark:hover:bg-sky-800/50 rounded-lg transition-colors px-4 py-2">
+                <span className="text-sm font-medium whitespace-nowrap">
+                  Welcome, {user?.firstName}!
+                </span>
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: "h-10 w-10",
+                      userButtonPopoverCard: "shadow-xl rounded-xl",
+                    }
+                  }}
+                />
+              </div>
+            )}
+          </SignedIn>
+          <SignedOut>
+            <div>
+              <Button
+                className="text-black dark:text-white whitespace-nowrap"
+                variant={'outline'}
+                size={'lg'}
+              >
+                <Link href="/auth/sign-in">Sign In</Link>
+              </Button>
+            </div>
+          </SignedOut>
+        </div>
       </div>
     </header>
   );
-};
-
+}

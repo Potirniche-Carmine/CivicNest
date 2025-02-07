@@ -2,21 +2,28 @@
 
 import React, { useEffect, useRef } from "react";
 import mapboxgl from 'mapbox-gl';
-import { useDarkMode } from "../DarkModeContext";
+import { useTheme } from "next-themes";
 
 mapboxgl.accessToken = 'pk.eyJ1IjoidG5vcnJpczU1IiwiYSI6ImNtNWxpdjVrOTB4b3gyam9xNGJpbml3YnQifQ.xAv-Vz7lcSjlya4TuFScYA';
 
 export function Map() {
     const mapRef = useRef<HTMLDivElement>(null);
     const mapInstanceRef = useRef<mapboxgl.Map | null>(null);
-    const { darkMode } = useDarkMode();
+    const { theme, systemTheme } = useTheme();
+
+    const isDarkMode = theme === "system" 
+        ? systemTheme === "dark"
+        : theme === "dark";
 
     const polygons: GeoJSON.FeatureCollection<GeoJSON.Polygon> = {
         type: "FeatureCollection",
         features: [
             {
                 type: "Feature",
-                properties: { id: 1, color: "Blue" }, // Initial color
+                properties: { 
+                    id: 1, 
+                    color: isDarkMode ? "#4a9eff" : "#2b6cb0"
+                },
                 geometry: {
                     type: "Polygon",
                     coordinates: [
@@ -32,7 +39,10 @@ export function Map() {
             },
             {
                 type: "Feature",
-                properties: { id: 2, color: "#00FF00" }, // Initial color
+                properties: { 
+                    id: 2, 
+                    color: isDarkMode ? "#48bb78" : "#2f855a"
+                },
                 geometry: {
                     type: "Polygon",
                     coordinates: [
@@ -52,53 +62,77 @@ export function Map() {
     useEffect(() => {
         if (!mapRef.current) return;
 
-        if (!mapInstanceRef.current) {
-            mapInstanceRef.current = new mapboxgl.Map({
-                container: mapRef.current,
-                style: darkMode
-                    ? "mapbox://styles/mapbox/dark-v11"
-                    : "mapbox://styles/mapbox/light-v11",
-                center: [-119.816326, 39.543627], // Initial map center [lng, lat]
-                zoom: 15, // Initial zoom level
-            });
-
-            // Wait for the map to load before adding sources and layers
-            mapInstanceRef.current.on('load', () => {
-                if(!mapInstanceRef.current) return;
-                
-                mapInstanceRef.current?.addSource('polygons', {
-                    type: 'geojson',
-                    data: polygons,
+        const initializeMap = () => {
+            if (!mapInstanceRef.current) {
+                mapInstanceRef.current = new mapboxgl.Map({
+                    container: mapRef.current as HTMLElement,
+                    style: isDarkMode
+                        ? "mapbox://styles/mapbox/dark-v11"
+                        : "mapbox://styles/mapbox/light-v11",
+                    center: [-119.816326, 39.543627],
+                    zoom: 15,
                 });
 
-                // Add the polygon layer
-                mapInstanceRef.current?.addLayer({
-                    id: 'polygons-layer',
-                    type: 'fill',
-                    source: 'polygons',
-                    paint: {
-                        'fill-color': ['get', 'color'], // Use the 'color' property from the GeoJSON
-                        'fill-opacity': 0.5,
-                    },
-                });
-            });
-        } else {
-            // Update the map style dynamically when darkMode changes
-            mapInstanceRef.current.setStyle(
-                darkMode
-                    ? "mapbox://styles/mapbox/dark-v11"
-                    : "mapbox://styles/mapbox/light-v11"
-            );
-        }
+                mapInstanceRef.current.on('load', () => {
+                    if (!mapInstanceRef.current) return;
 
-        // Cleanup on unmount
+                    mapInstanceRef.current.addSource('polygons', {
+                        type: 'geojson',
+                        data: polygons,
+                    });
+
+                    mapInstanceRef.current.addLayer({
+                        id: 'polygons-layer',
+                        type: 'fill',
+                        source: 'polygons',
+                        paint: {
+                            'fill-color': ['get', 'color'],
+                            'fill-opacity': isDarkMode ? 0.6 : 0.5, // Slightly higher opacity for dark mode
+                        },
+                    });
+                });
+            } else {
+                mapInstanceRef.current.setStyle(
+                    isDarkMode
+                        ? "mapbox://styles/mapbox/dark-v11"
+                        : "mapbox://styles/mapbox/light-v11"
+                );
+
+                mapInstanceRef.current.once('style.load', () => {
+                    if (!mapInstanceRef.current) return;
+
+                    if (!mapInstanceRef.current.getSource('polygons')) {
+                        mapInstanceRef.current.addSource('polygons', {
+                            type: 'geojson',
+                            data: polygons,
+                        });
+
+                        mapInstanceRef.current.addLayer({
+                            id: 'polygons-layer',
+                            type: 'fill',
+                            source: 'polygons',
+                            paint: {
+                                'fill-color': ['get', 'color'],
+                                'fill-opacity': isDarkMode ? 0.6 : 0.5,
+                            },
+                        });
+                    } else {
+                        (mapInstanceRef.current.getSource('polygons') as mapboxgl.GeoJSONSource)
+                            .setData(polygons);
+                    }
+                });
+            }
+        };
+
+        initializeMap();
+
         return () => {
             mapInstanceRef.current?.remove();
             mapInstanceRef.current = null;
         };
-    }, [darkMode]);
+    }, [isDarkMode]);
 
     return (
-        <div style={{ height: '700px' }} ref={mapRef} />
+        <div className="w-full h-[700px] rounded-lg overflow-hidden border border-border" ref={mapRef} />
     );
 }
