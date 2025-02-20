@@ -1,6 +1,7 @@
 import requests
 import time
 
+print("Hello!")
 #Code from URL down to response were provided by RapidApi itself.
 def houses():
     properties = []
@@ -24,5 +25,5 @@ def houses():
             longitude = i.get("longitude",None)
             if zpid and address and price and latitude and longitude:  
                 properties.append({"zpid": zpid, "address": address, "price": price, "latitude": latitude, "longitude": longitude})
-    #print(properties)      
+    print(properties)      
     return properties
