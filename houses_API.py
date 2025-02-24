@@ -700,6 +700,7 @@ def DataCollection():
     ForSale(properties)
     ForRent(properties)
     Sold(properties)
+    return properties
 
 if __name__ == '__main__':
    DataCollection()
