@@ -10,7 +10,7 @@ conn = psycopg2.connect(
     password="Admit#762SQL"
 )
 
-properties = houses_API.houses()
+properties = houses_API.DataCollection()
 schools = schools_API.schools()
 
 
@@ -19,13 +19,6 @@ cur = conn.cursor() # Cursor object
 
 #Kaleo Sanchez helped with the queries for Table Creation
 # Tables:
-cur.execute('''CREATE TABLE IF NOT EXISTS users (
-                    account TEXT PRIMARY KEY,
-                    first_name TEXT,
-                    last_name TEXT,
-                    created_on date
-                )''')
-
 cur.execute('''CREATE TABLE IF NOT EXISTS crimes (
                     crime_id SERIAL PRIMARY KEY,
                     type TEXT,
@@ -39,7 +32,12 @@ cur.execute('''CREATE TABLE IF NOT EXISTS houses (
                     address VARCHAR(255) NOT NULL,
                     price NUMERIC NOT NULL,
                     lat FLOAT,
-                    long FLOAT
+                    long FLOAT,
+                    city VARCHAR(255) NOT NULL,
+                    state VARCHAR(255) NOT NULL,
+                    zipcod INT,
+                    price_change NUMERIC NOT NULL,
+                    price_per_sqft NUMERIC NOT NULL
                 )''')
 
 cur.execute('''CREATE TABLE IF NOT EXISTS schools (
@@ -52,14 +50,19 @@ cur.execute('''CREATE TABLE IF NOT EXISTS schools (
 for property in properties:
     zpid = property["zpid"]
     address = property["address"]
-    price = property["price"]
+    price = property["value"]
     lat = property["latitude"]
     long = property["longitude"]
-    cur.execute('''INSERT INTO houses (zpid, address, price, lat, long)
-            VALUES (%s, %s, %s, %s, %s)
+    city = property["city"]
+    state = property["state"]
+    zipcode = property["state"]
+    price_change = property["priceChange"]
+    price_per_sqft = property["pricePerSquareFoot"]
+    cur.execute('''INSERT INTO houses (zpid, address, price, lat, long, city, state, zipcode, price_change, price_per_sqft)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             ON CONFLICT (zpid) DO UPDATE SET 
             address = EXCLUDED.address, price = EXCLUDED.price, lat = EXCLUDED.lat, long = EXCLUDED.long''', # This is incase we have no zpid
-            (zpid, address, price,lat,long))
+            (zpid, address, price,lat,long,city,state,zipcode,price_change,price_per_sqft))
 
 
 for school in schools:
