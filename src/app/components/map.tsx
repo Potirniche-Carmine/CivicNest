@@ -179,5 +179,4 @@ export function Map() {
     return (
         <div className="w-full h-[700px] rounded-lg overflow-hidden border border-border" ref={mapRef} />
     );
-    return <div style={{ height: '700px' }} ref={mapRef} />;
 }

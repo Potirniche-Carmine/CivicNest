@@ -1,11 +1,10 @@
 'use client'
 
 import { Button } from "@/app/components/ui/button";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+import Image from "next/image"; ''
+import Link from "next/link";
 
 export default function LandingPage() {
-  const router = useRouter();
 
   return (
     <main className="flex-1 bg-background">
@@ -20,26 +19,28 @@ export default function LandingPage() {
               Make confident real estate decisions with detailed analytics beyond traditional listings.
             </p>
             <div className="flex flex-colsm:flex-row gap-4 justify-center lg:justify-start">
-              <Button
-                variant="outline"
-                size="lg"
-                className="text-lg px-8 py-6"
-                onClick={() => router.push('/auth/sign-up')}
-              >
-                Create an Account
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="text-lg px-8 py-6"
-                onClick={() => router.push('/auth/sign-in')}
-              >
-                Sign In
-              </Button>
+              <Link href="/auth/sign-up">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="text-lg px-8 py-6"
+                >
+                  Create an Account
+                </Button>
+              </Link>
+              <Link href="/auth/sign-in">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="text-lg px-8 py-6"
+                >
+                  Sign In
+                </Button>
+              </Link>
             </div>
           </div>
           <div className="flex-1 relative w-full max-w-xl h-[400px]">
-          <Image
+            <Image
               src="/hero-image-light.png"
               alt="CivicNest Platform Preview"
               fill
@@ -82,14 +83,15 @@ export default function LandingPage() {
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Join CivicNest today and gain access to comprehensive neighborhood analytics that help you make confident property decisions.
           </p>
-          <Button
-            variant="outline"
-            size="lg"
-            className="text-lg px-8 py-6"
-            onClick={() => router.push('/auth/sign-up')}
-          >
-            Start Your Property Search
-          </Button>
+          <Link href="/auth/sign-up">
+            <Button
+              variant="outline"
+              size="lg"
+              className="text-lg px-8 py-6"
+            >
+              Start Your Property Search
+            </Button>
+          </Link>
         </div>
       </div>
     </main>
