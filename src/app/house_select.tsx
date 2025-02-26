@@ -5,7 +5,7 @@ export interface houses {
     lat: number;
     long: number;
     price: number; 
-    spid: number
+    spid: number;
 }
 
 interface HouseSelectProps {
