@@ -440,7 +440,7 @@ export const useNeighborhoodPolygons = (): PolygonsCollection => {
         {
             type: "Feature",
             properties: { 
-                id: 7, 
+                id: 8, 
                 color: isDarkMode ? "#4a9eff" : "#2b6cb0"
             },
             geometry: {
