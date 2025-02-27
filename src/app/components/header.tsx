@@ -28,7 +28,7 @@ export function Header() {
             {isLoaded && (
               <div className="flex items-center gap-3 hover:bg-sky-500/50 dark:hover:bg-sky-800/50 rounded-lg transition-colors px-4 py-2">
                 <span className="text-sm font-medium whitespace-nowrap">
-                  Welcome, {user?.firstName}!
+                  Welcome, {user?.username}!
                 </span>
                 <UserButton
                   appearance={{

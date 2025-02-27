@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { pool } from '@/app/lib/db';
+import { pool } from '@/lib/db';
 
 export async function POST(request: Request){
     try{
@@ -23,20 +23,31 @@ export async function POST(request: Request){
         console.error('Error in Post /api/locations:', err);
         return NextResponse.json({ error: 'Internal Server Error'}, { status: 500 });
     }
-
 }
 
 export async function GET() {
-  try{const query = `
-    SELECT address, lat, long, price, zpid
-    FROM houses
-    ORDER BY address`;
+    try {
+        // First, let's try to establish a connection using our test function
+        const client = await pool.connect();
+        
+        const query = `
+            SELECT address, lat, long, price, zpid 
+            FROM houses 
+            WHERE lat IS NOT NULL AND long IS NOT NULL
+            ORDER BY address`;
 
-    const result = await pool.query(query);
-    return NextResponse.json({ houses: result.rows});
-}   catch (err) {
-    console.error('Error fetching locations:', err);
-    return NextResponse.json({error: 'Internal Server Error' }, { status: 500 });
-}
-  
+        const result = await client.query(query);
+        client.release();
+        
+        return NextResponse.json({ houses: result.rows });
+    } catch (err) {
+        console.error('Error fetching locations:', err);
+        
+        // More detailed error response
+        return NextResponse.json({
+            error: 'Database Connection Error',
+            message: err instanceof Error ? err.message : 'Unknown error',
+            details: 'Check your database configuration and environment variables'
+        }, { status: 500 });
+    }
 }
