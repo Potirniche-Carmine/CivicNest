@@ -1,20 +1,53 @@
 import { NextResponse } from 'next/server';
-import { queryDatabase } from '../../lib/db';
-import NodeCache from 'node-cache';
-const cache = new NodeCache();
+import { pool } from '@/lib/db';
+
+export async function POST(request: Request){
+    try{
+        const body = await request.json();
+        const { lat, long} = body;
+
+        if (!lat){
+            return NextResponse.json({ error: 'Latitude is required'}, { status: 400});
+        }
+
+        const query = `
+        SELECT lat, long FROM houses WHERE lat IS NOT NULL AND long IS NOT NULL LIMIT 3`;
+        const values = [lat, long || null];
+
+        const result = await pool.query(query, values);
+
+        const houses = result.rows[0];
+
+        return NextResponse.json({ houses}, { status: 201});
+    } catch (err) {
+        console.error('Error in Post /api/locations:', err);
+        return NextResponse.json({ error: 'Internal Server Error'}, { status: 500 });
+    }
+}
 
 export async function GET() {
-  const cachedData = cache.get('locations');
-  if(cachedData){
-    return NextResponse.json(cachedData, { status: 200 });
-  }
     try {
-      // Query the database to get the house locations (latitude and longitude)
-      const result = await queryDatabase('SELECT lat, lng FROM your_table WHERE lat IS NOT NULL AND lng IS NOT NULL LIMIT 3');
-      cache.set('locations',result.rows,3600);
-      // Return the rows from the query as a JSON response
-      return NextResponse.json(result.rows, { status: 200 });
-  }catch(error){
-  return NextResponse.json({message: 'Method Not Allowed' })
-  }
+        // First, let's try to establish a connection using our test function
+        const client = await pool.connect();
+        
+        const query = `
+            SELECT address, lat, long, price, zpid 
+            FROM houses 
+            WHERE lat IS NOT NULL AND long IS NOT NULL
+            ORDER BY address`;
+
+        const result = await client.query(query);
+        client.release();
+        
+        return NextResponse.json({ houses: result.rows });
+    } catch (err) {
+        console.error('Error fetching locations:', err);
+        
+        // More detailed error response
+        return NextResponse.json({
+            error: 'Database Connection Error',
+            message: err instanceof Error ? err.message : 'Unknown error',
+            details: 'Check your database configuration and environment variables'
+        }, { status: 500 });
+    }
 }

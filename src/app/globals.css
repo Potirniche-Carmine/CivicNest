@@ -75,3 +75,36 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Mapbox Popup Dark Mode Styles */
+@layer components {
+  .mapboxgl-popup-dark .mapboxgl-popup-content {
+    @apply bg-card text-card-foreground;
+  }
+
+  .mapboxgl-popup-dark .mapboxgl-popup-tip {
+    border-top-color: hsl(var(--card));
+    border-bottom-color: hsl(var(--card));
+  }
+
+  .mapboxgl-popup-dark.mapboxgl-popup-anchor-top .mapboxgl-popup-tip {
+    border-bottom-color: hsl(var(--card));
+  }
+  .mapboxgl-popup-dark.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
+    border-top-color: hsl(var(--card));
+  }
+  .mapboxgl-popup-dark.mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
+    border-right-color: hsl(var(--card));
+  }
+  .mapboxgl-popup-dark.mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
+    border-left-color: hsl(var(--card));
+  }
+
+  .dark-popup {
+    @apply text-card-foreground;
+  }
+
+  .light-popup {
+    @apply text-card-foreground;
+  }
+}
