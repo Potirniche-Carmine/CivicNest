@@ -10,9 +10,9 @@
 CivicNest is an innovative web application designed to revolutionize property investment decisions by providing comprehensive insights beyond traditional real estate listings. While conventional platforms focus on basic property details, CivicNest delivers detailed neighborhood analytics that directly impact investment potential and long-term value appreciation for specific areas.
 Our interactive map interface uses color-coded markers to visualize neighborhood investment potential based on critical factors:
 
-🏫 School quality metrics (a key driver of property value growth)
-🔒 Crime rates and safety statistics (essential for stable investments)
-🚶 Walkability scores (increasingly valued in contemporary markets)
+- 🏫 School quality metrics (a key driver of property value growth)
+- 🔒 Crime rates and safety statistics (essential for stable investments)
+- 🚶 Walkability scores (increasingly valued in contemporary markets)
 
 ## Key Features
 
