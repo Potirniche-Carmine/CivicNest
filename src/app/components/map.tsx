@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from 'mapbox-gl';
 import { useTheme } from "next-themes";
-import * as turf from '@turf/turf';
 import { X } from 'lucide-react';
 import ReactDOM from 'react-dom/client';
 import HouseSelect, { houses } from './house_select';
@@ -12,6 +11,9 @@ import { useNeighborhoodPolygons } from "./mapPolygons";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || "";
 
+const DEFAULT_ZOOM = 11;
+const DEFAULT_CENTER: [number, number] = [-119.8143, 39.5299];
+
 export function Map() {
     const mapRef = useRef<HTMLDivElement>(null);
     const mapInstanceRef = useRef<mapboxgl.Map | null>(null);
@@ -19,6 +21,7 @@ export function Map() {
     const [houses, setHouses] = useState<houses[]>([]);
     const [, setSelectedHouse] = useState<houses | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [showClusters, setShowClusters] = useState(true);
     const { theme, systemTheme } = useTheme();
 
     const isDarkMode = theme === "system" 
@@ -26,6 +29,16 @@ export function Map() {
         : theme === "dark";
 
     const neighborhoodPolygons = useNeighborhoodPolygons();
+
+    const resetMapView = () => {
+        if (mapInstanceRef.current) {
+            mapInstanceRef.current.flyTo({
+                center: DEFAULT_CENTER,
+                zoom: DEFAULT_ZOOM,
+                essential: true
+            });
+        }
+    }
 
     // Fetch houses data
     useEffect(() => {
@@ -61,79 +74,6 @@ export function Map() {
             }
         }))
     } as GeoJSON.FeatureCollection<GeoJSON.Point>;
-
-
-
-// This is polygons to test out for future functionality
-    const polygons: GeoJSON.FeatureCollection<GeoJSON.Polygon> = {
-        type: "FeatureCollection",
-        features: [
-            {
-                type: "Feature",
-                properties: { 
-                    id: 1, 
-                    color: isDarkMode ? "#4a9eff" : "#2b6cb0"
-                },
-                geometry: {
-                    type: "Polygon",
-                    coordinates: [
-                        [
-                            [-119.82, 39.54],
-                            [-119.81, 39.54],
-                            [-119.81, 39.55],
-                            [-119.82, 39.55],
-                            [-119.82, 39.54],
-                        ],
-                    ],
-                },
-            },
-            {
-                type: "Feature",
-                properties: { 
-                    id: 2, 
-                    color: isDarkMode ? "#48bb78" : "#2f855a"
-                },
-                geometry: {
-                    type: "Polygon",
-                    coordinates: [
-                        [
-                            [-119.83, 39.53],
-                            [-119.82, 39.53],
-                            [-119.82, 39.54],
-                            [-119.83, 39.54],
-                            [-119.83, 39.53],
-                        ],
-                    ],
-                },
-            },
-        ],
-    };
-
-
-    // This is circles to test out different regions
-    const circles: GeoJSON.FeatureCollection<GeoJSON.Polygon> = {
-        type: "FeatureCollection",
-        features: [
-            {
-                type: "Feature",
-                properties: { id: 3, color: "Red" },
-                geometry: turf.circle(
-                    [-119.81, 39.52], 
-                    500, 
-                    { steps: 64, units: 'meters' } 
-                ).geometry,
-            },
-            {
-                type: "Feature",
-                properties: { id: 4, color: "Purple" },
-                geometry: turf.circle(
-                    [-119.83, 39.56], 
-                    300, 
-                    { steps: 64, units: 'meters' }
-                ).geometry,
-            },
-        ],
-    };
 
     // Function to create and display a custom popup for a house
     const createCustomPopup = (coordinates: [number, number], address: string, price: number) => {
@@ -199,7 +139,10 @@ export function Map() {
         root.render(
             <X 
                 size={20} 
-                onClick={() => popup.remove()} 
+                onClick={() =>{
+                 popup.remove()
+                 resetMapView()
+                }} 
                 color={isDarkMode ? '#e5e7eb' : '#4b5563'} 
                 style={{
                     cursor: 'pointer',
@@ -242,8 +185,8 @@ export function Map() {
                     style: isDarkMode
                         ? "mapbox://styles/mapbox/dark-v11"
                         : "mapbox://styles/mapbox/light-v11",
-                    center: [-119.8143, 39.5299],
-                    zoom: 11,
+                    center: DEFAULT_CENTER,
+                    zoom: DEFAULT_ZOOM,
                 });
 
                 mapInstanceRef.current.on('load', () => {
@@ -279,21 +222,6 @@ export function Map() {
                             'fill-color': ['get', 'color'],
                             'fill-opacity': isDarkMode ? 0.6 : 0.5,
                         }
-                    });
-
-                    mapInstanceRef.current.addSource('circles', {
-                        type: 'geojson',
-                        data: circles,
-                    });
-
-                    mapInstanceRef.current.addLayer({
-                        id: 'circles-layer',
-                        type: 'fill',
-                        source: 'circles',
-                        paint: {
-                            'fill-color': ['get', 'color'],
-                            'fill-opacity': 0.5,
-                        },
                     });
 
                     mapInstanceRef.current.addSource('houses', {
@@ -350,27 +278,23 @@ export function Map() {
                 mapInstanceRef.current.once('style.load', () => {
                     if (!mapInstanceRef.current) return;
 
-                    // Re-add polygon source if needed
-                    if (!mapInstanceRef.current.getSource('polygons')) {
-                        mapInstanceRef.current.addSource('polygons', {
+                    // Re-add sources and layers after style change
+                    if (!mapInstanceRef.current.getSource('neighborhoods')) {
+                        mapInstanceRef.current.addSource('neighborhoods', {
                             type: 'geojson',
-                            data: polygons,
+                            data: neighborhoodPolygons
                         });
 
                         mapInstanceRef.current.addLayer({
-                            id: 'polygons-layer',
+                            id: 'neighborhoods-layer',
                             type: 'fill',
-                            source: 'polygons',
+                            source: 'neighborhoods',
                             paint: {
                                 'fill-color': ['get', 'color'],
                                 'fill-opacity': isDarkMode ? 0.6 : 0.5,
-                            },
+                            }
                         });
-                    } else {
-                        (mapInstanceRef.current.getSource('polygons') as mapboxgl.GeoJSONSource)
-                            .setData(polygons);
                     }
-                    // Re-adding everything in case we need to do it
                     if (!mapInstanceRef.current.getSource('houses')) {
                         mapInstanceRef.current.addSource('houses', {
                             type: 'geojson',
@@ -392,23 +316,6 @@ export function Map() {
                         (mapInstanceRef.current.getSource('houses') as mapboxgl.GeoJSONSource)
                             .setData(housesGeoJSON);
                     }
-
-                    if (!mapInstanceRef.current.getSource('circles')) {
-                        mapInstanceRef.current.addSource('circles', {
-                            type: 'geojson',
-                            data: circles,
-                        });
-
-                        mapInstanceRef.current.addLayer({
-                            id: 'circles-layer',
-                            type: 'fill',
-                            source: 'circles',
-                            paint: {
-                                'fill-color': ['get', 'color'],
-                                'fill-opacity': 0.5,
-                            },
-                        });
-                    }
                 });
             }
         };
@@ -427,6 +334,7 @@ export function Map() {
         };
     }, [isDarkMode, houses, isLoading]);
 
+    // Update house source data when houses change
     useEffect(() => {
         if (mapInstanceRef.current && mapInstanceRef.current.getSource('houses')) {
             (mapInstanceRef.current.getSource('houses') as mapboxgl.GeoJSONSource)
@@ -434,20 +342,10 @@ export function Map() {
         }
     }, [houses]);
 
-    if (isLoading) {
-        return (
-            <div className="space-y-4">
-                <div className="w-full">
-                    <Skeleton className="h-10 w-full rounded-md" />
-                </div>
-                <Skeleton className="w-full h-[700px] rounded-lg" />
-            </div>
-        );
-    }
 
     return (
         <div className="space-y-4">
-            <div className="w-full">
+            <div className="w-full flex justify-between items-center">
                 <HouseSelect onSelect={handleHouseSelect} />
             </div>
             <div className="w-full h-[700px] rounded-lg overflow-hidden border border-border" ref={mapRef} />

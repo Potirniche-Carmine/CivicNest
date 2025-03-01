@@ -1,30 +1,6 @@
 import { NextResponse } from 'next/server';
 import { pool } from "@/lib/db";
 
-export async function POST(request: Request){
-    try{
-        const body = await request.json();
-        const { latitude, longitude} = body;
-
-        if(!latitude){
-            return NextResponse.json({ error: 'Latitude is Required'}, { status: 400});
-        }
-
-        const query = `
-        SELECT latitude, longitude FROM cluster_table WHERE latitude IS NOT NULL AND longitude IS NOT NULL LIMIT 3`;
-        const values = [latitude, longitude || null];
-
-        const result = await pool.query(query, values);
-
-        const cluster_table = result.rows[0];
-
-        return NextResponse.json({ cluster_table}, { status: 201});
-    } catch (err){
-        console.error('Error in Post /api/clusters:', err);
-        return NextResponse.json({ error: 'Internal Server Error'}, { status: 500});
-    }
-}
-
 export async function GET() {
     try{
         const client = await pool.connect();

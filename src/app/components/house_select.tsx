@@ -57,7 +57,7 @@ export default function HouseSelect({ onSelect }: HouseSelectProps) {
     };
 
     return (
-        <div className="relative">
+        <div className="relative w-screen max-w-md">
             <input 
                 type="text"
                 className="w-full p-2 border rounded bg-background text-foreground"
