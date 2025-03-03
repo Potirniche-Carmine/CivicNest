@@ -8,6 +8,7 @@ import ReactDOM from 'react-dom/client';
 import HouseSelect, { houses } from './house_select';
 import { Skeleton } from "@/app/components/ui/skeleton";
 import { useNeighborhoodPolygons } from "./mapPolygons";
+import { useClusterCircles } from "./mapClusters";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || "";
 
@@ -21,7 +22,7 @@ export function Map() {
     const [houses, setHouses] = useState<houses[]>([]);
     const [, setSelectedHouse] = useState<houses | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [showClusters, setShowClusters] = useState(true);
+    const [showClusters, ] = useState(true);
     const { theme, systemTheme } = useTheme();
 
     const isDarkMode = theme === "system" 
@@ -29,6 +30,7 @@ export function Map() {
         : theme === "dark";
 
     const neighborhoodPolygons = useNeighborhoodPolygons();
+    const {clustersGeoJSON, isLoading: clustersLoading} = useClusterCircles();
 
     const resetMapView = () => {
         if (mapInstanceRef.current) {
@@ -224,6 +226,24 @@ export function Map() {
                         }
                     });
 
+                    if (clustersGeoJSON && showClusters && clustersGeoJSON.features.length > 0) {
+                        mapInstanceRef.current.addSource('clusters', {
+                            type: 'geojson',
+                            data: clustersGeoJSON
+                        });
+
+                        mapInstanceRef.current.addLayer({
+                            id: 'clusters-layer',
+                            type: 'fill',
+                            source: 'clusters',
+                            paint: {
+                                'fill-color': ['get', 'color'],
+                                'fill-opacity': 0.6,
+                                'fill-outline-color': isDarkMode ? '#ffffff' : '#000000',
+                            }
+                        });
+                    }
+
                     mapInstanceRef.current.addSource('houses', {
                         type: 'geojson',
                         data: housesGeoJSON,
@@ -294,6 +314,29 @@ export function Map() {
                                 'fill-opacity': isDarkMode ? 0.6 : 0.5,
                             }
                         });
+
+                        if (clustersGeoJSON && showClusters && clustersGeoJSON.features.length > 0) {
+                            if (!mapInstanceRef.current.getSource('clusters')) {
+                                mapInstanceRef.current.addSource('clusters', {
+                                    type: 'geojson',
+                                    data: clustersGeoJSON
+                                });
+    
+                                mapInstanceRef.current.addLayer({
+                                    id: 'clusters-layer',
+                                    type: 'fill',
+                                    source: 'clusters',
+                                    paint: {
+                                        'fill-color': ['get', 'color'],
+                                        'fill-opacity': 0.6,
+                                        'fill-outline-color': isDarkMode ? '#ffffff' : '#000000',
+                                    }
+                                });
+                            } else {
+                                (mapInstanceRef.current.getSource('clusters') as mapboxgl.GeoJSONSource)
+                                    .setData(clustersGeoJSON);
+                            }
+                        }
                     }
                     if (!mapInstanceRef.current.getSource('houses')) {
                         mapInstanceRef.current.addSource('houses', {
@@ -342,6 +385,29 @@ export function Map() {
         }
     }, [houses]);
 
+
+    // Update cluster source data when clusters change
+    useEffect(() => {
+        if (mapInstanceRef.current && 
+            mapInstanceRef.current.getSource('clusters') && 
+            clustersGeoJSON && 
+            clustersGeoJSON.features && 
+            clustersGeoJSON.features.length > 0) {
+            (mapInstanceRef.current.getSource('clusters') as mapboxgl.GeoJSONSource)
+                .setData(clustersGeoJSON);
+        }
+    }, [clustersGeoJSON]);
+
+    if (isLoading) {
+        return (
+            <div className="space-y-4">
+                <div className="w-full">
+                    <Skeleton className="h-10 max-w-md rounded-md" />
+                </div>
+                <Skeleton className="w-full h-[700px] rounded-lg" />
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-4">
