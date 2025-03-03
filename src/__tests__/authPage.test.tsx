@@ -19,7 +19,7 @@ jest.mock('react', () => {
   const originalReact = jest.requireActual('react');
   return {
     ...originalReact,
-    useState: jest.fn(() => [true, jest.fn()]) // Always return mounted=true
+    useState: jest.fn(() => [true, jest.fn()])
   };
 });
 
