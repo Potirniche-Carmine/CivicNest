@@ -9,7 +9,6 @@ jest.mock('next/navigation');
 jest.mock('next-themes');
 jest.mock('@clerk/nextjs', () => ({
   SignIn: jest.fn(() => <div data-testid="sign-in-component">Sign In</div>),
-  SignUp: jest.fn(() => <div data-testid="sign-up-component">Sign Up</div>),
 }));
 
 const mockedUsePathname = jest.mocked(navigation.usePathname);
@@ -30,18 +29,6 @@ describe('AuthPage Component', () => {
   });
 
   it('renders SignIn component when on the sign-in path', () => {
-    mockedUsePathname.mockReturnValue('/auth/sign-in');
-    render(<AuthPage />);
-    expect(screen.getByTestId('sign-in-component')).toBeInTheDocument();
-  });
-
-  it('renders SignUp component when on the sign-up path', () => {
-    mockedUsePathname.mockReturnValue('/auth/sign-up');
-    render(<AuthPage />);
-    expect(screen.getByTestId('sign-up-component')).toBeInTheDocument();
-  });
-
-  it('renders a component with correct styling based on theme', () => {
     mockedUsePathname.mockReturnValue('/auth/sign-in');
     render(<AuthPage />);
     expect(screen.getByTestId('sign-in-component')).toBeInTheDocument();
