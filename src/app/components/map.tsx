@@ -7,7 +7,6 @@ import { X } from 'lucide-react';
 import ReactDOM from 'react-dom/client';
 import HouseSelect, { houses } from './house_select';
 import { Skeleton } from "@/app/components/ui/skeleton";
-import { useNeighborhoodPolygons } from "./mapPolygons";
 import { useClusterCircles } from "./mapClusters";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || "";
@@ -29,7 +28,6 @@ export function Map() {
         ? systemTheme === "dark"
         : theme === "dark";
 
-    const neighborhoodPolygons = useNeighborhoodPolygons();
     const {clustersGeoJSON, isLoading: clustersLoading} = useClusterCircles();
 
     const resetMapView = () => {
@@ -160,7 +158,6 @@ export function Map() {
         return popup;
     };
 
-    // House selection to see all of the database houses
     const handleHouseSelect = (house: houses) => {
         setSelectedHouse(house);
         if (mapInstanceRef.current) {
@@ -170,7 +167,6 @@ export function Map() {
                 essential: true
             });
             
-            // Show popup after a short delay to let the animation complete
             setTimeout(() => {
                 createCustomPopup([house.long, house.lat], house.address, house.price);
             }, 1000);
@@ -194,7 +190,6 @@ export function Map() {
                 mapInstanceRef.current.on('load', () => {
                     if (!mapInstanceRef.current) return;
 
-                    // Add CSS for custom popups
                     const style = document.createElement('style');
                     style.textContent = `
                         .custom-mapbox-popup .mapboxgl-popup-content {
@@ -210,20 +205,21 @@ export function Map() {
                     `;
                     document.head.appendChild(style);
 
-                    // Add neighborhood polygons source and layer
-                    mapInstanceRef.current.addSource('neighborhoods', {
+                    mapInstanceRef.current.addSource('houses', {
                         type: 'geojson',
-                        data: neighborhoodPolygons
+                        data: housesGeoJSON,
                     });
 
                     mapInstanceRef.current.addLayer({
-                        id: 'neighborhoods-layer',
-                        type: 'fill',
-                        source: 'neighborhoods',
+                        id: 'houses-layer',
+                        type: 'circle',
+                        source: 'houses',
                         paint: {
-                            'fill-color': ['get', 'color'],
-                            'fill-opacity': isDarkMode ? 0.6 : 0.5,
-                        }
+                            'circle-radius': 4,
+                            'circle-color': ['get', 'color'],
+                            'circle-stroke-width': 1,
+                            'circle-stroke-color': isDarkMode ? '#ffffff' : '#000000',
+                        },
                     });
 
                     if (clustersGeoJSON && showClusters && clustersGeoJSON.features.length > 0) {
@@ -244,23 +240,6 @@ export function Map() {
                         });
                     }
 
-                    mapInstanceRef.current.addSource('houses', {
-                        type: 'geojson',
-                        data: housesGeoJSON,
-                    });
-
-                    mapInstanceRef.current.addLayer({
-                        id: 'houses-layer',
-                        type: 'circle',
-                        source: 'houses',
-                        paint: {
-                            'circle-radius': 8,
-                            'circle-color': ['get', 'color'],
-                            'circle-stroke-width': 1,
-                            'circle-stroke-color': isDarkMode ? '#ffffff' : '#000000',
-                        },
-                    });
-
                     // Add popup on house click
                     mapInstanceRef.current.on('click', 'houses-layer', (e) => {
                         if (e.features && e.features[0] && e.features[0].properties) {
@@ -275,7 +254,6 @@ export function Map() {
                         }
                     });
 
-                    // Change cursor on house hover
                     mapInstanceRef.current.on('mouseenter', 'houses-layer', () => {
                         if (mapInstanceRef.current) {
                             mapInstanceRef.current.getCanvas().style.cursor = 'pointer';
@@ -298,46 +276,6 @@ export function Map() {
                 mapInstanceRef.current.once('style.load', () => {
                     if (!mapInstanceRef.current) return;
 
-                    // Re-add sources and layers after style change
-                    if (!mapInstanceRef.current.getSource('neighborhoods')) {
-                        mapInstanceRef.current.addSource('neighborhoods', {
-                            type: 'geojson',
-                            data: neighborhoodPolygons
-                        });
-
-                        mapInstanceRef.current.addLayer({
-                            id: 'neighborhoods-layer',
-                            type: 'fill',
-                            source: 'neighborhoods',
-                            paint: {
-                                'fill-color': ['get', 'color'],
-                                'fill-opacity': isDarkMode ? 0.6 : 0.5,
-                            }
-                        });
-
-                        if (clustersGeoJSON && showClusters && clustersGeoJSON.features.length > 0) {
-                            if (!mapInstanceRef.current.getSource('clusters')) {
-                                mapInstanceRef.current.addSource('clusters', {
-                                    type: 'geojson',
-                                    data: clustersGeoJSON
-                                });
-    
-                                mapInstanceRef.current.addLayer({
-                                    id: 'clusters-layer',
-                                    type: 'fill',
-                                    source: 'clusters',
-                                    paint: {
-                                        'fill-color': ['get', 'color'],
-                                        'fill-opacity': 0.6,
-                                        'fill-outline-color': isDarkMode ? '#ffffff' : '#000000',
-                                    }
-                                });
-                            } else {
-                                (mapInstanceRef.current.getSource('clusters') as mapboxgl.GeoJSONSource)
-                                    .setData(clustersGeoJSON);
-                            }
-                        }
-                    }
                     if (!mapInstanceRef.current.getSource('houses')) {
                         mapInstanceRef.current.addSource('houses', {
                             type: 'geojson',
@@ -358,6 +296,28 @@ export function Map() {
                     } else {
                         (mapInstanceRef.current.getSource('houses') as mapboxgl.GeoJSONSource)
                             .setData(housesGeoJSON);
+                    }
+                    if (clustersGeoJSON && showClusters && clustersGeoJSON.features.length > 0) {
+                        if (!mapInstanceRef.current.getSource('clusters')) {
+                            mapInstanceRef.current.addSource('clusters', {
+                                type: 'geojson',
+                                data: clustersGeoJSON
+                            });
+
+                            mapInstanceRef.current.addLayer({
+                                id: 'clusters-layer',
+                                type: 'fill',
+                                source: 'clusters',
+                                paint: {
+                                    'fill-color': ['get', 'color'],
+                                    'fill-opacity': 0.6,
+                                    'fill-outline-color': isDarkMode ? '#ffffff' : '#000000',
+                                }
+                            });
+                        } else {
+                            (mapInstanceRef.current.getSource('clusters') as mapboxgl.GeoJSONSource)
+                                .setData(clustersGeoJSON);
+                        }
                     }
                 });
             }
