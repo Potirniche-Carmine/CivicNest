@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 import numpy as np
-from cluster_data import kmeans, lat_long_list
+from cluster_data import KMeans
 
 class TestClusterData(unittest.TestCase):
     @patch('fetch_location.get_location_data')# Mock fetch_location.get_location_data to return sample data
@@ -23,11 +23,11 @@ class TestClusterData(unittest.TestCase):
         #     exit()#Not needed because self.assertEqual does it for us
 
         lat_long_array = np.array(lat_long_list) # Numpy array conversion
-        kmeans.fit(lat_long_array) #KMeans model
+        KMeans.fit(lat_long_array) #KMeans model
 
-        self.assertEqual(kmeans.n_clusters, 3)
+        self.assertEqual(KMeans.n_clusters, 3)
 
-        centroids = kmeans.cluster_centers_
+        centroids = KMeans.cluster_centers_
         self.assertEqual(len(centroids), 3) 
 
         # Print out the cluster centers for verification
@@ -36,7 +36,7 @@ class TestClusterData(unittest.TestCase):
             print(f"Cluster {idx+1}: Latitude: {centroid[0]}, Longitude: {centroid[1]}")
 
   ####### Verify that the clustering assigns correct labels
-        labels = kmeans.labels_
+        labels = KMeans.labels_
         self.assertEqual(len(labels), 6)
 
 
@@ -50,7 +50,7 @@ class TestClusterData(unittest.TestCase):
         lat_long_list = mock_fetch_location.return_value
         self.assertIsNone(lat_long_list)  # Assert that lat_long_list is None
         with self.assertRaises(SystemExit): # If there's no data, the program should exit
-            kmeans.fit(lat_long_list)  # This line should exit if no data is found
+            KMeans.fit(lat_long_list)  # This line should exit if no data is found
 
 if __name__ == '__main__':
     unittest.main()

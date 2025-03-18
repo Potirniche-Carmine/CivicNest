@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.cluster import KMeans
 
-def cluster_data(data, k=3):
+def cluster_data(data, k):
     if data is None or len(data) == 0:
         raise ValueError("No data to cluster.")
 

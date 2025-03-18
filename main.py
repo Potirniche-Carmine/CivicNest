@@ -10,15 +10,15 @@ if lat_long_list is None:
 else:
     try:
         lat_long_array = np.array(lat_long_list)  # Convert to numpy array
-        labels, centroids = cluster_data(lat_long_array, k=3)
+        labels, centroids = cluster_data(lat_long_array, k=50)
         
-        print("\nCluster centers (centroids) for location data:")
-        for idx, centroid in enumerate(centroids):
-            print(f"Cluster {idx + 1}: Latitude: {centroid[0]}, Longitude: {centroid[1]}")
+        #print("\nCluster centers (centroids) for location data:")
+        #for idx, centroid in enumerate(centroids):
+            #print(f"Cluster {idx + 1}: Latitude: {centroid[0]}, Longitude: {centroid[1]}")
 
-        print("\nLocation clusters:")
-        for i, label in enumerate(labels):
-            print(f"Location {lat_long_list[i]} is in Cluster {label + 1}")
+        #print("\nLocation clusters:")
+        #for i, label in enumerate(labels):
+        #   print(f"Location {lat_long_list[i]} is in Cluster {label + 1}")
 
         store_location_centroids(centroids)
 
@@ -36,13 +36,13 @@ else:
         
         labels, centroids = cluster_data(price_array, k=3)
 
-        print("\nCluster centers (centroids) for price data:")
-        for idx, centroid in enumerate(centroids):
-            print(f"Cluster {idx + 1}: Price: {centroid[0]}")
+        #print("\nCluster centers (centroids) for price data:")
+        #for idx, centroid in enumerate(centroids):
+        #    print(f"Cluster {idx + 1}: Price: {centroid[0]}")
 
-        print("\nPrice clusters:")
-        for i, label in enumerate(labels):
-            print(f"Price {price_list[i]} is in Cluster {label + 1}")
+        #print("\nPrice clusters:")
+        #for i, label in enumerate(labels):
+        #    print(f"Price {price_list[i]} is in Cluster {label + 1}")
 
         store_price_centroids(centroids)
 

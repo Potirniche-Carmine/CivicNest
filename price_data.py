@@ -31,20 +31,8 @@ def store_cluster_centroids(centroids):
     conn = connect_to_db()
     if conn:
         cursor = conn.cursor()
-
-        create_table_query = """
-        CREATE TABLE IF NOT EXISTS price_cluster_table (
-            cluster_id SERIAL PRIMARY KEY,
-            price FLOAT NOT NULL
-        );
-        """
-        cursor.execute(create_table_query)
-
-        delete_query = "DELETE FROM price_cluster_table;"
-        cursor.execute(delete_query)
-
         insert_query = """
-        INSERT INTO price_cluster_table (cluster_id, price)
+        INSERT INTO cluster_table (cluster_id, price)
         VALUES (%s, %s);
         """
         for idx, centroid in enumerate(centroids):
@@ -55,7 +43,7 @@ def store_cluster_centroids(centroids):
         print("\nCluster centers (centroids) inserted into price_cluster_table:")
 
         fetch_query = """
-        SELECT * FROM price_cluster_table;
+        SELECT * FROM cluster_table;
         """
         cursor.execute(fetch_query)
         all_rows = cursor.fetchall()
@@ -68,7 +56,7 @@ def store_cluster_centroids(centroids):
                 except IndexError:
                     print("Row doesn't match expected format. Columns may be different.")
         else:
-            print("No clusters found in the price_cluster_table.")
+            print("No clusters found in the cluster_table.")
 
         # Close the connection
         close_connection(cursor, conn)

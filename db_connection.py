@@ -16,7 +16,6 @@ def connect_to_db():
             host=DB_HOST,
             port=DB_PORT
         )
-        print("Connected to the database successfully!")
         return conn
     except Exception as e:
         print(f"Error connecting to database: {e}")
@@ -30,14 +29,6 @@ if __name__ == "__main__":
     conn = connect_to_db()  # This will only return the connection, makes the unpacking nice and easy
     if conn:
         cursor = conn.cursor()  # Now create the cursor separately, otherwise there will be a tuple error
-        print("Connection established!")
         close_connection(cursor, conn)
     else:
-        print("Failed to connect.")
-
-# Tables in the database:
-# User
-# crimes
-# houses, has columns zpid, price, lat, long, address
-# schools
-# users, probably redundant
+        print("No connection established.")
