@@ -72,17 +72,24 @@ def store_house_cluster_assignments(house_ids, cluster_assignments):
         cursor = conn.cursor()
         
         cursor.execute("DELETE FROM cluster_table")
+        print("Cleared existing cluster assignments")
         
         insert_query = """
-        INSERT INTO cluster_table (house_id, cluster_id)
+        INSERT INTO cluster_table (zpid, cluster_id)
         VALUES (%s, %s);
         """
         
+        data_to_insert = []
         for house_id, cluster_id in zip(house_ids, cluster_assignments):
-            cursor.execute(insert_query, (house_id, int(cluster_id) + 1))
-
+            data_to_insert.append((house_id, int(cluster_id) + 1))
+        
+        total_records = len(data_to_insert)
+        print(f"Preparing to insert {total_records} cluster assignments...")
+        
+        cursor.executemany(insert_query, data_to_insert)
+        
         conn.commit()
-        print(f"Stored cluster assignments for {len(house_ids)} houses")
+        print(f"Successfully stored cluster assignments for {total_records} houses")
         
         close_connection(cursor, conn)
         return True
@@ -104,7 +111,7 @@ def fetch_cluster_results():
     cursor.execute("""
         SELECT h.zpid, h.price, ct.cluster_id 
         FROM houses h
-        JOIN cluster_table ct ON h.zpid = ct.house_id
+        JOIN cluster_table ct ON h.zpid = ct.zpid
         ORDER BY ct.cluster_id, h.price
     """)
     cluster_table = cursor.fetchall()
