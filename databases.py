@@ -25,7 +25,7 @@ cur = conn.cursor() # Cursor object
 
 #Kaleo Sanchez helped with the queries for Table Creation
 # Tables:
-cur.execute('''DROP TABLE IF EXISTS houses''')
+cur.execute('''DROP TABLE IF EXISTS houses CASCADE''')
 
 cur.execute('''CREATE TABLE IF NOT EXISTS crimes (
                     crime_id SERIAL PRIMARY KEY,
@@ -63,7 +63,7 @@ for property in properties:
     long = property["longitude"]
     city = property["city"]
     state = property["state"]
-    zipcode = property["state"]
+    zipcode = property["zipcode"]
     price_change = property["priceChange"]
     price_per_sqft = property["pricePerSquareFoot"]
     cur.execute('''INSERT INTO houses (zpid, address, price, lat, long, city, state, zipcode, price_change, price_per_sqft)
