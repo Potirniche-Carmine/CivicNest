@@ -71,10 +71,10 @@ def store_house_cluster_assignments(house_ids, cluster_assignments):
     if conn:
         cursor = conn.cursor()
         
-        cursor.execute("DELETE FROM house_clusters")
+        cursor.execute("DELETE FROM cluster_table")
         
         insert_query = """
-        INSERT INTO house_clusters (house_id, cluster_id)
+        INSERT INTO cluster_table (house_id, cluster_id)
         VALUES (%s, %s);
         """
         
@@ -102,18 +102,18 @@ def fetch_cluster_results():
     centroids = cursor.fetchall()
     
     cursor.execute("""
-        SELECT h.id, h.price, hc.cluster_id 
+        SELECT h.zpid, h.price, ct.cluster_id 
         FROM houses h
-        JOIN house_clusters hc ON h.id = hc.house_id
-        ORDER BY hc.cluster_id, h.price
+        JOIN cluster_table ct ON h.zpid = ct.house_id
+        ORDER BY ct.cluster_id, h.price
     """)
-    house_clusters = cursor.fetchall()
+    cluster_table = cursor.fetchall()
     
     close_connection(cursor, conn)
     
     return {
         'centroids': centroids,
-        'house_clusters': house_clusters
+        'cluster_table': cluster_table
     }
 
 if __name__ == "__main__":
