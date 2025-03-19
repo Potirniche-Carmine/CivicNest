@@ -79,7 +79,7 @@ def store_house_cluster_assignments(house_ids, cluster_assignments):
         """
         
         for house_id, cluster_id in zip(house_ids, cluster_assignments):
-            cursor.execute(insert_query, (house_id, int(cluster_id) + 1))  # +1 to make cluster IDs 1-based
+            cursor.execute(insert_query, (house_id, int(cluster_id) + 1))
 
         conn.commit()
         print(f"Stored cluster assignments for {len(house_ids)} houses")
