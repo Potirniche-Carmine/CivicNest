@@ -27,14 +27,6 @@ cur = conn.cursor() # Cursor object
 # Tables:
 cur.execute('''DROP TABLE IF EXISTS houses CASCADE''')
 
-cur.execute('''CREATE TABLE IF NOT EXISTS crimes (
-                    crime_id SERIAL PRIMARY KEY,
-                    type TEXT,
-                    description TEXT,
-                    location TEXT,
-                    date_reported date
-                )''')
-
 cur.execute('''CREATE TABLE IF NOT EXISTS houses (
                     zpid SERIAL UNIQUE PRIMARY KEY,
                     address VARCHAR(255) NOT NULL,
@@ -46,12 +38,6 @@ cur.execute('''CREATE TABLE IF NOT EXISTS houses (
                     zipcode VARCHAR(255),
                     price_change NUMERIC,
                     price_per_sqft NUMERIC
-                )''')
-
-cur.execute('''CREATE TABLE IF NOT EXISTS schools (
-                    name VARCHAR(200) UNIQUE PRIMARY KEY,
-                    grades VARCHAR(25),
-                    rating INT
                 )''')
 
 #Go through house API contents
