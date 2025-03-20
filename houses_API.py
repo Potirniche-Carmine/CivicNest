@@ -30,6 +30,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -47,6 +49,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -71,6 +75,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -88,6 +94,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -113,6 +121,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -130,6 +140,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -155,6 +167,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -172,6 +186,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -197,6 +213,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -214,6 +232,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -239,6 +259,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -256,6 +278,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -281,6 +305,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -298,6 +324,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -323,6 +351,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -340,6 +370,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -365,6 +397,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -382,6 +416,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -407,6 +443,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -424,6 +462,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -449,6 +489,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -466,6 +508,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -491,6 +535,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -508,6 +554,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -533,6 +581,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -550,6 +600,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -575,6 +627,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -592,6 +646,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -617,6 +673,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -634,6 +692,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -659,6 +719,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -676,6 +738,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -701,6 +765,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -718,6 +784,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -743,6 +811,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -760,6 +830,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -785,6 +857,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -802,6 +876,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -827,6 +903,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -844,6 +922,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -868,6 +948,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -885,6 +967,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -909,6 +993,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -926,6 +1012,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -950,6 +1038,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -967,6 +1057,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -991,6 +1083,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1008,6 +1102,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1032,6 +1128,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1049,6 +1147,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1073,6 +1173,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1090,6 +1192,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1114,6 +1218,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1131,6 +1237,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1155,6 +1263,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1172,6 +1282,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1196,6 +1308,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1213,6 +1327,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1237,6 +1353,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1254,6 +1372,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1278,6 +1398,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1295,6 +1417,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1319,6 +1443,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1336,6 +1462,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1360,6 +1488,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1377,6 +1507,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1401,6 +1533,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1418,6 +1552,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1442,6 +1578,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1459,6 +1597,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1483,6 +1623,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1500,6 +1642,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1524,6 +1668,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1541,6 +1687,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1565,6 +1713,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1582,6 +1732,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1606,6 +1758,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1623,6 +1777,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1647,6 +1803,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1664,6 +1822,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1688,6 +1848,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1705,6 +1867,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1729,6 +1893,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1746,6 +1912,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1770,6 +1938,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1787,6 +1957,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1811,6 +1983,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1828,6 +2002,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1852,6 +2028,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1869,6 +2047,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1893,6 +2073,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1910,6 +2092,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1934,6 +2118,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1951,6 +2137,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -1975,6 +2163,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -1992,6 +2182,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2016,6 +2208,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2033,6 +2227,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2057,6 +2253,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2074,6 +2272,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2098,6 +2298,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2115,6 +2317,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2139,6 +2343,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2156,6 +2362,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2180,6 +2388,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2197,6 +2407,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2221,6 +2433,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2238,6 +2452,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2262,6 +2478,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2279,6 +2497,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2303,6 +2523,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2320,6 +2542,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2344,6 +2568,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2361,6 +2587,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2385,6 +2613,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2402,6 +2632,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2426,6 +2658,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2443,6 +2677,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2467,6 +2703,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2484,6 +2722,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2508,6 +2748,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2525,6 +2767,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2549,6 +2793,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2566,6 +2812,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2590,6 +2838,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2607,6 +2857,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2631,6 +2883,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2648,6 +2902,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2672,6 +2928,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2689,6 +2947,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2713,6 +2973,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2730,6 +2992,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2754,6 +3018,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2771,6 +3037,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2795,6 +3063,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2812,6 +3082,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2836,6 +3108,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2853,6 +3127,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2877,6 +3153,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2894,6 +3172,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2918,6 +3198,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2935,6 +3217,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -2959,6 +3243,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -2976,6 +3262,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -3000,6 +3288,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -3017,6 +3307,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -3041,6 +3333,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -3058,6 +3352,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -3082,6 +3378,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -3099,6 +3397,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -3123,6 +3423,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -3140,6 +3442,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -3164,6 +3468,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -3181,6 +3487,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -3205,6 +3513,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -3222,6 +3532,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -3246,6 +3558,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -3263,6 +3577,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -3287,6 +3603,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -3304,6 +3622,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -3328,6 +3648,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -3345,6 +3667,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -3369,6 +3693,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -3386,6 +3712,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -3410,6 +3738,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -3427,6 +3757,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -3451,6 +3783,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -3468,6 +3802,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -3492,6 +3828,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -3509,6 +3847,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -3533,6 +3873,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -3550,6 +3892,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -3574,6 +3918,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -3591,6 +3937,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -3615,6 +3963,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -3632,6 +3982,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
@@ -3656,6 +4008,8 @@ def Sold(properties):
             zipcode = address.get("zipcode", None)
             latitude = property_data.get("location", {}).get("latitude", None)
             longitude = property_data.get("location", {}).get("longitude", None)
+            bathrooms = property_data.get("bathrooms",None)
+            bedrooms = property_data.get("bedrooms",None)
             value = price.get("value", None)
             price_change = price.get("priceChange", None)
             price_per_sqft = price.get("pricePerSquareFoot", None)
@@ -3673,6 +4027,8 @@ def Sold(properties):
                     "zipcode": zipcode,
                     "latitude": latitude,
                     "longitude": longitude,
+                    "bathrooms": bathrooms,
+                    "bedrooms": bedrooms,
                     "price": value,
                     "priceChange": price_change,
                     "pricePerSquareFoot": price_per_sqft,
