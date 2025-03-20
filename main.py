@@ -11,11 +11,11 @@ else:
     try:
         price_array = np.array(price_list).reshape(-1, 1)  # Reshape to (n_samples, 1) for single feature (this sucked)
         
-        labels, centroids = cluster_data(price_array, k=4)
+        labels, centroids = cluster_data(price_array, k=15)
 
         #print("\nCluster centers (centroids) for price data:")
-        #for idx, centroid in enumerate(centroids):
-        #    print(f"Cluster {idx + 1}: Price: {centroid[0]}")
+        for idx, centroid in enumerate(centroids):
+            print(f"Cluster {idx + 1}: Price: {centroid[0]}")
 
         #print("\nPrice clusters:")
         #for i, label in enumerate(labels):
