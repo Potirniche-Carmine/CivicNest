@@ -72,6 +72,9 @@ export function Map() {
             });
             setSelectedClusterId(null);
             updateHouseOpacity(null);
+            if (activePopupRef.current) {
+                activePopupRef.current.remove();
+            }
         }
     }
 
