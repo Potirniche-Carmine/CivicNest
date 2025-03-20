@@ -12,7 +12,8 @@ export function Header() {
     <header className="bg-zinc-600 dark:bg-zinc-800 text-white p-5">
       <div className="relative w-full max-w-[2560px] mx-auto flex items-center">
         <div>
-          <Link href="/home" className="flex items-center px-5">
+          <Link href={user ? "/home" : "/"} 
+          className="flex items-center px-5">
             <Image
               src="/logo.png"
               alt="CivicNest Logo"

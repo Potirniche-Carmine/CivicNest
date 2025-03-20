@@ -14,38 +14,30 @@ const DEFAULT_ZOOM = 11;
 const DEFAULT_CENTER: [number, number] = [-119.8143, 39.5299];
 
 const generateClusterColors = (numClusters: number) => {
-    const goldenRatio = 0.618033988749895;
+    const accessibleColors = [
+        '#003f5c', // Dark blue
+        '#ff6361', // Salmon pink
+        '#ffa600', // Orange
+        '#58508d', // Purple
+        '#bc5090', // Magenta
+        '#2f4b7c', // Navy
+        '#a05195', // Plum
+        '#f95d6a', // Coral
+        '#665191', // Indigo
+        '#d45087', // Pink
+        '#ff7c43', // Light orange
+        '#386cb0', // Royal blue
+    ];
+    
     const colors = [];
-    let hue = Math.random();
     
     for (let i = 0; i < numClusters; i++) {
-        hue += goldenRatio;
-        hue %= 1;
-        
-        const h = hue * 360;
-        const s = 0.7;
-        const v = 0.9;
-        
-        const hi = Math.floor(h / 60) % 6;
-        const f = h / 60 - Math.floor(h / 60);
-        const p = v * (1 - s);
-        const q = v * (1 - f * s);
-        const t = v * (1 - (1 - f) * s);
-        
-        let r, g, b;
-        if (hi === 0) [r, g, b] = [v, t, p];
-        else if (hi === 1) [r, g, b] = [q, v, p];
-        else if (hi === 2) [r, g, b] = [p, v, t];
-        else if (hi === 3) [r, g, b] = [p, q, v];
-        else if (hi === 4) [r, g, b] = [t, p, v];
-        else [r, g, b] = [v, p, q];
-        
-        const rgb = `rgb(${Math.floor(r * 255)}, ${Math.floor(g * 255)}, ${Math.floor(b * 255)})`;
-        colors.push(rgb);
+        colors.push(accessibleColors[i % accessibleColors.length]);
     }
     
     return colors;
 };
+
 
 export function Map() {
     const mapRef = useRef<HTMLDivElement>(null);
@@ -157,19 +149,25 @@ export function Map() {
 
         if (mapInstanceRef.current.getLayer('houses-layer')) {
             if (clusterId === null) {
-                mapInstanceRef.current.setPaintProperty('houses-layer', 'circle-opacity', 1);
+                mapInstanceRef.current.setPaintProperty('houses-layer', 'circle-opacity', 0.9);
                 mapInstanceRef.current.setPaintProperty('houses-layer', 'circle-radius', 4);
+                mapInstanceRef.current.setPaintProperty('houses-layer', 'circle-stroke-width', 1.2);
             } else {
                 mapInstanceRef.current.setPaintProperty(
                     'houses-layer',
                     'circle-opacity',
-                    ['case', ['==', ['get', 'cluster_id'], clusterId], 1, 0.05]
+                    ['case', ['==', ['get', 'cluster_id'], clusterId], 0.9, 0.1]
                 );
                 
                 mapInstanceRef.current.setPaintProperty(
                     'houses-layer',
                     'circle-radius',
-                    ['case', ['==', ['get', 'cluster_id'], clusterId], 7, 4]
+                    ['case', ['==', ['get', 'cluster_id'], clusterId], 6, 3]
+                );
+                mapInstanceRef.current.setPaintProperty(
+                    'houses-layer',
+                    'circle-stroke-width',
+                    ['case', ['==', ['get', 'cluster_id'], clusterId], 2, 0.8]
                 );
             }
         }
@@ -355,8 +353,9 @@ export function Map() {
                         paint: {
                             'circle-radius': 4,
                             'circle-color': ['get', 'color'],
-                            'circle-stroke-width': 1,
+                            'circle-stroke-width': 1.2,
                             'circle-stroke-color': isDarkMode ? '#ffffff' : '#000000',
+                            'circle-opacity': 0.9,
                         },
                     });
 
