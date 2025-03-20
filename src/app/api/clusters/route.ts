@@ -6,8 +6,10 @@ interface Cluster {
     avg_price: number;
     houses: Array<{
         zpid: string;
-        latitude: number;
-        longitude: number;
+        lat: number;
+        long: number;
+        bathrooms: string;
+        bedrooms: string;
     }>;
 }
 
@@ -51,8 +53,10 @@ export async function GET() {
             
             clustersMap[row.cluster_id].houses.push({
                 zpid: row.zpid,
-                latitude: row.latitude,
-                longitude: row.longitude
+                lat: row.lat,
+                long: row.long,
+                bathrooms: row.bathrooms,
+                bedrooms: row.bedrooms
             });
         });
 

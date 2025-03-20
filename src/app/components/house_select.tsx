@@ -7,6 +7,8 @@ export interface houses {
     long: number;
     price: number; 
     zpid: number; 
+    bedrooms: string;
+    bathrooms: string;
 }
 
 interface HouseSelectProps {

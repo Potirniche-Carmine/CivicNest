@@ -111,11 +111,17 @@ export function Map() {
             cluster.houses.some((h: any) => h.zpid === house.zpid)
         );
         
+        const houseInCluster = houseCluster ? 
+            houseCluster.houses.find((h: any) => h.zpid === house.zpid) : 
+            null;
+        
         const clusterIndex = houseCluster ? clusters.indexOf(houseCluster) : -1;
         const clusterColor = clusterIndex >= 0 ? clusterColors[clusterIndex] : isDarkMode ? "#f56565" : "#e53e3e";
         
         return {
             ...house,
+            bathrooms: houseInCluster?.bathrooms || house.bathrooms,
+            bedrooms: houseInCluster?.bedrooms || house.bedrooms,
             cluster_id: houseCluster?.cluster_id || null,
             cluster_avg_price: houseCluster?.avg_price || null,
             color: clusterColor
@@ -131,6 +137,8 @@ export function Map() {
                 address: house.address,
                 price: house.price,
                 cluster_id: house.cluster_id,
+                bathrooms: house.bathrooms,
+                bedrooms: house.bedrooms,
                 cluster_avg_price: house.cluster_avg_price,
                 color: house.color
             },
@@ -290,6 +298,8 @@ export function Map() {
                 const properties = {
                     address: houseWithCluster.address,
                     price: houseWithCluster.price,
+                    bedrooms: houseWithCluster.bedrooms,
+                    bathrooms: houseWithCluster.bathrooms,
                     cluster_id: houseWithCluster.cluster_id,
                     cluster_avg_price: houseWithCluster.cluster_avg_price
                 };
