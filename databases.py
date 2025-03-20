@@ -1,5 +1,5 @@
 import psycopg2
-import API2
+import houses_API
 
 DB_NAME = "dcaimsa6md4201"  
 DB_USER = "ub23idbf5fs4n9" # There's a 9 at the end
@@ -16,7 +16,7 @@ conn = psycopg2.connect(
     port=DB_PORT
 )
 
-properties = API2.DataCollection()
+properties = houses_API.DataCollection()
 
 
 
