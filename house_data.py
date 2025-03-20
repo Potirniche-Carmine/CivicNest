@@ -40,6 +40,8 @@ def store_cluster_centroids(centroids):
     if conn:
         cursor = conn.cursor()
         
+        cursor.execute("DELETE FROM cluster_table")
+        
         cursor.execute("DELETE FROM cluster_centroids")
         
         insert_query = """
@@ -84,7 +86,7 @@ def store_house_cluster_assignments(house_ids, cluster_assignments):
             data_to_insert.append((house_id, int(cluster_id) + 1))
         
         total_records = len(data_to_insert)
-        print(f"Preparing to insert {total_records} cluster assignments...")
+        print(f"Inserting {total_records} cluster assignments...")
         
         cursor.executemany(insert_query, data_to_insert)
         

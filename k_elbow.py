@@ -11,8 +11,8 @@ else:
         
         # elbow method to find optimal k
         sse = {}
-        for k in range (1, 7):
-            kmeans = KMeans(n_clusters=k, max_iter=1000).fit(price_df)
+        for k in range (1, 10):
+            kmeans = KMeans(n_clusters=k,random_state=42).fit(price_df)
             price_df["clusters"] = kmeans.labels_
             sse[k] = kmeans.inertia_
         
