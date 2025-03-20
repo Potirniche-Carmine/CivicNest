@@ -262,7 +262,6 @@ export function Map() {
                 size={20} 
                 onClick={() => {
                     popup.remove();
-                    resetMapView();
                 }} 
                 color={isDarkMode ? '#e5e7eb' : '#4b5563'} 
                 style={{
