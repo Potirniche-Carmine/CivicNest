@@ -1,5 +1,5 @@
 import psycopg2
-import houses_API
+import API2
 
 DB_NAME = "dcaimsa6md4201"  
 DB_USER = "ub23idbf5fs4n9" # There's a 9 at the end
@@ -16,7 +16,7 @@ conn = psycopg2.connect(
     port=DB_PORT
 )
 
-properties = houses_API.DataCollection()
+properties = API2.DataCollection()
 
 
 
@@ -33,6 +33,8 @@ cur.execute('''CREATE TABLE IF NOT EXISTS houses (
                     price NUMERIC NOT NULL,
                     lat FLOAT,
                     long FLOAT,
+                    bathrooms NUMERIC,
+                    bedrooms NUMERIC,
                     city VARCHAR(255) NOT NULL,
                     state VARCHAR(255) NOT NULL,
                     zipcode VARCHAR(255),
@@ -47,12 +49,14 @@ for property in properties:
     price = property["price"]
     lat = property["latitude"]
     long = property["longitude"]
+    bath = property["bathrooms"]
+    bed = property["bedrooms"]
     city = property["city"]
     state = property["state"]
     zipcode = property["zipcode"]
     price_change = property["priceChange"]
     price_per_sqft = property["pricePerSquareFoot"]
-    cur.execute('''INSERT INTO houses (zpid, address, price, lat, long, city, state, zipcode, price_change, price_per_sqft)
+    cur.execute('''INSERT INTO houses (zpid, address, price, lat, long, bath, bed, city, state, zipcode, price_change, price_per_sqft)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             ON CONFLICT (zpid) DO UPDATE SET 
             address = EXCLUDED.address, price = EXCLUDED.price, lat = EXCLUDED.lat, long = EXCLUDED.long''', # This is incase we have no zpid
