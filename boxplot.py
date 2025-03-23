@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import numpy as np
 from house_data import fetch_price_data
 from matplotlib.ticker import FuncFormatter
 
