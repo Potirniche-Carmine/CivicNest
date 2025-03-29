@@ -1,15 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTheme } from "next-themes";
-
-export interface houses {
-    address: string;
-    lat: number;
-    long: number;
-    price: number; 
-    zpid: number; 
-    bedrooms: string;
-    bathrooms: string;
-}
+import {houses } from '@/lib/types';
 
 interface HouseSelectProps {
     onSelect: (house: houses) => void;

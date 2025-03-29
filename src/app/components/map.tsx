@@ -5,7 +5,7 @@ import mapboxgl from 'mapbox-gl';
 import { useTheme } from "next-themes";
 import { X, Info, ArrowLeft } from 'lucide-react';
 import ReactDOM from 'react-dom/client';
-import HouseSelect, { houses } from './house_select';
+import HouseSelect from './house_select';
 import { Skeleton } from "@/app/components/ui/skeleton";
 import { 
   Tooltip, 
@@ -13,6 +13,7 @@ import {
   TooltipProvider, 
   TooltipTrigger 
 } from "@/app/components/ui/tooltip";
+import { houses } from "@/lib/types";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || "";
 
