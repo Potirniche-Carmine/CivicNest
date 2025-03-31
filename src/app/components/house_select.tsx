@@ -19,7 +19,7 @@ export default function HouseSelect({ onSelect }: HouseSelectProps) {
     const dropdownRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const isDarkMode = theme === "system" 
+    const isDarkMode = theme === "system"
         ? systemTheme === "dark"
         : theme === "dark";
 
@@ -49,7 +49,7 @@ export default function HouseSelect({ onSelect }: HouseSelectProps) {
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node) && 
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node) &&
                 inputRef.current && !inputRef.current.contains(event.target as Node)) {
                 setShowDropdown(false);
             }
@@ -62,10 +62,10 @@ export default function HouseSelect({ onSelect }: HouseSelectProps) {
     }, []);
 
     const filteredHouses = (Houses && Array.isArray(Houses) && search.length >= MIN_SEARCH_LENGTH)
-    ? Houses.filter(house => 
-        house.address && house.address.toLowerCase().includes(search.toLowerCase())
-      )
-    : [];
+        ? Houses.filter(house =>
+            house.address && house.address.toLowerCase().includes(search.toLowerCase())
+        )
+        : [];
 
     const handleSelect = (house: houses) => {
         onSelect(house);
@@ -78,7 +78,7 @@ export default function HouseSelect({ onSelect }: HouseSelectProps) {
 
         if (e.key === 'ArrowDown') {
             e.preventDefault();
-            setActiveIndex(prevIndex => 
+            setActiveIndex(prevIndex =>
                 prevIndex < filteredHouses.length - 1 ? prevIndex + 1 : 0
             );
             if (dropdownRef.current && activeIndex >= 0) {
@@ -90,7 +90,7 @@ export default function HouseSelect({ onSelect }: HouseSelectProps) {
         }
         else if (e.key === 'ArrowUp') {
             e.preventDefault();
-            setActiveIndex(prevIndex => 
+            setActiveIndex(prevIndex =>
                 prevIndex > 0 ? prevIndex - 1 : filteredHouses.length - 1
             );
             if (dropdownRef.current && activeIndex >= 0) {
@@ -109,14 +109,14 @@ export default function HouseSelect({ onSelect }: HouseSelectProps) {
         }
     };
 
-    const shouldShowDropdown = showDropdown && 
-                          search.length >= MIN_SEARCH_LENGTH && 
-                          (filteredHouses.length <= MAX_DISPLAY_THRESHOLD) && 
-                          !isLoading;
+    const shouldShowDropdown = showDropdown &&
+        search.length >= MIN_SEARCH_LENGTH &&
+        (filteredHouses.length <= MAX_DISPLAY_THRESHOLD) &&
+        !isLoading;
 
     return (
-<div className="relative w-full max-w-md mx-auto" role="combobox" aria-expanded={showDropdown} aria-haspopup="listbox" aria-controls="house-dropdown">
-         <input 
+        <div className="relative w-full max-w-md mx-auto" role="combobox" aria-expanded={showDropdown} aria-haspopup="listbox" aria-controls="house-dropdown">
+            <input
                 ref={inputRef}
                 type="text"
                 className="w-full p-2 border rounded bg-background text-foreground"
@@ -133,42 +133,41 @@ export default function HouseSelect({ onSelect }: HouseSelectProps) {
                 aria-autocomplete="list"
             />
             {shouldShowDropdown && (
-    <div 
-        id="house-dropdown"
-        ref={dropdownRef}
-        className={`absolute z-10 w-full mt-1 border rounded shadow-lg max-h-60 overflow-auto ${isDarkMode ? 'bg-card text-card-foreground' : 'bg-white text-gray-900'}`}
-        role="listbox"
-    >
-        {filteredHouses.length > 0 ? (
-            filteredHouses.map((house, index) => (
-                <div 
-                    key={house.zpid}
-                    className={`p-2 cursor-pointer ${
-                        index === activeIndex 
-                            ? isDarkMode ? 'bg-primary text-primary-foreground' : 'bg-blue-100' 
-                            : isDarkMode ? 'hover:bg-muted' : 'hover:bg-gray-100'
-                    }`}
-                    onClick={() => handleSelect(house)}
-                    role="option"
-                    aria-selected={index === activeIndex}
-                    tabIndex={-1}
+                <div
+                    id="house-dropdown"
+                    ref={dropdownRef}
+                    className={`absolute z-10 w-full mt-1 border rounded shadow-lg max-h-60 overflow-auto ${isDarkMode ? 'bg-card text-card-foreground' : 'bg-white text-gray-900'}`}
+                    role="listbox"
                 >
-                    {house.address}
+                    {filteredHouses.length > 0 ? (
+                        filteredHouses.map((house, index) => (
+                            <div
+                                key={house.zpid}
+                                className={`p-2 cursor-pointer ${index === activeIndex
+                                        ? isDarkMode ? 'bg-primary text-primary-foreground' : 'bg-blue-100'
+                                        : isDarkMode ? 'hover:bg-muted' : 'hover:bg-gray-100'
+                                    }`}
+                                onClick={() => handleSelect(house)}
+                                role="option"
+                                aria-selected={index === activeIndex}
+                                tabIndex={-1}
+                            >
+                                {house.address}
+                            </div>
+                        ))
+                    ) : (
+                        <div className={`p-2 ${isDarkMode ? 'text-muted-foreground' : 'text-gray-500'}`}>
+                            No houses found
+                        </div>
+                    )}
                 </div>
-            ))
-        ) : (
-            <div className={`p-2 ${isDarkMode ? 'text-muted-foreground' : 'text-gray-500'}`}>
-                No houses found
-            </div>
-        )}
-    </div>
-)}
+            )}
 
-{showDropdown && search.length >= MIN_SEARCH_LENGTH && filteredHouses.length > MAX_DISPLAY_THRESHOLD && (
-    <div className="absolute z-10 w-full mt-1 border rounded p-2 text-center shadow-lg bg-background">
-        {filteredHouses.length} matches found. Please type more to narrow results.
-    </div>
-)}
+            {showDropdown && search.length >= MIN_SEARCH_LENGTH && filteredHouses.length > MAX_DISPLAY_THRESHOLD && (
+                <div className="absolute z-10 w-full mt-1 border rounded p-2 text-center shadow-lg bg-background">
+                    {filteredHouses.length} matches found. Please type more to narrow results.
+                </div>
+            )}
         </div>
     );
 }
