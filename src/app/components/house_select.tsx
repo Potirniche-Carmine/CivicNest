@@ -115,8 +115,8 @@ export default function HouseSelect({ onSelect }: HouseSelectProps) {
                           !isLoading;
 
     return (
-        <div className="relative w-full max-w-300 mx-auto" role="combobox" aria-expanded={showDropdown} aria-haspopup="listbox" aria-controls="house-dropdown">
-            <input 
+<div className="relative w-full max-w-md mx-auto" role="combobox" aria-expanded={showDropdown} aria-haspopup="listbox" aria-controls="house-dropdown">
+         <input 
                 ref={inputRef}
                 type="text"
                 className="w-full p-2 border rounded bg-background text-foreground"
