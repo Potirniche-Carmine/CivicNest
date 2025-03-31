@@ -10,10 +10,9 @@ export function Header() {
 
   return (
     <header className="bg-zinc-600 dark:bg-zinc-800 text-white p-5">
-      <div className="relative w-full max-w-[2560px] mx-auto flex items-center">
+      <div className="relative w-full max-w-[2560px] mx-auto flex flex-wrap items-center justify-between">
         <div>
-          <Link href={user ? "/home" : "/"} 
-          className="flex items-center px-5">
+          <Link href={user ? "/home" : "/"} className="flex items-center px-5">
             <Image
               src="/logo.png"
               alt="CivicNest Logo"
@@ -24,11 +23,11 @@ export function Header() {
             <h1 className="text-2xl font-bold">CivicNest</h1>
           </Link>
         </div>
-        <div className="flex justify-end items-center ml-auto">
+        <div className="flex items-center">
           <SignedIn>
             {isLoaded && (
               <div className="flex items-center gap-3 hover:bg-sky-500/50 dark:hover:bg-sky-800/50 rounded-lg transition-colors px-4 py-2">
-                <span className="text-sm font-medium whitespace-nowrap">
+                <span className="text-sm font-medium hidden sm:inline">
                   Welcome, {user?.username}!
                 </span>
                 <UserButton
