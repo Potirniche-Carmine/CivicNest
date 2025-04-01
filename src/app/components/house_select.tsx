@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, KeyboardEvent } from 'react';
 import { useTheme } from "next-themes";
 import { houses } from '@/lib/types';
 
-const MAX_DISPLAY_THRESHOLD = 10;
+const MAX_DISPLAY_THRESHOLD = 30;
 const MIN_SEARCH_LENGTH = 2;
 
 interface HouseSelectProps {
