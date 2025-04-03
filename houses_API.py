@@ -1,7 +1,7 @@
 import requests
 import time
 
-#Code from URL down to response were provided by RapidApi itself.
+#Code from URL down to response were provided by RapidApi itself. https://rapidapi.com/oneapiproject/api/zillow-working-api/playground/apiendpoint_68fbab94-16cf-4b5a-a643-a6f8fcee068d 
 def Sold(properties):
     numData = 0
     url = "https://zillow-working-api.p.rapidapi.com/search/bypolygon"
