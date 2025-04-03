@@ -7,11 +7,11 @@ import { Info, CheckSquare, Square } from 'lucide-react';
 import ReactDOM from 'react-dom/client';
 import HouseSelect from './house_select';
 import { Skeleton } from "@/app/components/ui/skeleton";
-import { 
-  Tooltip, 
-  TooltipContent, 
-  TooltipProvider, 
-  TooltipTrigger 
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger
 } from "@/app/components/ui/tooltip";
 import { houses } from "@/lib/types";
 import { Badge } from "@/app/components/ui/badge";
@@ -65,7 +65,7 @@ export function Map() {
     const [legendTimeoutId, setLegendTimeoutId] = useState<NodeJS.Timeout | null>(null);
     const { theme, systemTheme } = useTheme();
 
-    const isDarkMode = theme === "system" 
+    const isDarkMode = theme === "system"
         ? systemTheme === "dark"
         : theme === "dark";
 
@@ -93,17 +93,17 @@ export function Map() {
                 const locationResponse = await fetch('/api/locations');
                 const locationData = await locationResponse.json();
                 setHouses(locationData.houses || []);
-                
+
                 const clusterResponse = await fetch('/api/clusters');
                 const clusterData = await clusterResponse.json();
-                
+
                 const clustersArray = clusterData.clusters || [];
                 setClusters(clustersArray);
-                
+
                 setClusterColors(generateClusterColors());
-                
+
                 const total = clustersArray.reduce(
-                    (count: number, cluster: { houses?: any[] }) => count + (cluster.houses?.length || 0), 
+                    (count: number, cluster: { houses?: any[] }) => count + (cluster.houses?.length || 0),
                     0
                 );
                 setTotalHousesCount(total);
@@ -152,20 +152,20 @@ export function Map() {
     const getHousesToShow = () => {
         if (displayMode === 'selectedClusters' && selectedClusterIds.length > 0) {
             return houses.map(house => {
-                const houseCluster = clusters.find(cluster => 
+                const houseCluster = clusters.find(cluster =>
                     cluster.houses.some((h: any) => h.zpid === house.zpid)
                 );
-                
+
                 if (!houseCluster) return null;
-                
+
                 const houseInCluster = houseCluster.houses.find((h: any) => h.zpid === house.zpid);
                 const clusterIndex = clusters.indexOf(houseCluster);
                 const clusterColor = clusterIndex >= 0 ? clusterColors[clusterIndex % clusterColors.length] : isDarkMode ? "#f56565" : "#e53e3e";
-                
+
                 if (!selectedClusterIds.includes(houseCluster.cluster_id)) {
                     return null;
                 }
-                
+
                 return {
                     ...house,
                     bathrooms: houseInCluster?.bathrooms || house.bathrooms,
@@ -176,19 +176,19 @@ export function Map() {
                 };
             }).filter(Boolean);
         }
-        
+
         // Default: show all houses
         return houses.map(house => {
-            const houseCluster = clusters.find(cluster => 
+            const houseCluster = clusters.find(cluster =>
                 cluster.houses.some((h: any) => h.zpid === house.zpid)
             );
-            
+
             if (!houseCluster) return null;
-            
+
             const houseInCluster = houseCluster.houses.find((h: any) => h.zpid === house.zpid);
             const clusterIndex = clusters.indexOf(houseCluster);
             const clusterColor = clusterIndex >= 0 ? clusterColors[clusterIndex % clusterColors.length] : isDarkMode ? "#f56565" : "#e53e3e";
-            
+
             return {
                 ...house,
                 bathrooms: houseInCluster?.bathrooms || house.bathrooms,
@@ -203,13 +203,13 @@ export function Map() {
 
     const updateHouseVisibility = (clusterIds: number[] = [], showAll: boolean = false) => {
         if (!mapInstanceRef.current || !mapInstanceRef.current.getSource('houses')) return;
-        
+
         const updatedGeoJSON = {
             type: "FeatureCollection",
             features: getHousesToShow().map((house: any) => ({
                 type: "Feature",
-                properties: { 
-                    id: house.zpid, 
+                properties: {
+                    id: house.zpid,
                     address: house.address,
                     price: house.price,
                     cluster_id: house.cluster_id,
@@ -225,7 +225,7 @@ export function Map() {
                 }
             }))
         } as GeoJSON.FeatureCollection<GeoJSON.Point>;
-        
+
         (mapInstanceRef.current.getSource('houses') as mapboxgl.GeoJSONSource)
             .setData(updatedGeoJSON);
     };
@@ -235,15 +235,15 @@ export function Map() {
         if (activePopupRef.current) {
             activePopupRef.current.remove();
         }
-        
+
         const formattedPrice = formatPrice(properties.price);
         const formattedClusterAvgPrice = formatPrice(properties.cluster_avg_price);
-        
+
         const popupContainer = document.createElement('div');
         popupContainer.className = `popup-container ${isDarkMode ? 'dark-popup' : 'light-popup'}`;
         popupContainer.setAttribute('role', 'dialog');
         popupContainer.setAttribute('aria-label', 'House Information');
-        
+
         const popupContent = document.createElement('div');
         popupContent.className = 'popup-content';
         popupContent.style.position = 'relative';
@@ -253,14 +253,14 @@ export function Map() {
         popupContent.style.backgroundColor = isDarkMode ? '#2b1f66' : '#d5ccff';
         popupContent.style.color = isDarkMode ? '#f3f4f6' : '#111827';
         popupContent.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
-        
+
         const addressElement = document.createElement('h3');
         addressElement.innerText = properties.address;
         addressElement.style.fontWeight = 'bold';
         addressElement.style.marginBottom = '12px';
         addressElement.style.paddingRight = '24px';
         addressElement.style.fontSize = '16px';
-        
+
         const closeButton = document.createElement('button');
         closeButton.setAttribute('aria-label', 'Close popup');
         closeButton.style.position = 'absolute';
@@ -283,15 +283,15 @@ export function Map() {
                 activePopupRef.current = null;
             }
         };
-        
+
         popupContent.appendChild(closeButton);
-        
+
         const detailsGrid = document.createElement('div');
         detailsGrid.style.display = 'grid';
         detailsGrid.style.gridTemplateColumns = 'repeat(2, 1fr)';
         detailsGrid.style.gap = '8px';
         detailsGrid.style.marginBottom = '12px';
-        
+
         const priceElement = document.createElement('div');
         const priceLabel = document.createElement('div');
         priceLabel.innerText = 'Price';
@@ -302,7 +302,7 @@ export function Map() {
         priceValue.style.fontSize = '15px';
         priceElement.appendChild(priceLabel);
         priceElement.appendChild(priceValue);
-        
+
         const bedroomElement = document.createElement('div');
         const bedroomLabel = document.createElement('div');
         bedroomLabel.innerText = 'Bedrooms';
@@ -313,7 +313,7 @@ export function Map() {
         bedroomValue.style.fontSize = '15px';
         bedroomElement.appendChild(bedroomLabel);
         bedroomElement.appendChild(bedroomValue);
-        
+
         const bathroomElement = document.createElement('div');
         const bathroomLabel = document.createElement('div');
         bathroomLabel.innerText = 'Bathrooms';
@@ -324,7 +324,7 @@ export function Map() {
         bathroomValue.style.fontSize = '15px';
         bathroomElement.appendChild(bathroomLabel);
         bathroomElement.appendChild(bathroomValue);
-        
+
         const clusterAvgElement = document.createElement('div');
         const clusterAvgLabel = document.createElement('div');
         clusterAvgLabel.innerText = 'Cluster Avg';
@@ -335,34 +335,34 @@ export function Map() {
         clusterAvgValue.style.fontSize = '15px';
         clusterAvgElement.appendChild(clusterAvgLabel);
         clusterAvgElement.appendChild(clusterAvgValue);
-        
+
         detailsGrid.appendChild(priceElement);
         detailsGrid.appendChild(bedroomElement);
         detailsGrid.appendChild(bathroomElement);
         detailsGrid.appendChild(clusterAvgElement);
-        
+
         const buttonsContainer = document.createElement('div');
         buttonsContainer.style.display = 'flex';
         buttonsContainer.style.gap = '8px';
         buttonsContainer.style.marginTop = '8px';
-        
+
         const toggleButtonContainer = document.createElement('div');
         toggleButtonContainer.style.flex = '1';
-        
+
         popupContent.appendChild(addressElement);
         popupContent.appendChild(detailsGrid);
-        
+
         const divider = document.createElement('div');
         divider.style.height = '1px';
         divider.style.backgroundColor = isDarkMode ? '#374151' : '#e5e7eb';
         divider.style.margin = '8px 0';
         popupContent.appendChild(divider);
-        
+
         buttonsContainer.appendChild(toggleButtonContainer);
         popupContent.appendChild(buttonsContainer);
-        
+
         popupContainer.appendChild(popupContent);
-        
+
         const popup = new mapboxgl.Popup({
             closeButton: false,
             closeOnClick: false,
@@ -372,7 +372,7 @@ export function Map() {
             .setLngLat(coordinates)
             .setDOMContent(popupContainer)
             .addTo(mapInstanceRef.current);
-        
+
         const toggleRoot = ReactDOM.createRoot(toggleButtonContainer);
         toggleRoot.render(
             <button
@@ -389,34 +389,34 @@ export function Map() {
                 Show Only This Cluster
             </button>
         );
-        
+
         activePopupRef.current = popup;
-        
+
         return popup;
     };
 
     const handleHouseSelect = (house: houses) => {
         setSelectedHouse(house);
-        
+
         // When selecting a house, switch to show ALL houses to see neighborhood context
         setDisplayMode('selectedHouse');
         updateHouseVisibility();
-        
+
         // Find the house with cluster info
         const houseWithCluster = houses.map(h => {
-            const houseCluster = clusters.find(cluster => 
+            const houseCluster = clusters.find(cluster =>
                 cluster.houses.some((ch: any) => ch.zpid === h.zpid)
             );
-            
+
             if (!houseCluster) return null;
-            
-            const houseInCluster = houseCluster ? 
-                houseCluster.houses.find((ch: any) => ch.zpid === h.zpid) : 
+
+            const houseInCluster = houseCluster ?
+                houseCluster.houses.find((ch: any) => ch.zpid === h.zpid) :
                 null;
-            
+
             const clusterIndex = houseCluster ? clusters.indexOf(houseCluster) : -1;
             const clusterColor = clusterIndex >= 0 ? clusterColors[clusterIndex % clusterColors.length] : isDarkMode ? "#f56565" : "#e53e3e";
-            
+
             return {
                 ...h,
                 bathrooms: houseInCluster?.bathrooms || h.bathrooms,
@@ -426,14 +426,14 @@ export function Map() {
                 color: clusterColor
             };
         }).filter(Boolean).find(h => h?.zpid === house.zpid);
-        
+
         if (mapInstanceRef.current && houseWithCluster) {
             mapInstanceRef.current.flyTo({
                 center: [houseWithCluster.long, houseWithCluster.lat],
                 zoom: 15,
                 essential: true
             });
-            
+
             setTimeout(() => {
                 const properties = {
                     address: houseWithCluster.address,
@@ -443,7 +443,7 @@ export function Map() {
                     cluster_id: houseWithCluster.cluster_id,
                     cluster_avg_price: houseWithCluster.cluster_avg_price
                 };
-                
+
                 createCustomPopup([houseWithCluster.long, houseWithCluster.lat], properties);
             }, 1000);
         }
@@ -456,15 +456,15 @@ export function Map() {
         } else {
             newSelectedClusters.push(clusterId);
         }
-        
+
         setSelectedClusterIds(newSelectedClusters);
-        
+
         if (newSelectedClusters.length > 0) {
             setDisplayMode('selectedClusters');
         } else {
             setDisplayMode('all');
         }
-        
+
         updateHouseVisibility(newSelectedClusters);
     };
 
@@ -492,14 +492,13 @@ export function Map() {
                 count: cluster.houses?.length || 0
             };
         }).sort((a, b) => a.id - b.id);
-        
+
         const isCompact = !isLegendVisible;
-        
+
         return (
-            <div 
-                className={`bg-card rounded-md border border-border absolute bottom-6 right-6 z-10 shadow-md transition-all duration-300 ease-in-out ${
-                    isCompact ? 'w-12 h-12 p-2 hover:scale-105' : 'w-72 p-4'
-                }`}
+            <div
+                className={`bg-card rounded-md border border-border absolute bottom-6 right-6 z-10 shadow-md transition-all duration-300 ease-in-out ${isCompact ? 'w-12 h-12 p-2 hover:scale-105' : 'w-72 p-4'
+                    }`}
                 onMouseEnter={handleLegendHover}
                 onMouseLeave={handleLegendLeave}
             >
@@ -507,9 +506,9 @@ export function Map() {
                     <div className="w-full h-full flex items-center justify-center">
                         <div className="grid grid-cols-3 gap-1">
                             {clusterGroups.slice(0, 9).map(cluster => (
-                                <div 
+                                <div
                                     key={cluster.id}
-                                    style={{ backgroundColor: cluster.color }} 
+                                    style={{ backgroundColor: cluster.color }}
                                     className="w-2 h-2 rounded-full"
                                     aria-hidden="true"
                                 ></div>
@@ -521,8 +520,8 @@ export function Map() {
                         <h3 className="text-lg font-medium mb-3">Price Clusters</h3>
                         <div className="space-y-2 max-h-40 overflow-y-auto">
                             {clusterGroups.map(cluster => (
-                                <div 
-                                    key={cluster.id} 
+                                <div
+                                    key={cluster.id}
                                     className="flex items-center justify-between gap-2 cursor-pointer hover:bg-accent/50 p-1 rounded"
                                     onClick={() => handleClusterSelection(cluster.id)}
                                 >
@@ -532,8 +531,8 @@ export function Map() {
                                         ) : (
                                             <Square size={16} className="text-muted-foreground" />
                                         )}
-                                        <div 
-                                            style={{ backgroundColor: cluster.color }} 
+                                        <div
+                                            style={{ backgroundColor: cluster.color }}
                                             className="w-4 h-4 rounded-full border border-border"
                                             aria-label={`Cluster ${cluster.id} color indicator`}
                                         ></div>
@@ -554,13 +553,13 @@ export function Map() {
 
     const getHousesGeoJSON = () => {
         const housesToShow = getHousesToShow();
-        
+
         return {
             type: "FeatureCollection",
             features: housesToShow.map((house: any) => ({
                 type: "Feature",
-                properties: { 
-                    id: house.zpid, 
+                properties: {
+                    id: house.zpid,
                     address: house.address,
                     price: house.price,
                     cluster_id: house.cluster_id,
@@ -609,7 +608,7 @@ export function Map() {
                 mapInstanceRef.current.addControl(new mapboxgl.NavigationControl({
                     visualizePitch: true
                 }), 'top-right');
-                
+
                 // Add keyboard shortcuts help
                 const keyboardTips = document.createElement('div');
                 keyboardTips.className = 'keyboard-tips';
@@ -672,211 +671,211 @@ export function Map() {
 
                     // Add house points layer
                     mapInstanceRef.current.addLayer({
-                      id: 'houses-layer',
-                      type: 'circle',
-                      source: 'houses',
-                      filter: ['!', ['has', 'point_count']],
-                      paint: {
-                          'circle-radius': [
-                              'case',
-                              ['==', ['get', 'isSelected'], true], 12,
-                              6
-                          ],
-                          'circle-color': ['get', 'color'],
-                          'circle-stroke-width': [
-                              'case',
-                              ['==', ['get', 'isSelected'], true], 2,
-                              1.2
-                          ],
-                          'circle-stroke-color': isDarkMode ? '#ffffff' : '#000000',
-                          'circle-opacity': 0.9,
-                      },
-                  });
-                  // Add popup on house click
-                  mapInstanceRef.current.on('click', 'houses-layer', (e) => {
-                      if (e.features && e.features[0] && e.features[0].properties) {
-                          const coordinates = (e.features[0].geometry as GeoJSON.Point).coordinates.slice();
-                          const props = e.features[0].properties;
-                          
-                          createCustomPopup(
-                              coordinates as [number, number], 
-                              props
-                          );
-                      }
-                  });
+                        id: 'houses-layer',
+                        type: 'circle',
+                        source: 'houses',
+                        filter: ['!', ['has', 'point_count']],
+                        paint: {
+                            'circle-radius': [
+                                'case',
+                                ['==', ['get', 'isSelected'], true], 12,
+                                6
+                            ],
+                            'circle-color': ['get', 'color'],
+                            'circle-stroke-width': [
+                                'case',
+                                ['==', ['get', 'isSelected'], true], 2,
+                                1.2
+                            ],
+                            'circle-stroke-color': isDarkMode ? '#ffffff' : '#000000',
+                            'circle-opacity': 0.9,
+                        },
+                    });
+                    // Add popup on house click
+                    mapInstanceRef.current.on('click', 'houses-layer', (e) => {
+                        if (e.features && e.features[0] && e.features[0].properties) {
+                            const coordinates = (e.features[0].geometry as GeoJSON.Point).coordinates.slice();
+                            const props = e.features[0].properties;
 
-                  // Change cursor on hover
-                  mapInstanceRef.current.on('mouseenter', 'houses-layer', () => {
-                      if (mapInstanceRef.current) {
-                          mapInstanceRef.current.getCanvas().style.cursor = 'pointer';
-                      }
-                  });
+                            createCustomPopup(
+                                coordinates as [number, number],
+                                props
+                            );
+                        }
+                    });
 
-                  mapInstanceRef.current.on('mouseleave', 'houses-layer', () => {
-                      if (mapInstanceRef.current) {
-                          mapInstanceRef.current.getCanvas().style.cursor = '';
-                      }
-                  });
+                    // Change cursor on hover
+                    mapInstanceRef.current.on('mouseenter', 'houses-layer', () => {
+                        if (mapInstanceRef.current) {
+                            mapInstanceRef.current.getCanvas().style.cursor = 'pointer';
+                        }
+                    });
 
-                  // Add cursor pointer for clusters
-                  mapInstanceRef.current.on('mouseenter', 'clusters', () => {
-                      if (mapInstanceRef.current) {
-                          mapInstanceRef.current.getCanvas().style.cursor = 'pointer';
-                      }
-                  });
+                    mapInstanceRef.current.on('mouseleave', 'houses-layer', () => {
+                        if (mapInstanceRef.current) {
+                            mapInstanceRef.current.getCanvas().style.cursor = '';
+                        }
+                    });
 
-                  mapInstanceRef.current.on('mouseleave', 'clusters', () => {
-                      if (mapInstanceRef.current) {
-                          mapInstanceRef.current.getCanvas().style.cursor = '';
-                      }
-                  });
-              });
-          } else {
-              mapInstanceRef.current.setStyle(
-                  isDarkMode
-                      ? "mapbox://styles/mapbox/dark-v11"
-                      : "mapbox://styles/mapbox/light-v11"
-              );
+                    // Add cursor pointer for clusters
+                    mapInstanceRef.current.on('mouseenter', 'clusters', () => {
+                        if (mapInstanceRef.current) {
+                            mapInstanceRef.current.getCanvas().style.cursor = 'pointer';
+                        }
+                    });
 
-              mapInstanceRef.current.once('style.load', () => {
-                  if (!mapInstanceRef.current) return;
+                    mapInstanceRef.current.on('mouseleave', 'clusters', () => {
+                        if (mapInstanceRef.current) {
+                            mapInstanceRef.current.getCanvas().style.cursor = '';
+                        }
+                    });
+                });
+            } else {
+                mapInstanceRef.current.setStyle(
+                    isDarkMode
+                        ? "mapbox://styles/mapbox/dark-v11"
+                        : "mapbox://styles/mapbox/light-v11"
+                );
 
-                  // Re-add the houses source
-                  if (!mapInstanceRef.current.getSource('houses')) {
-                      mapInstanceRef.current.addSource('houses', {
-                          type: 'geojson',
-                          data: getHousesGeoJSON(),
-                      });
+                mapInstanceRef.current.once('style.load', () => {
+                    if (!mapInstanceRef.current) return;
 
-                      mapInstanceRef.current.addLayer({
-                          id: 'houses-layer',
-                          type: 'circle',
-                          source: 'houses',
-                          filter: ['!', ['has', 'point_count']],
-                          paint: {
-                              'circle-radius': [
-                                  'case',
-                                  ['==', ['get', 'isSelected'], true], 12,
-                                  6
-                              ],
-                              'circle-color': ['get', 'color'],
-                              'circle-stroke-width': [
-                                  'case',
-                                  ['==', ['get', 'isSelected'], true], 2,
-                                  1.2
-                              ],
-                              'circle-stroke-color': isDarkMode ? '#ffffff' : '#000000',
-                              'circle-opacity': 0.9,
-                          },
-                      });
-                  } else {
-                      (mapInstanceRef.current.getSource('houses') as mapboxgl.GeoJSONSource)
-                          .setData(getHousesGeoJSON());
-                  }
-              });
-          }
-      };
+                    // Re-add the houses source
+                    if (!mapInstanceRef.current.getSource('houses')) {
+                        mapInstanceRef.current.addSource('houses', {
+                            type: 'geojson',
+                            data: getHousesGeoJSON(),
+                        });
 
-      initializeMap();
+                        mapInstanceRef.current.addLayer({
+                            id: 'houses-layer',
+                            type: 'circle',
+                            source: 'houses',
+                            filter: ['!', ['has', 'point_count']],
+                            paint: {
+                                'circle-radius': [
+                                    'case',
+                                    ['==', ['get', 'isSelected'], true], 12,
+                                    6
+                                ],
+                                'circle-color': ['get', 'color'],
+                                'circle-stroke-width': [
+                                    'case',
+                                    ['==', ['get', 'isSelected'], true], 2,
+                                    1.2
+                                ],
+                                'circle-stroke-color': isDarkMode ? '#ffffff' : '#000000',
+                                'circle-opacity': 0.9,
+                            },
+                        });
+                    } else {
+                        (mapInstanceRef.current.getSource('houses') as mapboxgl.GeoJSONSource)
+                            .setData(getHousesGeoJSON());
+                    }
+                });
+            }
+        };
 
-      return () => {
-          if (activePopupRef.current) {
-              activePopupRef.current.remove();
-              activePopupRef.current = null;
-          }
-          
-          mapInstanceRef.current?.remove();
-          mapInstanceRef.current = null;
-      };
-  }, [isDarkMode, houses, clusters, clusterColors]);
+        initializeMap();
 
-  useEffect(() => {
-      if (mapInstanceRef.current) {
-          if (mapInstanceRef.current.getSource('houses')) {
-              (mapInstanceRef.current.getSource('houses') as mapboxgl.GeoJSONSource)
-                  .setData(getHousesGeoJSON());
-          }
-      }
-  }, [displayMode, selectedClusterIds, selectedHouse]);
+        return () => {
+            if (activePopupRef.current) {
+                activePopupRef.current.remove();
+                activePopupRef.current = null;
+            }
 
-  if (isLoading) {
-      return (
-          <div className="space-y-4">
-              <div className="w-full">
-                  <Skeleton className="h-10 max-w-md rounded-md" />
+            mapInstanceRef.current?.remove();
+            mapInstanceRef.current = null;
+        };
+    }, [isDarkMode, houses, clusters, clusterColors]);
+
+    useEffect(() => {
+        if (mapInstanceRef.current) {
+            if (mapInstanceRef.current.getSource('houses')) {
+                (mapInstanceRef.current.getSource('houses') as mapboxgl.GeoJSONSource)
+                    .setData(getHousesGeoJSON());
+            }
+        }
+    }, [displayMode, selectedClusterIds, selectedHouse]);
+
+    if (isLoading) {
+        return (
+            <div className="space-y-4">
+                <div className="w-full">
+                    <Skeleton className="h-10 rounded-md" />
+                </div>
+                <Skeleton className="w-full h-[700px] rounded-lg" />
+            </div>
+        );
+    }
+
+    return (
+        <div className="space-y-4">
+          <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:flex-1">
+              <div className="w-full sm:flex-1 max-w-md sm:max-w-none">
+                <HouseSelect onSelect={handleHouseSelect}/>
               </div>
-              <Skeleton className="w-full h-[700px] rounded-lg" />
-          </div>
-      );
-  }
-
-  return (
-    <div className="space-y-4">
-      <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 min-w-0">
-          <div className="w-full sm:w-auto">
-            <HouseSelect onSelect={handleHouseSelect}/>
-          </div>
-          
-          <div className="mt-1 sm:mt-0">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Badge variant="outline" className="px-3 py-1 text-xs bg-card">
-                    Showing <span className="font-bold mx-1">{visibleHousesCount}</span> of <span className="font-bold mx-1">{totalHousesCount}</span> houses
-                  </Badge>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{getDisplayModeDescription()}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        </div>
-        
-        <div className="mt-2 sm:mt-0 flex justify-end">
-          <div className="h-10">
-            {(displayMode !== 'all' || selectedClusterIds.length > 0 || selectedHouse) ? (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button 
-                      onClick={resetMapView}
-                      className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-                      aria-label="Reset map view"
-                    >
-                      Reset Map View
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Return to default map view</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            ) : (
-              <div className="opacity-0 invisible">
-                <button 
-                  className="px-4 py-2 bg-primary text-primary-foreground rounded-md"
-                  aria-hidden="true"
-                >
-                  Reset Map View
-                </button>
+              
+              <div className="mt-1 sm:mt-0 sm:flex-shrink-0">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Badge variant="outline" className="px-3 py-1 text-xs bg-card whitespace-nowrap">
+                        Showing <span className="font-bold mx-1">{visibleHousesCount}</span> of <span className="font-bold mx-1">{totalHousesCount}</span> houses
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{getDisplayModeDescription()}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
-            )}
-          </div>
+            </div>
+
+                <div className="mt-2 sm:mt-0 flex justify-end">
+                    <div className="h-10">
+                        {(displayMode !== 'all' || selectedClusterIds.length > 0 || selectedHouse) ? (
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <button
+                                            onClick={resetMapView}
+                                            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                                            aria-label="Reset map view"
+                                        >
+                                            Reset Map View
+                                        </button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Return to default map view</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        ) : (
+                            <div className="opacity-0 invisible">
+                                <button
+                                    className="px-4 py-2 bg-primary text-primary-foreground rounded-md"
+                                    aria-hidden="true"
+                                >
+                                    Reset Map View
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            <div className="relative w-full h-[700px] rounded-lg overflow-hidden border border-border">
+                <div className="w-full h-full" ref={mapRef} />
+                {renderLegend()}
+            </div>
+
+            <div className="text-sm text-muted-foreground">
+                <p>Use the map to explore housing clusters in Reno. Each color represents a group of houses with similar prices.</p>
+                <p>Click on a house to see details, hover over the legend to select clusters, or use the dropdown to search for a specific property.</p>
+                <p>Zoom out to see clustered groups of houses with counts displayed.</p>
+            </div>
         </div>
-      </div>
-            
-      <div className="relative w-full h-[700px] rounded-lg overflow-hidden border border-border">
-        <div className="w-full h-full" ref={mapRef} />
-        {renderLegend()}
-      </div>
-            
-      <div className="text-sm text-muted-foreground">
-        <p>Use the map to explore housing clusters in Reno. Each color represents a group of houses with similar prices.</p>
-        <p>Click on a house to see details, hover over the legend to select clusters, or use the dropdown to search for a specific property.</p>
-        <p>Zoom out to see clustered groups of houses with counts displayed.</p>
-      </div>
-    </div>
-  );
+    );
 }

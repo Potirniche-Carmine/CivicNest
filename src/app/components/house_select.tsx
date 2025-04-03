@@ -115,7 +115,7 @@ export default function HouseSelect({ onSelect }: HouseSelectProps) {
         !isLoading;
 
     return (
-        <div className="relative w-full max-w-md mx-auto" role="combobox" aria-expanded={showDropdown} aria-haspopup="listbox" aria-controls="house-dropdown">
+        <div className="relative w-full" role="combobox" aria-expanded={showDropdown} aria-haspopup="listbox" aria-controls="house-dropdown">
             <input
                 ref={inputRef}
                 type="text"
@@ -144,8 +144,8 @@ export default function HouseSelect({ onSelect }: HouseSelectProps) {
                             <div
                                 key={house.zpid}
                                 className={`p-2 cursor-pointer ${index === activeIndex
-                                        ? isDarkMode ? 'bg-primary text-primary-foreground' : 'bg-blue-100'
-                                        : isDarkMode ? 'hover:bg-muted' : 'hover:bg-gray-100'
+                                    ? isDarkMode ? 'bg-primary text-primary-foreground' : 'bg-blue-100'
+                                    : isDarkMode ? 'hover:bg-muted' : 'hover:bg-gray-100'
                                     }`}
                                 onClick={() => handleSelect(house)}
                                 role="option"

@@ -1,7 +1,8 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import HouseSelect, { houses } from '@/app/components/house_select';
+import HouseSelect from '@/app/components/house_select';
 import * as themes from 'next-themes';
+import { houses } from '@/lib/types';
 
 // Mock fetch
 global.fetch = jest.fn();
