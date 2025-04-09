@@ -32,3 +32,5 @@ if __name__ == "__main__":
         close_connection(cursor, conn)
     else:
         print("No connection established.")
+
+
