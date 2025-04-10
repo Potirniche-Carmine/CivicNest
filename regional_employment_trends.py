@@ -4,7 +4,6 @@ import pandas as pd
 from db_connection import connect_to_db, close_connection
 
 def fetch_employment_data():
-    """Fetch employment data from the database."""
     conn = connect_to_db()
     if conn:
         try:
@@ -25,7 +24,6 @@ def fetch_employment_data():
         return None
 
 def forecast_employment(zipcodes, avg_employment, avg_employment_roc, years_ahead=1):
-    """Forecast employment for each zip code based on current employment and ROC."""
     future_employment = []
     model = LinearRegression()
 
@@ -41,7 +39,6 @@ def forecast_employment(zipcodes, avg_employment, avg_employment_roc, years_ahea
     return future_employment
 
 def regional_employment_trends():
-    """Analyze regional employment trends based on ZIP code and forecast future employment."""
     data = fetch_employment_data()
 
     if data is None or len(data) == 0:
