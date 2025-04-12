@@ -42,3 +42,6 @@ next-env.d.ts
 
 # clerk configuration (can include secrets)
 /.clerk/
+/.idea/dbnavigator.xml
+/.idea/workspace.xml
+/.idea/inspectionProfiles/Project_Default.xml
