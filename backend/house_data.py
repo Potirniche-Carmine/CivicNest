@@ -1,7 +1,7 @@
 from db_connection import connect_to_db, close_connection
 
 def fetch_house_data(cursor):
-    cursor.execute("SELECT zpid, price FROM houses")
+    cursor.execute("SELECT zpid, price, zipcode FROM houses")  # Add zipcode to the query
     houses = cursor.fetchall()
     return houses
 
@@ -104,29 +104,12 @@ def fetch_cluster_results():
     if conn is None:
         print("Failed to connect to the database.")
         return None
-    
-    cursor = conn.cursor()
-    
-    cursor.execute("SELECT cluster_id, price FROM cluster_centroids ORDER BY cluster_id")
-    centroids = cursor.fetchall()
-    
-    cursor.execute("""
-        SELECT h.zpid, h.price, ct.cluster_id 
-        FROM houses h
-        JOIN cluster_table ct ON h.zpid = ct.zpid
-        ORDER BY ct.cluster_id, h.price
-    """)
-    cluster_table = cursor.fetchall()
-    
-    close_connection(cursor, conn)
-    
-    return {
-        'centroids': centroids,
-        'cluster_table': cluster_table
-    }
 
-if __name__ == "__main__":
-    prices = fetch_price_data()
-    if prices:
-        print(f"Retrieved {len(prices)} house prices")
-        print(f"Price range: ${min(prices):.2f} - ${max(prices):.2f}")
+def fetch_house_zipcodes():
+    houses = get_house_data()
+    if houses is None or len(houses) == 0:
+        print("No house data found.")
+        return None
+    
+    zipcode_list = [house[2] for house in houses]  # Get the zipcodes from the house data
+    return zipcode_list

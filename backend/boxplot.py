@@ -10,7 +10,7 @@ else:
     fig, ax = plt.subplots()
     ax.boxplot(prices_float)
 
-    def currency_formatter(x,pos):
+    def currency_formatter(x,_):
         if x >= 1e6:
             return f'${x/1e6:.1f}M'
         elif x >= 1e3:
