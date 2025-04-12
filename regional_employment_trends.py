@@ -1,4 +1,3 @@
-
 import numpy as np
 import pandas as pd
 from db_connection import connect_to_db, close_connection
@@ -92,18 +91,24 @@ def save_forecasts_to_db(zipcodes, current_employment, future_employment):
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS employment_prediction (
                 zipcode TEXT PRIMARY KEY,
-                current NUMERIC,
-                future NUMERIC
+                percent_change NUMERIC
             );
         """)
 
         cursor.execute("DELETE FROM employment_prediction;")
 
         for i in range(len(zipcodes)):
+            current = current_employment[i]
+            future = future_employment[i]
+            if current == 0:
+                percent_change = 0
+            else:
+                percent_change = ((future - current) / current) * 100
+
             cursor.execute("""
-                INSERT INTO employment_prediction (zipcode, current, future)
-                VALUES (%s, %s, %s);
-            """, (zipcodes[i], int(current_employment[i]), int(future_employment[i])))  # Can't hire half a dude
+                INSERT INTO employment_prediction (zipcode, percent_change)
+                VALUES (%s, %s);
+            """, (zipcodes[i], round(percent_change, 2)))
 
         conn.commit()
 
@@ -112,6 +117,7 @@ def save_forecasts_to_db(zipcodes, current_employment, future_employment):
         conn.rollback()
     finally:
         close_connection(cursor, conn)
+
 
 def forecast_and_save(zipcodes, current_employment, employment_roc):
     print("\nForecasting future employment for the next year...")
