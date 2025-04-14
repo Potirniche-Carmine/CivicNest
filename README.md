@@ -35,7 +35,7 @@ Access the live application here: **[https://civicnest-03dbc0b45eef.herokuapp.co
   <img src="public/hero-image-dark.png" alt="Interactive Map Interface showing Price Clusters" width="800"/>
   <p><i>Interactive neighborhood mapping with price clusters and insights</i></p>
   <img src="public/insights-page.png" alt="Insights Page Showing Different Insights for the Clusters" width="800"/>
-  <p><i>Insights Page showing different insights for the website</i></p>
+  <p><i>Insights Page Showing Different Insights For Our Clusters</i></p>
   </div>
 
 ## Technology Stack
