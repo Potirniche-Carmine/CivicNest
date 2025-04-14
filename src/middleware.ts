@@ -10,7 +10,7 @@ const isAPIRoute = createRouteMatcher([
 ])
 
 const isProtectedRoute = createRouteMatcher([
-  '/home(.*)'
+  '/insights(.*)'
 ]);
 
 export default clerkMiddleware(async (auth, request) => {
