@@ -83,7 +83,7 @@ export default function LandingPage() {
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Join CivicNest today and gain access to comprehensive neighborhood analytics that help you make confident property decisions.
           </p>
-          <Link href="/auth/sign-up">
+          <Link href="/home">
             <Button
               variant="outline"
               size="lg"
