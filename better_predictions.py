@@ -43,8 +43,7 @@ def workers_per_zip_code(conn):
 def cluster_distribution_by_zipcode(conn):
     cur = conn.cursor()
 
-    sql = """
-    SELECT 
+    sql = """SELECT 
         h.zipcode,
         ct.cluster_id,
         COUNT(*) AS house_count,
@@ -71,8 +70,7 @@ def cluster_distribution_by_zipcode(conn):
 def employment_and_payroll_by_cluster(conn):
     cur = conn.cursor()
 
-    sql = """
-    SELECT 
+    sql = """SELECT 
         ct.cluster_id,
         ROUND(AVG(ea.avg_employment)::numeric, 2) AS avg_employment_in_cluster,
         ROUND(AVG(
@@ -100,23 +98,131 @@ def employment_and_payroll_by_cluster(conn):
 
     close_connection(cur, conn)
 
+def payroll_vs_price_ratio_by_cluster(conn):
+    cur = conn.cursor()
+
+    sql = """
+    SELECT 
+        ct.cluster_id,
+        ROUND(AVG(ea.avg_annual_payroll::FLOAT / NULLIF(ea.avg_employment, 0))::numeric, 2) AS avg_pay_per_worker,
+        ROUND(AVG(h.price)::numeric, 2) AS avg_house_price,
+        ROUND((
+            AVG(ea.avg_annual_payroll::FLOAT / NULLIF(ea.avg_employment, 0)) 
+            / NULLIF(AVG(h.price), 0)
+        )::numeric, 4) AS payroll_to_price_ratio
+    FROM cluster_table ct
+    JOIN houses h ON ct.zpid = h.zpid
+    JOIN employment_averages ea ON h.zipcode::INT = ea.zipcode
+    GROUP BY ct.cluster_id
+    ORDER BY ct.cluster_id;
+    """
+
+    cur.execute(sql)
+    results = cur.fetchall()
+
+    print("\nPayroll-to-House-Price Ratio by Cluster")
+    for row in results:
+        cluster_id = row[0]
+        avg_pay_per_worker = row[1]
+        avg_house_price = row[2]
+        ratio = row[3]
+        print(f"Cluster: {cluster_id}, Avg Payroll per Worker: ${avg_pay_per_worker}, "
+              f"Avg House Price: ${avg_house_price}, Payroll-to-Price Ratio: {ratio}")
+
+    close_connection(cur, conn)
+
+def predicted_employment_growth_by_cluster(conn):
+    cur = conn.cursor()
+
+    sql = """
+    SELECT 
+        ct.cluster_id,
+        ROUND(AVG(ep.percent_change)::numeric, 2) AS avg_predicted_employment_growth
+    FROM cluster_table ct
+    JOIN houses h ON ct.zpid = h.zpid
+    JOIN employment_prediction ep ON h.zipcode = ep.zipcode::TEXT
+    GROUP BY ct.cluster_id
+    ORDER BY ct.cluster_id;
+    """
+    #Gives us house's cluster id and zip code
+
+    cur.execute(sql)
+    results = cur.fetchall()
+
+    print("\nProjected Employment Growth by Cluster")
+    for row in results:
+        cluster_id = row[0]
+        avg_growth = row[1]
+        print(f"Cluster {cluster_id}: Avg Employment Growth = {avg_growth}%")
+
+    close_connection(cur, conn)
+
+#MODIFY THIS CODE SO THAT IT DISPLAYS THE AVG PAYROLL PER WORKER FROM ABOVE
+def growth_vs_payroll_and_price(conn):
+    cur = conn.cursor()
+
+    sql = """
+    SELECT 
+        ct.cluster_id,
+        ROUND(AVG(ep.percent_change)::numeric, 2) AS avg_growth,
+        ROUND(AVG(ea.avg_annual_payroll)::numeric, 2) AS avg_payroll,
+        ROUND(AVG(cc.price)::numeric, 2) AS avg_cluster_price
+    FROM cluster_table ct
+    JOIN houses h ON ct.zpid = h.zpid
+    JOIN employment_prediction ep ON h.zipcode = ep.zipcode::TEXT
+    JOIN employment_averages ea ON h.zipcode = ea.zipcode::TEXT
+    JOIN cluster_centroids cc ON ct.cluster_id = cc.cluster_id
+    GROUP BY ct.cluster_id
+    ORDER BY ct.cluster_id;
+    """
+
+    cur.execute(sql)
+    results = cur.fetchall()
+
+    print("\nProjected Employment Growth vs Payroll and Price (by Cluster)")
+    for row in results:
+        cluster_id = row[0]
+        avg_growth = row[1]
+        avg_payroll = row[2]
+        avg_price = row[3]
+
+        print(f"Cluster {cluster_id}:")
+        print(f"Avg Growth: {avg_growth}%")
+        #print(f"Avg Salary for Resident: ${some_table_element}")
+        print(f"Avg Payroll: ${avg_payroll}")
+        print(f"Avg House Price: ${avg_price}\n")
+
+    close_connection(cur, conn)
+
+
+
 def main():
     conn = connect_to_db()
     if conn is None:
         print("Connection failed.")
         return
 
-    workers_per_zip_code(conn)
+    # workers_per_zip_code(conn)
 
-    conn = connect_to_db()
-    if conn is not None:
-        cluster_distribution_by_zipcode(conn)
+    # conn = connect_to_db()
+    # if conn is not None:
+    #     cluster_distribution_by_zipcode(conn)
 
     conn = connect_to_db()
     if conn is not None:
         employment_and_payroll_by_cluster(conn)
+    
+    conn = connect_to_db()
+    if conn is not None:
+        payroll_vs_price_ratio_by_cluster(conn)
+    
+    conn = connect_to_db()
+    if conn is not None:
+        predicted_employment_growth_by_cluster(conn)
+
+    conn = connect_to_db()
+    if conn is not None:
+        growth_vs_payroll_and_price(conn)
 
 if __name__ == "__main__":
     main()
-
-
