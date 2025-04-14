@@ -1,6 +1,6 @@
 from db_connection import connect_to_db, close_connection
 
-def workers_per_zip_code(conn):
+def workers_per_zip_code(conn, cur):
     cur = conn.cursor()
 
     sql = """
@@ -38,9 +38,9 @@ def workers_per_zip_code(conn):
         print(f"Zip: {zipc}, Year: {year}, Avg Workers per Business: {safe_format(workers_per_est)}, "
               f"Avg Payroll per Business: {safe_format(payroll_per_est)}, Avg Payroll per Worker: {safe_format(payroll_per_worker)}")
 
-    close_connection(cur, conn)
+    
 
-def cluster_distribution_by_zipcode(conn):
+def cluster_distribution_by_zipcode(conn, cur):
     cur = conn.cursor()
 
     sql = """SELECT 
@@ -65,9 +65,9 @@ def cluster_distribution_by_zipcode(conn):
         percent = row[3]
         print(f"Zip: {zipc}, Cluster: {cluster_id}, Houses: {count}, Percentage of houses in this ZIP code that belong to this price cluster: {percent}%")
 
-    close_connection(cur, conn)
+    
 
-def employment_and_payroll_by_cluster(conn):
+def employment_and_payroll_by_cluster(conn, cur):
     cur = conn.cursor()
 
     sql = """SELECT 
@@ -96,9 +96,9 @@ def employment_and_payroll_by_cluster(conn):
         avg_pay_per_worker = row[2]
         print(f"Cluster: {cluster_id}, Avg Employment per ZIP: {avg_emp}, Avg Payroll per Worker: {avg_pay_per_worker}")
 
-    close_connection(cur, conn)
+    
 
-def payroll_vs_price_ratio_by_cluster(conn):
+def payroll_vs_price_ratio_by_cluster(conn, cur):
     cur = conn.cursor()
 
     sql = """
@@ -129,11 +129,10 @@ def payroll_vs_price_ratio_by_cluster(conn):
         print(f"Cluster: {cluster_id}, Avg Payroll per Worker: ${avg_pay_per_worker}, "
               f"Avg House Price: ${avg_house_price}, Payroll-to-Price Ratio: {ratio}")
 
-    close_connection(cur, conn)
+    
 
-def predicted_employment_growth_by_cluster(conn):
+def predicted_employment_growth_by_cluster(conn, cur):
     cur = conn.cursor()
-
     sql = """
     SELECT 
         ct.cluster_id,
@@ -155,10 +154,9 @@ def predicted_employment_growth_by_cluster(conn):
         avg_growth = row[1]
         print(f"Cluster {cluster_id}: Avg Employment Growth = {avg_growth}%")
 
-    close_connection(cur, conn)
 
 #MODIFY THIS CODE SO THAT IT DISPLAYS THE AVG PAYROLL PER WORKER FROM ABOVE
-def growth_vs_payroll_and_price(conn):
+def growth_vs_payroll_and_price(conn, cur):
     cur = conn.cursor()
 
     sql = """
@@ -192,37 +190,24 @@ def growth_vs_payroll_and_price(conn):
         print(f"Avg Payroll: ${avg_payroll}")
         print(f"Avg House Price: ${avg_price}\n")
 
-    close_connection(cur, conn)
 
-
-
-def main():
+def better_predictions():
     conn = connect_to_db()
+    cur = conn.cursor()
     if conn is None:
         print("Connection failed.")
         return
 
-    # workers_per_zip_code(conn)
+    workers_per_zip_code(conn, cur)
 
-    # conn = connect_to_db()
-    # if conn is not None:
-    #     cluster_distribution_by_zipcode(conn)
-
-    conn = connect_to_db()
     if conn is not None:
-        employment_and_payroll_by_cluster(conn)
+        cluster_distribution_by_zipcode(conn, cur)
+        employment_and_payroll_by_cluster(conn, cur)
+        payroll_vs_price_ratio_by_cluster(conn, cur)
+        predicted_employment_growth_by_cluster(conn, cur)
+        growth_vs_payroll_and_price(conn, cur)
     
-    conn = connect_to_db()
-    if conn is not None:
-        payroll_vs_price_ratio_by_cluster(conn)
-    
-    conn = connect_to_db()
-    if conn is not None:
-        predicted_employment_growth_by_cluster(conn)
-
-    conn = connect_to_db()
-    if conn is not None:
-        growth_vs_payroll_and_price(conn)
+    close_connection(cur, conn)
 
 if __name__ == "__main__":
-    main()
+    better_predictions()
