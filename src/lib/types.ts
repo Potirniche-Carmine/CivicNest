@@ -6,5 +6,14 @@ export interface houses {
     price: number;
     bedrooms: number;
     bathrooms: number;
+    zipcode: string;
     cluster_id?: number | null;
+}
+
+export interface EmploymentPrediction {
+    zipcode: string;
+    percent_change: string;
+    houses: Array<{
+        zpid: string;
+    }>;
 }
