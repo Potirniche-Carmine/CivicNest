@@ -342,47 +342,66 @@ export function Map() {
         buttonsContainer.style.marginTop = '8px';
         const toggleButtonContainer = document.createElement('div');
         toggleButtonContainer.style.flex = '1';
+
         detailsGrid.appendChild(priceElement);
         detailsGrid.appendChild(clusterAvgElement);
-        if (Number(properties.bedrooms) === 0 && Number(properties.bathrooms) === 0) {
+
+        const isBedMissingOrZero = properties.bedrooms == null || Number(properties.bedrooms) === 0;
+        const isBathMissingOrZero = properties.bathrooms == null || Number(properties.bathrooms) === 0;
+
+        if (isBedMissingOrZero && isBathMissingOrZero) {
             const lotElement = document.createElement('div');
-            lotElement.style.gridColumn = 'span 2';
+            lotElement.style.gridColumn = 'span 2'; 
+
             const lotLabel = document.createElement('div');
             lotLabel.innerText = 'Property Type';
             lotLabel.style.fontWeight = 'bold';
             lotLabel.style.fontSize = '14px';
+
             const lotValue = document.createElement('div');
-            lotValue.innerText = 'LOT';
+            lotValue.innerText = 'Lot'; 
             lotValue.style.fontSize = '15px';
+
             lotElement.appendChild(lotLabel);
             lotElement.appendChild(lotValue);
             detailsGrid.appendChild(lotElement);
         } else {
-            const bedroomElement = document.createElement('div');
-            const bedroomLabel = document.createElement('div');
-            bedroomLabel.innerText = 'Bedrooms';
-            bedroomLabel.style.fontWeight = 'bold';
-            bedroomLabel.style.fontSize = '14px';
-            const bedroomValue = document.createElement('div');
-            bedroomValue.innerText = properties.bedrooms;
-            bedroomValue.style.fontSize = '15px';
-            bedroomElement.appendChild(bedroomLabel);
-            bedroomElement.appendChild(bedroomValue);
-            const bathroomElement = document.createElement('div');
-            const bathroomLabel = document.createElement('div');
-            bathroomLabel.innerText = 'Bathrooms';
-            bathroomLabel.style.fontWeight = 'bold';
-            bathroomLabel.style.fontSize = '14px';
-            const bathroomValue = document.createElement('div');
-            bathroomValue.innerText = properties.bathrooms;
-            bathroomValue.style.fontSize = '15px';
-            bathroomElement.appendChild(bathroomLabel);
-            bathroomElement.appendChild(bathroomValue);
-            detailsGrid.appendChild(bedroomElement);
-            detailsGrid.appendChild(bathroomElement);
+            if (properties.bedrooms != null && Number(properties.bedrooms) > 0) {
+                const bedroomElement = document.createElement('div');
+                const bedroomLabel = document.createElement('div');
+                bedroomLabel.innerText = 'Bedrooms';
+                bedroomLabel.style.fontWeight = 'bold';
+                bedroomLabel.style.fontSize = '14px';
+                const bedroomValue = document.createElement('div');
+                bedroomValue.innerText = properties.bedrooms;
+                bedroomValue.style.fontSize = '15px';
+                bedroomElement.appendChild(bedroomLabel);
+                bedroomElement.appendChild(bedroomValue);
+                detailsGrid.appendChild(bedroomElement);
+            } else {
+                detailsGrid.appendChild(document.createElement('div'));
+            }
+
+            if (properties.bathrooms != null && Number(properties.bathrooms) > 0) {
+                const bathroomElement = document.createElement('div');
+                const bathroomLabel = document.createElement('div');
+                bathroomLabel.innerText = 'Bathrooms';
+                bathroomLabel.style.fontWeight = 'bold';
+                bathroomLabel.style.fontSize = '14px';
+                const bathroomValue = document.createElement('div');
+                bathroomValue.innerText = properties.bathrooms;
+                bathroomValue.style.fontSize = '15px';
+                bathroomElement.appendChild(bathroomLabel);
+                bathroomElement.appendChild(bathroomValue);
+                detailsGrid.appendChild(bathroomElement);
+            } else {
+                 detailsGrid.appendChild(document.createElement('div'));
+            }
         }
+
         detailsGrid.appendChild(zipcodeElement);
         detailsGrid.appendChild(employmentElement);
+
         popupContent.appendChild(buttonsContainer);
         popupContainer.appendChild(popupContent);
         const popup = new mapboxgl.Popup({
@@ -848,10 +867,10 @@ export function Map() {
                 <div className="w-full h-full" ref={mapRef} />
                 {renderLegend()}
             </div>
-            <div className="text-sm text-muted-foreground">
+            <div className="text-sm text-muted-foreground space-y-1">
                 <p>Use the map to explore housing clusters in Reno. Each color represents a group of houses with similar prices.</p>
-                <p>Click on a house to see details, hover over the legend to select clusters, or use the dropdown to search for a specific property.</p>
-                <p>Zoom out to see clustered groups of houses with counts displayed.</p>
+                <p>Click on a house circle <span className="inline-block w-3 h-3 rounded-full bg-blue-500 border border-black dark:border-white" aria-hidden="true"></span> to see details. Hover over the legend <span className="inline-block w-3 h-3 rounded-full bg-red-500" aria-hidden="true"></span><span className="inline-block w-3 h-3 rounded-full bg-green-500" aria-hidden="true"></span><span className="inline-block w-3 h-3 rounded-full bg-purple-500" aria-hidden="true"></span> (bottom-right) to view and select clusters.</p>
+                <p>Use the dropdown above to search for a specific property by address.</p>
             </div>
         </div>
     );
