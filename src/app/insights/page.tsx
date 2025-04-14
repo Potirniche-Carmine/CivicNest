@@ -35,7 +35,7 @@ const InsightsPage = () => {
   return (
     <main className="flex-1 bg-background min-h-screen">
       <div className="container mx-auto px-4 py-16">
-        <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-blue-600 to-sky-600 inline-block text-transparent bg-clip-text">
+        <h1 className="text-4xl font-bold mb-8 px-3 py-3 bg-gradient-to-r from-blue-600 to-sky-600 inline-block text-transparent bg-clip-text">
           Market Insights
         </h1>
         

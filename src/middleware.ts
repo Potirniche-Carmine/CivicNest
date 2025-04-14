@@ -20,9 +20,8 @@ export default clerkMiddleware(async (auth, request) => {
     return NextResponse.redirect(url)
   }
 
-  if (isProtectedRoute(request) && (await auth()).sessionClaims?.metadata?.role !== 'admin') {
-    const url = new URL('/home', request.url)
-    return NextResponse.redirect(url)
+  if (isProtectedRoute(request)) {
+    await auth.protect()
   }
 })
 
