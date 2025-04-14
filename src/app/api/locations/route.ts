@@ -31,7 +31,7 @@ export async function GET() {
         const client = await pool.connect();
         
         const query = `
-            SELECT address, lat, long, price, zpid 
+            SELECT address, lat, long, price, zpid, zipcode 
             FROM houses 
             WHERE lat IS NOT NULL AND long IS NOT NULL
             ORDER BY address`;
