@@ -2,14 +2,23 @@
 //https://docs.clerk.dev/nextjs/middleware
 
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
 
+
+const isAPIRoute = createRouteMatcher([
+  '/api(.*)'
+])
 
 const isProtectedRoute = createRouteMatcher([
-  '/home(.*)',
-  '/api/locations(.*)'
+  '/home(.*)'
 ]);
 
 export default clerkMiddleware(async (auth, request) => {
+
+  if (isAPIRoute(request) && request.headers.get('Sec-Fetch-Dest') === 'document' && (await auth()).sessionClaims?.metadata?.role !== 'admin') {
+    const url = new URL('/home', request.url)
+    return NextResponse.redirect(url)
+  }
 
   if (isProtectedRoute(request)) {
     await auth.protect()

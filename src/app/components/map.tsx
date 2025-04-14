@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from 'mapbox-gl';
 import { useTheme } from "next-themes";
-import { Info, CheckSquare, Square } from 'lucide-react';
+import { Info, CheckSquare, Square, House } from 'lucide-react';
 import ReactDOM from 'react-dom/client';
 import HouseSelect from './house_select';
 import { Skeleton } from "@/app/components/ui/skeleton";
@@ -230,28 +230,36 @@ export function Map() {
         if (!mapInstanceRef.current) return;
         if (activePopupRef.current) {
             activePopupRef.current.remove();
+            activePopupRef.current = null;
         }
+
         const formattedPrice = formatPrice(properties.price);
         const formattedClusterAvgPrice = formatPrice(properties.cluster_avg_price);
+
         const popupContainer = document.createElement('div');
         popupContainer.className = `popup-container ${isDarkMode ? 'dark-popup' : 'light-popup'}`;
         popupContainer.setAttribute('role', 'dialog');
         popupContainer.setAttribute('aria-label', 'House Information');
+
         const popupContent = document.createElement('div');
         popupContent.className = 'popup-content';
         popupContent.style.position = 'relative';
         popupContent.style.padding = '16px';
-        popupContent.style.borderRadius = '8px';
-        popupContent.style.minWidth = '280px';
-        popupContent.style.backgroundColor = isDarkMode ? '#2b1f66' : '#d5ccff';
-        popupContent.style.color = isDarkMode ? '#f3f4f6' : '#111827';
-        popupContent.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+        popupContent.style.borderRadius = '10px';
+        popupContent.style.minWidth = '300px';
+        popupContent.style.backgroundColor = isDarkMode ? '#1a2335' : '#f5f7fa';
+        popupContent.style.color = isDarkMode ? '#f3f4f6' : '#1e293b';
+        popupContent.style.boxShadow = isDarkMode
+            ? '0 8px 16px rgba(0, 0, 0, 0.35)'
+            : '0 8px 16px rgba(0, 0, 0, 0.15)';
+
         const addressElement = document.createElement('h3');
         addressElement.innerText = properties.address;
-        addressElement.style.fontWeight = 'bold';
+        addressElement.style.fontWeight = '600';
         addressElement.style.marginBottom = '12px';
         addressElement.style.paddingRight = '24px';
         addressElement.style.fontSize = '16px';
+
         const closeButton = document.createElement('button');
         closeButton.setAttribute('aria-label', 'Close popup');
         closeButton.style.position = 'absolute';
@@ -275,135 +283,96 @@ export function Map() {
             }
         };
         popupContent.appendChild(closeButton);
+        popupContent.appendChild(addressElement);
+
         const detailsGrid = document.createElement('div');
         detailsGrid.style.display = 'grid';
         detailsGrid.style.gridTemplateColumns = 'repeat(2, 1fr)';
-        detailsGrid.style.gap = '8px';
-        detailsGrid.style.marginBottom = '12px';
-        const priceElement = document.createElement('div');
-        const priceLabel = document.createElement('div');
-        priceLabel.innerText = 'Price';
-        priceLabel.style.fontWeight = 'bold';
-        priceLabel.style.fontSize = '14px';
-        const priceValue = document.createElement('div');
-        priceValue.innerText = formattedPrice;
-        priceValue.style.fontSize = '15px';
-        priceElement.appendChild(priceLabel);
-        priceElement.appendChild(priceValue);
-        const clusterAvgElement = document.createElement('div');
-        const clusterAvgLabel = document.createElement('div');
-        clusterAvgLabel.innerText = 'Cluster Avg';
-        clusterAvgLabel.style.fontWeight = 'bold';
-        clusterAvgLabel.style.fontSize = '14px';
-        const clusterAvgValue = document.createElement('div');
-        clusterAvgValue.innerText = formattedClusterAvgPrice;
-        clusterAvgValue.style.fontSize = '15px';
-        clusterAvgElement.appendChild(clusterAvgLabel);
-        clusterAvgElement.appendChild(clusterAvgValue);
-        const zipcodeElement = document.createElement('div');
-        const zipcodeLabel = document.createElement('div');
-        zipcodeLabel.innerText = 'Zipcode';
-        zipcodeLabel.style.fontWeight = 'bold';
-        zipcodeLabel.style.fontSize = '14px';
-        const zipcodeValue = document.createElement('div');
-        zipcodeValue.innerText = properties.zipcode;
-        zipcodeValue.style.fontSize = '15px';
-        zipcodeElement.appendChild(zipcodeLabel);
-        zipcodeElement.appendChild(zipcodeValue);
-        const employmentElement = document.createElement('div');
-        const employmentLabel = document.createElement('div');
-        employmentLabel.innerText = 'Employment Trend';
-        employmentLabel.style.fontWeight = 'bold';
-        employmentLabel.style.fontSize = '14px';
-        const employmentValue = document.createElement('div');
-        if (properties.employment_prediction !== null &&
-            properties.employment_prediction !== undefined &&
-            !isNaN(properties.employment_prediction)) {
-            const predictionValue = Number(properties.employment_prediction);
-            const formattedPrediction = `${predictionValue > 0 ? '+' : ''}${predictionValue.toFixed(2)}%`;
-            employmentValue.innerText = formattedPrediction;
-            employmentValue.style.color = predictionValue > 0 ? '#10b981' : '#ef4444';
-        } else {
-            employmentValue.innerText = 'N/A';
-        }
-        employmentValue.style.fontSize = '15px';
-        employmentElement.appendChild(employmentLabel);
-        employmentElement.appendChild(employmentValue);
-        popupContent.appendChild(addressElement);
-        popupContent.appendChild(detailsGrid);
-        const divider = document.createElement('div');
-        divider.style.height = '1px';
-        divider.style.backgroundColor = isDarkMode ? '#374151' : '#e5e7eb';
-        divider.style.margin = '8px 0';
-        popupContent.appendChild(divider);
-        const buttonsContainer = document.createElement('div');
-        buttonsContainer.style.display = 'flex';
-        buttonsContainer.style.gap = '8px';
-        buttonsContainer.style.marginTop = '8px';
-        const toggleButtonContainer = document.createElement('div');
-        toggleButtonContainer.style.flex = '1';
+        detailsGrid.style.gap = '12px';
+        detailsGrid.style.marginBottom = '16px';
 
-        detailsGrid.appendChild(priceElement);
-        detailsGrid.appendChild(clusterAvgElement);
+        const createDetailItem = (label: string, value: string | number, valueStyle: React.CSSProperties = {}) => {
+            const element = document.createElement('div');
+            const labelDiv = document.createElement('div');
+            labelDiv.innerText = label;
+            labelDiv.style.fontWeight = '600';
+            labelDiv.style.fontSize = '14px';
+            labelDiv.style.opacity = '0.8';
+            const valueDiv = document.createElement('div');
+            valueDiv.innerText = String(value);
+            valueDiv.style.fontSize = '15px';
+            valueDiv.style.marginTop = '2px';
+            Object.assign(valueDiv.style, valueStyle);
+            element.appendChild(labelDiv);
+            element.appendChild(valueDiv);
+            return element;
+        };
+
+        detailsGrid.appendChild(createDetailItem('Price', formattedPrice));
+        detailsGrid.appendChild(createDetailItem('Cluster Avg', formattedClusterAvgPrice));
 
         const isBedMissingOrZero = properties.bedrooms == null || Number(properties.bedrooms) === 0;
         const isBathMissingOrZero = properties.bathrooms == null || Number(properties.bathrooms) === 0;
 
         if (isBedMissingOrZero && isBathMissingOrZero) {
-            const lotElement = document.createElement('div');
-            lotElement.style.gridColumn = 'span 2'; 
-
-            const lotLabel = document.createElement('div');
-            lotLabel.innerText = 'Property Type';
-            lotLabel.style.fontWeight = 'bold';
-            lotLabel.style.fontSize = '14px';
-
-            const lotValue = document.createElement('div');
-            lotValue.innerText = 'Lot'; 
-            lotValue.style.fontSize = '15px';
-
-            lotElement.appendChild(lotLabel);
-            lotElement.appendChild(lotValue);
+            const lotElement = createDetailItem('Property Type', 'Lot');
+            lotElement.style.gridColumn = 'span 2';
             detailsGrid.appendChild(lotElement);
         } else {
             if (properties.bedrooms != null && Number(properties.bedrooms) > 0) {
-                const bedroomElement = document.createElement('div');
-                const bedroomLabel = document.createElement('div');
-                bedroomLabel.innerText = 'Bedrooms';
-                bedroomLabel.style.fontWeight = 'bold';
-                bedroomLabel.style.fontSize = '14px';
-                const bedroomValue = document.createElement('div');
-                bedroomValue.innerText = properties.bedrooms;
-                bedroomValue.style.fontSize = '15px';
-                bedroomElement.appendChild(bedroomLabel);
-                bedroomElement.appendChild(bedroomValue);
-                detailsGrid.appendChild(bedroomElement);
+                detailsGrid.appendChild(createDetailItem('Bedrooms', properties.bedrooms));
             } else {
                 detailsGrid.appendChild(document.createElement('div'));
             }
 
             if (properties.bathrooms != null && Number(properties.bathrooms) > 0) {
-                const bathroomElement = document.createElement('div');
-                const bathroomLabel = document.createElement('div');
-                bathroomLabel.innerText = 'Bathrooms';
-                bathroomLabel.style.fontWeight = 'bold';
-                bathroomLabel.style.fontSize = '14px';
-                const bathroomValue = document.createElement('div');
-                bathroomValue.innerText = properties.bathrooms;
-                bathroomValue.style.fontSize = '15px';
-                bathroomElement.appendChild(bathroomLabel);
-                bathroomElement.appendChild(bathroomValue);
-                detailsGrid.appendChild(bathroomElement);
+                detailsGrid.appendChild(createDetailItem('Bathrooms', properties.bathrooms));
             } else {
-                 detailsGrid.appendChild(document.createElement('div'));
+                detailsGrid.appendChild(document.createElement('div'));
             }
         }
 
-        detailsGrid.appendChild(zipcodeElement);
-        detailsGrid.appendChild(employmentElement);
+        detailsGrid.appendChild(createDetailItem('Zipcode', properties.zipcode));
 
-        popupContent.appendChild(buttonsContainer);
+        let employmentValue = 'N/A';
+        let employmentStyle = {};
+        if (properties.employment_prediction !== null &&
+            properties.employment_prediction !== undefined &&
+            !isNaN(properties.employment_prediction)) {
+            const predictionValue = Number(properties.employment_prediction);
+            employmentValue = `${predictionValue > 0 ? '+' : ''}${predictionValue.toFixed(2)}%`;
+            employmentStyle = {
+                color: predictionValue > 0 ? '#10b981' : '#ef4444',
+                fontWeight: '500'
+            };
+        }
+        detailsGrid.appendChild(createDetailItem('Employment Trend', employmentValue, employmentStyle));
+
+        popupContent.appendChild(detailsGrid);
+
+        const divider = document.createElement('div');
+        divider.style.height = '1px';
+        divider.style.backgroundColor = isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+        divider.style.margin = '12px 0';
+        popupContent.appendChild(divider);
+
+        const actionsContainer = document.createElement('div');
+        actionsContainer.style.display = 'flex';
+        actionsContainer.style.flexDirection = 'column';
+        actionsContainer.style.gap = '10px';
+
+        const clusterButtonContainer = document.createElement('div');
+
+        const zillowLinkContainer = document.createElement('div');
+
+        const zillowLinkReactContainer = document.createElement('div');
+        zillowLinkContainer.appendChild(zillowLinkReactContainer);
+
+        actionsContainer.appendChild(clusterButtonContainer);
+        actionsContainer.appendChild(zillowLinkContainer);
+        popupContent.appendChild(actionsContainer);
         popupContainer.appendChild(popupContent);
+
         const popup = new mapboxgl.Popup({
             closeButton: false,
             closeOnClick: false,
@@ -413,21 +382,48 @@ export function Map() {
             .setLngLat(coordinates)
             .setDOMContent(popupContainer)
             .addTo(mapInstanceRef.current);
-        const toggleRoot = ReactDOM.createRoot(toggleButtonContainer);
-        toggleRoot.render(
-            <button
-                className="flex items-center justify-center gap-2 py-2 px-3 bg-primary/90 hover:bg-primary text-primary-foreground text-sm rounded-md w-full"
-                onClick={() => {
-                    const clusterId = properties.cluster_id;
-                    setSelectedClusterIds([clusterId]);
-                    setDisplayMode('selectedClusters');
-                    updateHouseVisibility();
+
+        if (clusterButtonContainer) {
+            const toggleRoot = ReactDOM.createRoot(clusterButtonContainer);
+            toggleRoot.render(
+                <React.StrictMode>
+                    <button
+                        className="flex items-center justify-center gap-2 py-2 px-4 bg-primary/90 hover:bg-primary text-primary-foreground text-sm font-medium rounded-md w-full"
+                        onClick={() => {
+                            const clusterId = properties.cluster_id;
+                            if (setSelectedClusterIds) setSelectedClusterIds([clusterId]);
+                            if (setDisplayMode) setDisplayMode('selectedClusters');
+                            if (updateHouseVisibility) updateHouseVisibility();
+                            popup.remove();
+                            activePopupRef.current = null;
+                        }}
+                        aria-label="Show only this cluster"
+                    >
+                        <Info size={16} />
+                        Show Only This Cluster
+                    </button>
+                </React.StrictMode>
+            );
+        } else {
+            console.error("Cluster button container not found!");
+        }
+        const zillowLinkRoot = ReactDOM.createRoot(zillowLinkReactContainer);
+        zillowLinkRoot.render(
+            <a
+                href={`https://www.zillow.com/homedetails/${properties.id}_zpid/`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`View ${properties.address} on Zillow`}
+                className={`flex items-center justify-center gap-2 py-2 px-4 text-sm font-medium rounded-md w-full ${isDarkMode ? 'bg-blue-900/20 hover:bg-blue-900/30' : 'bg-blue-100/50 hover:bg-blue-100/80'}`}
+                style={{
+                    color: '#006aff',
+                    textDecoration: 'none',
+                    boxSizing: 'border-box'
                 }}
-                aria-label="Show only this cluster"
             >
-                <Info size={16} />
-                Show Only This Cluster
-            </button>
+                <House size={16} color="#006aff" />
+                <span>View on Zillow</span>
+            </a>
         );
         activePopupRef.current = popup;
         return popup;
