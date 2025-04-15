@@ -105,11 +105,10 @@ export default function Insights() {
 
   return (
     <main className="flex-1 bg-background min-h-screen">
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-4">
         <h1 className="text-4xl font-bold mb-8 px-3 py-3 bg-gradient-to-r from-blue-600 to-sky-600 inline-block text-transparent bg-clip-text">
           Market Insights
         </h1>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           <section className="p-6 rounded-xl bg-card shadow-lg border border-border">
             <div className="flex items-center mb-4">
