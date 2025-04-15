@@ -5,15 +5,15 @@ import { useTheme } from "next-themes";
 import { Info, CheckSquare, Square, House } from 'lucide-react';
 import ReactDOM from 'react-dom/client';
 import HouseSelect from './house_select';
-import { Skeleton } from "@/app/components/ui/skeleton";
+import { Skeleton } from "./ui/skeleton";
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger
-} from "@/app/components/ui/tooltip";
+} from "./ui/tooltip";
 import { houses, EmploymentPrediction } from "@/lib/types";
-import { Badge } from "@/app/components/ui/badge";
+import { Badge } from "./ui/badge";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || "";
 
@@ -56,7 +56,6 @@ export function Map() {
     const [selectedHouse, setSelectedHouse] = useState<houses | null>(null);
     const [selectedClusterIds, setSelectedClusterIds] = useState<number[]>([]);
     const [employmentData, setEmploymentData] = useState<EmploymentPrediction[]>([]);
-    const [showEmploymentOverlay, setShowEmploymentOverlay] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState(true);
     const [displayMode, setDisplayMode] = useState<'all' | 'selectedHouse' | 'selectedClusters'>('all');
     const [visibleHousesCount, setVisibleHousesCount] = useState<number>(0);
