@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+__tests__/
 
 # next.js
 /.next/
@@ -39,14 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Default ignored files
-/shelf/
-/workspace.xml
-# Editor-based HTTP Client requests
-/httpRequests/
-# Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml\
-
-
-/.github/
+# clerk configuration (can include secrets)
+/.clerk/
+/.idea/
