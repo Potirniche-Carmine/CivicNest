@@ -193,7 +193,7 @@ export default function Insights() {
         <section className="p-6 rounded-xl bg-card shadow-lg border border-border mb-12">
           <div className="flex items-center mb-6">
             <BarChart2 className="mr-3 text-sky-500 dark:text-sky-400" size={24} />
-            <h2 className="text-2xl font-semibold">Key Market Insights (Latest Update)</h2>
+            <h2 className="text-2xl font-semibold">AI-Generated Key Market Summaries (Latest Update)</h2>
           </div>
 
           {generatedInsights.length > 0 ? (
