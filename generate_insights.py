@@ -73,14 +73,14 @@ def generate_insights_from_ai(data):
 Analyze the following real estate market cluster data:
 {json.dumps(data, indent=2)}
 
-Based ONLY on the provided data, generate 4 concise key market insights covering different aspects like investment potential, growth trends, affordability issues, or market balance.
+Based ONLY on the provided data, generate 4 concise key market insights covering different aspects like investment potential, employment growth trends, affordability issues, or market balance.
 For each insight:
 1. Provide a short, relevant title (e.g., "Investment Hotspot", "Growth Leaders", "Affordability Concern", "Balanced Market").
-2. Write a brief explanation (1-2 sentences) directly referencing the data points (cluster numbers, ratios, growth rates) that support the insight.
+2. Write a brief explanation (1-2 sentences) directly referencing the data points (cluster numbers, ratios, employment growth rates) that support the insight.
 3. Format the output STRICTLY as a JSON array of objects, where each object has a "title" (string) and "explanation" (string) property. Example: [{{"title": "Example Title", "explanation": "Example explanation referencing data."}}]
 Do not include any introductory text, concluding text, markdown formatting (like ```json), or anything else outside the pure JSON array structure.
 Ensure the output is valid JSON.
-Make sure all of the prices are correctly formatted such as $123,456.78 and all the ratios are formatted as 0.1234.
+Make sure all of the prices are correctly formatted such as $123,456.78 and all the ratios are formatted as 0.1234 and also the growth rate is an employment growth rate not a housing price growth rate and make sure you format it correctly with a % sign.
 """
 
     print("Calling Google Generative AI API...")
