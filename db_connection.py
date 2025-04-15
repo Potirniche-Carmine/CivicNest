@@ -1,11 +1,13 @@
 import psycopg2
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
 #DB credentials
-DB_NAME = "dcaimsa6md4201"  
-DB_USER = "ub23idbf5fs4n9" # There's a 9 at the end
-DB_PASSWORD = "pc2bb30cd6a4689cab33cc7a5833a754114d1a191680a4b9a26f8855e75f08b4a"
-DB_HOST = "c586ehe1mt2hev.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com"
-DB_PORT = "5432"
+DB_NAME = os.getenv("DB_NAME")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = os.getenv("DB_PORT")
 
 def connect_to_db():
     try:
