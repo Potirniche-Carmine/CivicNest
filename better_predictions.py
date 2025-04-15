@@ -2,7 +2,6 @@ from db_connection import connect_to_db, close_connection
 
 def workers_per_zip_code(conn, cur):
     cur = conn.cursor()
-
     sql = """
     SELECT zipcode, year, employment, establishments, annual_payroll,
     CASE 
@@ -19,7 +18,6 @@ def workers_per_zip_code(conn, cur):
     END as avg_payroll_per_worker
     FROM employment;
     """
-
     cur.execute(sql)
     results = cur.fetchall()
 
@@ -27,22 +25,12 @@ def workers_per_zip_code(conn, cur):
         return f"{val:.2f}" if val is not None else "N/A"
 
     for r in results:
-        zipc = r[0]
-        year = r[1]
-        emp = r[2]
-        est = r[3]
-        payroll = r[4]
-        workers_per_est = r[5]
-        payroll_per_est = r[6]
-        payroll_per_worker = r[7]
+        zipc, year, emp, est, payroll, workers_per_est, payroll_per_est, payroll_per_worker = r
         print(f"Zip: {zipc}, Year: {year}, Avg Workers per Business: {safe_format(workers_per_est)}, "
               f"Avg Payroll per Business: {safe_format(payroll_per_est)}, Avg Payroll per Worker: {safe_format(payroll_per_worker)}")
 
-    
-
 def cluster_distribution_by_zipcode(conn, cur):
     cur = conn.cursor()
-
     sql = """SELECT 
         h.zipcode,
         ct.cluster_id,
@@ -53,23 +41,15 @@ def cluster_distribution_by_zipcode(conn, cur):
     GROUP BY h.zipcode, ct.cluster_id
     ORDER BY h.zipcode, ct.cluster_id;
     """
-
     cur.execute(sql)
     results = cur.fetchall()
 
     print("\nCluster Distribution per Zip Code")
-    for row in results:
-        zipc = row[0]
-        cluster_id = row[1]
-        count = row[2]
-        percent = row[3]
+    for zipc, cluster_id, count, percent in results:
         print(f"Zip: {zipc}, Cluster: {cluster_id}, Houses: {count}, Percentage of houses in this ZIP code that belong to this price cluster: {percent}%")
-
-    
 
 def employment_and_payroll_by_cluster(conn, cur):
     cur = conn.cursor()
-
     sql = """SELECT 
         ct.cluster_id,
         ROUND(AVG(ea.avg_employment)::numeric, 2) AS avg_employment_in_cluster,
@@ -85,22 +65,15 @@ def employment_and_payroll_by_cluster(conn, cur):
     GROUP BY ct.cluster_id
     ORDER BY ct.cluster_id;
     """
-
     cur.execute(sql)
     results = cur.fetchall()
 
     print("\nAverage Employment and Payroll per Worker by Cluster")
-    for row in results:
-        cluster_id = row[0]
-        avg_emp = row[1]
-        avg_pay_per_worker = row[2]
+    for cluster_id, avg_emp, avg_pay_per_worker in results:
         print(f"Cluster: {cluster_id}, Avg Employment per ZIP: {avg_emp}, Avg Payroll per Worker: {avg_pay_per_worker}")
-
-    
 
 def payroll_vs_price_ratio_by_cluster(conn, cur):
     cur = conn.cursor()
-
     sql = """
     SELECT 
         ct.cluster_id,
@@ -116,20 +89,8 @@ def payroll_vs_price_ratio_by_cluster(conn, cur):
     GROUP BY ct.cluster_id
     ORDER BY ct.cluster_id;
     """
-
     cur.execute(sql)
-    results = cur.fetchall()
-
-    print("\nPayroll-to-House-Price Ratio by Cluster")
-    for row in results:
-        cluster_id = row[0]
-        avg_pay_per_worker = row[1]
-        avg_house_price = row[2]
-        ratio = row[3]
-        print(f"Cluster: {cluster_id}, Avg Payroll per Worker: ${avg_pay_per_worker}, "
-              f"Avg House Price: ${avg_house_price}, Payroll-to-Price Ratio: {ratio}")
-
-    
+    return cur.fetchall()
 
 def predicted_employment_growth_by_cluster(conn, cur):
     cur = conn.cursor()
@@ -143,22 +104,15 @@ def predicted_employment_growth_by_cluster(conn, cur):
     GROUP BY ct.cluster_id
     ORDER BY ct.cluster_id;
     """
-    #Gives us house's cluster id and zip code
-
     cur.execute(sql)
     results = cur.fetchall()
 
     print("\nProjected Employment Growth by Cluster")
-    for row in results:
-        cluster_id = row[0]
-        avg_growth = row[1]
+    for cluster_id, avg_growth in results:
         print(f"Cluster {cluster_id}: Avg Employment Growth = {avg_growth}%")
 
-
-#MODIFY THIS CODE SO THAT IT DISPLAYS THE AVG PAYROLL PER WORKER FROM ABOVE
 def growth_vs_payroll_and_price(conn, cur):
     cur = conn.cursor()
-
     sql = """
     SELECT 
         ct.cluster_id,
@@ -173,23 +127,36 @@ def growth_vs_payroll_and_price(conn, cur):
     GROUP BY ct.cluster_id
     ORDER BY ct.cluster_id;
     """
-
     cur.execute(sql)
     results = cur.fetchall()
 
     print("\nProjected Employment Growth vs Payroll and Price (by Cluster)")
-    for row in results:
-        cluster_id = row[0]
-        avg_growth = row[1]
-        avg_payroll = row[2]
-        avg_price = row[3]
-
+    for cluster_id, avg_growth, avg_payroll, avg_price in results:
         print(f"Cluster {cluster_id}:")
         print(f"Avg Growth: {avg_growth}%")
-        #print(f"Avg Salary for Resident: ${some_table_element}")
         print(f"Avg Payroll: ${avg_payroll}")
         print(f"Avg House Price: ${avg_price}\n")
 
+def update_insights_table(conn, cur, values):
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS insights_table (
+        cluster_id INTEGER PRIMARY KEY,
+        avg_payroll NUMERIC,
+        avg_price NUMERIC,
+        affordability_ratio NUMERIC
+    );
+    """)
+
+    cur.execute("DELETE FROM insights_table;")
+
+    for cluster_id, avg_payroll, avg_price, ratio in values:
+        cur.execute("""
+            INSERT INTO insights_table (cluster_id, avg_payroll, avg_price, affordability_ratio)
+            VALUES (%s, %s, %s, %s)
+        """, (cluster_id, avg_payroll, avg_price, ratio))
+
+    conn.commit()
+    print("\ninsights_table updated successfully.")
 
 def better_predictions():
     conn = connect_to_db()
@@ -203,10 +170,11 @@ def better_predictions():
     if conn is not None:
         cluster_distribution_by_zipcode(conn, cur)
         employment_and_payroll_by_cluster(conn, cur)
-        payroll_vs_price_ratio_by_cluster(conn, cur)
+        results = payroll_vs_price_ratio_by_cluster(conn, cur)
         predicted_employment_growth_by_cluster(conn, cur)
         growth_vs_payroll_and_price(conn, cur)
-    
+        update_insights_table(conn, cur, results)
+
     close_connection(cur, conn)
 
 if __name__ == "__main__":
