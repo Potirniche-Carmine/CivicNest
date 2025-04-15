@@ -81,6 +81,7 @@ For each insight:
 Do not include any introductory text, concluding text, markdown formatting (like ```json), or anything else outside the pure JSON array structure.
 Ensure the output is valid JSON.
 Make sure all of the prices are correctly formatted such as $123,456.78 and all the ratios are formatted as 0.1234 and also the growth rate is an employment growth rate not a housing price growth rate and make sure you format it correctly with a % sign.
+Add html tags to bold the clusters number and important numbers in the explanation.
 """
 
     print("Calling Google Generative AI API...")
