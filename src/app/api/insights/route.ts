@@ -15,13 +15,10 @@ interface GeneratedInsight {
 }
 
 export async function GET() {
-    console.log("API Route /api/insights GET request received");
     let client;
 
     try {
         client = await pool.connect();
-        console.log("Database client connected.");
-
         const numericalQuery = `
             SELECT
                 cluster_id,
@@ -33,7 +30,6 @@ export async function GET() {
             WHERE cluster_id IS NOT NULL
             ORDER BY cluster_id;
         `;
-        console.log("Executing numerical data query...");
         const numericalResult = await client.query<InsightDataFromDB>(numericalQuery);
         const insightsData = numericalResult.rows.map(row => ({
             cluster_id: row.cluster_id, 
@@ -42,15 +38,12 @@ export async function GET() {
             affordability_ratio: row.affordability_ratio, 
             employment_growth: row.employment_growth,
         }));
-        console.log(`Workspaceed ${insightsData.length} rows of numerical insight data.`);
-
         const generatedQuery = `
             SELECT insights_content
             FROM generated_market_insights
             ORDER BY generated_at DESC
             LIMIT 1;
         `;
-        console.log("Executing generated insights query...");
         const generatedResult = await client.query(generatedQuery);
 
         let generatedInsights: GeneratedInsight[] = [];
@@ -61,19 +54,15 @@ export async function GET() {
                     console.warn("Cached generated insights format is invalid, falling back to empty array.");
                     generatedInsights = [];
                 } else {
-                     console.log(`Retrieved ${generatedInsights.length} cached generated insights.`);
                 }
             } catch (parseError) {
                 console.error("Error processing cached generated insights from DB:", parseError);
                 generatedInsights = []; 
             }
         } else {
-            console.log("No cached generated insights found in the database.");
         }
 
         client.release();
-        console.log("Database client released.");
-
         return NextResponse.json({
             insights: insightsData, 
             generatedInsights: generatedInsights, 
@@ -82,7 +71,6 @@ export async function GET() {
     } catch (err: unknown) {
         if (client) {
             client.release();
-            console.log("Database client released after error.");
         }
         console.error('Error in /api/insights route:', err);
 
