@@ -80,6 +80,7 @@ For each insight:
 3. Format the output STRICTLY as a JSON array of objects, where each object has a "title" (string) and "explanation" (string) property. Example: [{{"title": "Example Title", "explanation": "Example explanation referencing data."}}]
 Do not include any introductory text, concluding text, markdown formatting (like ```json), or anything else outside the pure JSON array structure.
 Ensure the output is valid JSON.
+Make sure all of the prices are correctly formatted such as $123,456.78 and all the ratios are formatted as 0.1234.
 """
 
     print("Calling Google Generative AI API...")
@@ -97,7 +98,6 @@ Ensure the output is valid JSON.
         response = model.generate_content(
             prompt,
             generation_config=generation_config,
-            # safety_settings=... # Add safety settings if needed
         )
 
         if not response.candidates:
