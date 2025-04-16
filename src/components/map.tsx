@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from 'mapbox-gl';
 import { useTheme } from "next-themes";
-import { Info, CheckSquare, Square, House } from 'lucide-react';
+import { Info, CheckSquare, Square, House, Layers, EyeOff, Eye } from 'lucide-react';
 import ReactDOM from 'react-dom/client';
 import HouseSelect from './house_select';
 import { Skeleton } from "./ui/skeleton";
@@ -14,6 +14,7 @@ import {
 } from "./ui/tooltip";
 import { houses, EmploymentPrediction } from "@/lib/types";
 import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || "";
 
@@ -62,6 +63,7 @@ export function Map() {
     const [totalHousesCount, setTotalHousesCount] = useState<number>(0);
     const [isLegendVisible, setIsLegendVisible] = useState<boolean>(false);
     const [legendTimeoutId, setLegendTimeoutId] = useState<NodeJS.Timeout | null>(null);
+    const [isBoundaryLayerVisible, setIsBoundaryLayerVisible] = useState<boolean>(true);
     const { theme, systemTheme } = useTheme();
 
     const isDarkMode = theme === "system"
@@ -84,6 +86,51 @@ export function Map() {
             }
         }
     }
+
+    const toggleBoundaryLayer = () => {
+        setIsBoundaryLayerVisible(!isBoundaryLayerVisible);
+        if (mapInstanceRef.current) {
+            mapInstanceRef.current.setLayoutProperty(
+                'employment-fill',
+                'visibility',
+                !isBoundaryLayerVisible ? 'visible' : 'none'
+            );
+            mapInstanceRef.current.setLayoutProperty(
+                'employment-outline',
+                'visibility',
+                !isBoundaryLayerVisible ? 'visible' : 'none'
+            );
+        }
+    };
+
+    const [zipBoundaries, setZipBoundaries] = useState<any>(null);
+
+    useEffect(() => {
+        const fetchBoundaries = async () => {
+            try {
+                const response = await fetch('/api/zip-boundaries');
+                const data = await response.json();
+                setZipBoundaries(data);
+            } catch (error) {
+                console.error('Error fetching ZIP code boundaries:', error);
+            }
+        };
+        fetchBoundaries();
+    }, []);
+
+    const getEmploymentColor = (percentChange: number | null): string => {
+        if (percentChange === null) return isDarkMode ? '#6b7280' : '#f3f4f6'; 
+        
+        if (percentChange < 0) {
+            const intensity = Math.min(Math.abs(percentChange) / 5, 1);
+            return `rgba(239, 68, 68, ${0.3 + intensity * 0.4})`; 
+        } else if (percentChange > 0) {
+            const intensity = Math.min(percentChange / 5, 1);
+            return `rgba(16, 185, 129, ${0.3 + intensity * 0.4})`; 
+        }
+        
+        return isDarkMode ? 'rgba(107, 114, 128, 0.5)' : 'rgba(243, 244, 246, 0.5)';
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -508,39 +555,30 @@ export function Map() {
     };
 
     const renderLegend = () => {
-        const clusterGroups = clusters.map((cluster, index) => {
-            return {
-                id: cluster.cluster_id,
-                avgPrice: cluster.avg_price,
-                color: clusterColors[index % clusterColors.length],
-                count: cluster.houses?.length || 0
-            };
-        }).sort((a, b) => a.id - b.id);
+        const clusterGroups = clusters.map((cluster, index) => ({
+            id: cluster.cluster_id,
+            avgPrice: cluster.avg_price,
+            color: clusterColors[index % clusterColors.length],
+            count: cluster.houses?.length || 0
+        })).sort((a, b) => a.id - b.id);
+
         const isCompact = !isLegendVisible;
+
         return (
             <div
-                className={`bg-card rounded-md border border-border absolute bottom-6 right-6 z-10 shadow-md transition-all duration-300 ease-in-out ${isCompact ? 'w-12 h-12 p-2 hover:scale-105' : 'w-72 p-4'
-                    }`}
+                className={`bg-card rounded-md border border-border absolute bottom-6 right-6 z-10 shadow-md transition-all duration-300 ease-in-out ${isCompact ? 'w-12 h-12 p-2 hover:scale-105 cursor-pointer' : 'w-72 p-4'}`}
                 onMouseEnter={handleLegendHover}
                 onMouseLeave={handleLegendLeave}
+                onClick={isCompact ? handleLegendHover : undefined}
             >
                 {isCompact ? (
                     <div className="w-full h-full flex items-center justify-center">
-                        <div className="grid grid-cols-3 gap-1">
-                            {clusterGroups.slice(0, 9).map(cluster => (
-                                <div
-                                    key={cluster.id}
-                                    style={{ backgroundColor: cluster.color }}
-                                    className="w-2 h-2 rounded-full"
-                                    aria-hidden="true"
-                                ></div>
-                            ))}
-                        </div>
+                        <Layers size={20} className="text-muted-foreground" />
                     </div>
                 ) : (
                     <>
-                        <h3 className="text-lg font-medium mb-3">Price Clusters</h3>
-                        <div className="space-y-2 max-h-40 overflow-y-auto">
+                        <h3 className="text-base font-medium mb-2">Price Clusters</h3>
+                        <div className="space-y-1.5 max-h-32 overflow-y-auto mb-3 pr-1">
                             {clusterGroups.map(cluster => (
                                 <div
                                     key={cluster.id}
@@ -549,23 +587,45 @@ export function Map() {
                                 >
                                     <div className="flex items-center gap-2">
                                         {selectedClusterIds.includes(cluster.id) ? (
-                                            <CheckSquare size={16} className="text-primary" />
+                                            <CheckSquare size={16} className="text-primary flex-shrink-0" />
                                         ) : (
-                                            <Square size={16} className="text-muted-foreground" />
+                                            <Square size={16} className="text-muted-foreground flex-shrink-0" />
                                         )}
-                                        <div
-                                            style={{ backgroundColor: cluster.color }}
-                                            className="w-4 h-4 rounded-full border border-border"
-                                            aria-label={`Cluster ${cluster.id} color indicator`}
-                                        ></div>
-                                        <span className="text-sm">Cluster {cluster.id}</span>
+                                        <div style={{ backgroundColor: cluster.color }} className="w-4 h-4 rounded-full border border-border flex-shrink-0" aria-label={`Cluster ${cluster.id} color indicator`}></div>
+                                        <span className="text-sm truncate">Cluster {cluster.id}</span>
                                     </div>
-                                    <div className="text-sm font-medium">{formatPrice(cluster.avgPrice)}</div>
+                                    <div className="text-sm font-medium flex-shrink-0">{formatPrice(cluster.avgPrice)}</div>
                                 </div>
                             ))}
                         </div>
-                        <div className="mt-3 text-xs text-muted-foreground">
-                            Click clusters to select/deselect
+                        <div className="text-xs text-muted-foreground mb-3">
+                            Click clusters to filter map
+                        </div>
+
+                        <div className="h-px bg-border my-3"></div>
+
+                        <h3 className="text-base font-medium mb-2">Employment Zones</h3>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="w-full justify-start gap-2"
+                            onClick={toggleBoundaryLayer}
+                        >
+                            {isBoundaryLayerVisible ? <EyeOff size={16} /> : <Eye size={16} />}
+                            {isBoundaryLayerVisible ? 'Hide Employment Zones' : 'Show Employment Zones'}
+                        </Button>
+
+                        <div className="mt-3 space-y-1">
+                            <div className="text-xs text-muted-foreground">Employment Growth Trend:</div>
+                            <div
+                                className="w-full h-2 rounded-full"
+                                style={{ background: `linear-gradient(to right, #ef4444, ${isDarkMode ? '#6b7280' : '#f3f4f6'}, #10b981)` }}
+                                aria-hidden="true"
+                            ></div>
+                            <div className="flex justify-between text-xs text-muted-foreground">
+                                <span>Decline</span>
+                                <span>Growth</span>
+                            </div>
                         </div>
                     </>
                 )}
@@ -731,6 +791,47 @@ export function Map() {
                             mapInstanceRef.current.getCanvas().style.cursor = '';
                         }
                     });
+
+                    if (zipBoundaries) {
+                        mapInstanceRef.current.addSource('employment-zones', {
+                            type: 'geojson',
+                            data: zipBoundaries
+                        });
+                    
+                        mapInstanceRef.current.addLayer({
+                            id: 'employment-fill',
+                            type: 'fill',
+                            source: 'employment-zones',
+                            layout: {
+                                visibility: isBoundaryLayerVisible ? 'visible' : 'none'
+                            },
+                            paint: {
+                                'fill-color': [
+                                    'match',
+                                    ['get', 'zip_code'],
+                                    ...employmentData.flatMap(emp => [
+                                        String(emp.zipcode),
+                                        getEmploymentColor(Number(emp.percent_change))
+                                    ]),
+                                    isDarkMode ? 'rgba(107, 114, 128, 0.3)' : 'rgba(243, 244, 246, 0.3)' 
+                                ],
+                                'fill-opacity': 0.6
+                            }
+                        });
+                    
+                        mapInstanceRef.current.addLayer({
+                            id: 'employment-outline',
+                            type: 'line',
+                            source: 'employment-zones',
+                            layout: {
+                                visibility: isBoundaryLayerVisible ? 'visible' : 'none'
+                            },
+                            paint: {
+                                'line-color': isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)',
+                                'line-width': 1
+                            }
+                        });
+                    }
                 });
             } else {
                 mapInstanceRef.current.setStyle(
@@ -765,12 +866,55 @@ export function Map() {
                                 'circle-stroke-color': isDarkMode ? '#ffffff' : '#000000',
                                 'circle-opacity': 0.9,
                             },
-                        });
+                        });                       
                     } else {
-                        (mapInstanceRef.current.getSource('houses') as mapboxgl.GeoJSONSource)
-                            .setData(getHousesGeoJSON());
-                    }
-                });
+                                (mapInstanceRef.current.getSource('houses') as mapboxgl.GeoJSONSource)
+                                    .setData(getHousesGeoJSON());
+        
+                                if (zipBoundaries) {
+                                    if (!mapInstanceRef.current.getSource('employment-zones')) {
+                                        mapInstanceRef.current.addSource('employment-zones', {
+                                            type: 'geojson',
+                                            data: zipBoundaries
+                                        });
+                            
+                                        mapInstanceRef.current.addLayer({
+                                            id: 'employment-fill',
+                                            type: 'fill',
+                                            source: 'employment-zones',
+                                            layout: {
+                                                visibility: isBoundaryLayerVisible ? 'visible' : 'none'
+                                            },
+                                            paint: {
+                                                'fill-color': [
+                                                    'match',
+                                                    ['get', 'zip_code'],
+                                                    ...employmentData.flatMap(emp => [
+                                                        String(emp.zipcode),
+                                                        getEmploymentColor(Number(emp.percent_change))
+                                                    ]),
+                                                    isDarkMode ? 'rgba(107, 114, 128, 0.3)' : 'rgba(243, 244, 246, 0.3)'
+                                                ],
+                                                'fill-opacity': 0.6
+                                            }
+                                        }, 'houses-layer'); 
+                            
+                                        mapInstanceRef.current.addLayer({
+                                            id: 'employment-outline',
+                                            type: 'line',
+                                            source: 'employment-zones',
+                                            layout: {
+                                                visibility: isBoundaryLayerVisible ? 'visible' : 'none'
+                                            },
+                                            paint: {
+                                                'line-color': isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)',
+                                                'line-width': 1
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        });
             }
         };
         initializeMap();
@@ -783,6 +927,30 @@ export function Map() {
             mapInstanceRef.current = null;
         };
     }, [isDarkMode, houses, clusters, clusterColors]);
+
+    useEffect(() => {
+        if (mapInstanceRef.current && zipBoundaries && mapInstanceRef.current.getSource('employment-zones')) {
+            mapInstanceRef.current.setPaintProperty(
+                'employment-fill',
+                'fill-color',
+                [
+                    'match',
+                    ['get', 'zip_code'],
+                    ...employmentData.flatMap(emp => [
+                        String(emp.zipcode),
+                        getEmploymentColor(Number(emp.percent_change))
+                    ]),
+                    isDarkMode ? 'rgba(107, 114, 128, 0.3)' : 'rgba(243, 244, 246, 0.3)' 
+                ]
+            );
+            
+            mapInstanceRef.current.setPaintProperty(
+                'employment-outline',
+                'line-color',
+                isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)'
+            );
+        }
+    }, [isDarkMode, employmentData, zipBoundaries]);
 
     useEffect(() => {
         if (mapInstanceRef.current) {
@@ -863,8 +1031,11 @@ export function Map() {
                 {renderLegend()}
             </div>
             <div className="text-sm text-muted-foreground space-y-1">
-                <p>Use the map to explore housing clusters in Reno. Each color represents a group of houses with similar prices.</p>
-                <p>Click on a house circle <span className="inline-block w-3 h-3 rounded-full bg-blue-500 border border-black dark:border-white" aria-hidden="true"></span> to see details. Hover over the legend <span className="inline-block w-3 h-3 rounded-full bg-red-500" aria-hidden="true"></span><span className="inline-block w-3 h-3 rounded-full bg-green-500" aria-hidden="true"></span><span className="inline-block w-3 h-3 rounded-full bg-purple-500" aria-hidden="true"></span> (bottom-right) to view and select clusters.</p>
+                <p>Use the map to explore housing clusters and employment zones in Reno.</p>
+                <p>
+                    House colors <span className="inline-block w-3 h-3 rounded-full bg-red-500" aria-hidden="true"></span><span className="inline-block w-3 h-3 rounded-full bg-green-500" aria-hidden="true"></span><span className="inline-block w-3 h-3 rounded-full bg-purple-500" aria-hidden="true"></span> indicate price clusters. Zone colors indicate employment growth trends (Green=Growth, Red=Decline).
+                </p>
+                <p>Click on a house circle <span className="inline-block w-3 h-3 rounded-full bg-blue-500 border border-black dark:border-white" aria-hidden="true"></span> to see details. Hover over the legend <Layers size={14} className="inline-block -mt-1" /> (bottom-right) to view options.</p>
                 <p>Use the dropdown above to search for a specific property by address.</p>
             </div>
         </div>
