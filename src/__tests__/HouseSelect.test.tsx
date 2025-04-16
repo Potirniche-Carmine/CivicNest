@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import HouseSelect from '@/app/components/house_select';
+import HouseSelect from '@/components/house_select';
 import * as themes from 'next-themes';
 import { houses } from '@/lib/types';
 

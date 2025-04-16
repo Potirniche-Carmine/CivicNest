@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Button } from '@/app/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { TrendingUp, Home, BarChart2, Info, Loader2, AlertTriangle } from 'lucide-react';
 
 interface InsightData {

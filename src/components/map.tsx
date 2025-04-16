@@ -2,18 +2,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from 'mapbox-gl';
 import { useTheme } from "next-themes";
-import { Info, CheckSquare, Square, House } from 'lucide-react';
+import { Info, CheckSquare, Square, House, Layers } from 'lucide-react';
 import ReactDOM from 'react-dom/client';
 import HouseSelect from './house_select';
-import { Skeleton } from "@/app/components/ui/skeleton";
+import { Skeleton } from "./ui/skeleton";
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger
-} from "@/app/components/ui/tooltip";
+} from "./ui/tooltip";
 import { houses, EmploymentPrediction } from "@/lib/types";
-import { Badge } from "@/app/components/ui/badge";
+import { Badge } from "./ui/badge";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || "";
 
@@ -56,7 +56,6 @@ export function Map() {
     const [selectedHouse, setSelectedHouse] = useState<houses | null>(null);
     const [selectedClusterIds, setSelectedClusterIds] = useState<number[]>([]);
     const [employmentData, setEmploymentData] = useState<EmploymentPrediction[]>([]);
-    const [showEmploymentOverlay, setShowEmploymentOverlay] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState(true);
     const [displayMode, setDisplayMode] = useState<'all' | 'selectedHouse' | 'selectedClusters'>('all');
     const [visibleHousesCount, setVisibleHousesCount] = useState<number>(0);
@@ -509,39 +508,30 @@ export function Map() {
     };
 
     const renderLegend = () => {
-        const clusterGroups = clusters.map((cluster, index) => {
-            return {
-                id: cluster.cluster_id,
-                avgPrice: cluster.avg_price,
-                color: clusterColors[index % clusterColors.length],
-                count: cluster.houses?.length || 0
-            };
-        }).sort((a, b) => a.id - b.id);
+        const clusterGroups = clusters.map((cluster, index) => ({
+            id: cluster.cluster_id,
+            avgPrice: cluster.avg_price,
+            color: clusterColors[index % clusterColors.length],
+            count: cluster.houses?.length || 0
+        })).sort((a, b) => a.id - b.id);
+
         const isCompact = !isLegendVisible;
+
         return (
             <div
-                className={`bg-card rounded-md border border-border absolute bottom-6 right-6 z-10 shadow-md transition-all duration-300 ease-in-out ${isCompact ? 'w-12 h-12 p-2 hover:scale-105' : 'w-72 p-4'
-                    }`}
+                className={`bg-card rounded-md border border-border absolute bottom-6 right-6 z-10 shadow-md transition-all duration-300 ease-in-out ${isCompact ? 'w-12 h-12 p-2 hover:scale-105 cursor-pointer' : 'w-72 p-4'}`}
                 onMouseEnter={handleLegendHover}
                 onMouseLeave={handleLegendLeave}
+                onClick={isCompact ? handleLegendHover : undefined}
             >
                 {isCompact ? (
                     <div className="w-full h-full flex items-center justify-center">
-                        <div className="grid grid-cols-3 gap-1">
-                            {clusterGroups.slice(0, 9).map(cluster => (
-                                <div
-                                    key={cluster.id}
-                                    style={{ backgroundColor: cluster.color }}
-                                    className="w-2 h-2 rounded-full"
-                                    aria-hidden="true"
-                                ></div>
-                            ))}
-                        </div>
+                        <Layers size={20} className="text-muted-foreground" />
                     </div>
                 ) : (
                     <>
-                        <h3 className="text-lg font-medium mb-3">Price Clusters</h3>
-                        <div className="space-y-2 max-h-40 overflow-y-auto">
+                        <h3 className="text-base font-medium mb-2">Price Clusters</h3>
+                        <div className="space-y-1.5 max-h-32 overflow-y-auto mb-3 pr-1">
                             {clusterGroups.map(cluster => (
                                 <div
                                     key={cluster.id}
@@ -550,23 +540,19 @@ export function Map() {
                                 >
                                     <div className="flex items-center gap-2">
                                         {selectedClusterIds.includes(cluster.id) ? (
-                                            <CheckSquare size={16} className="text-primary" />
+                                            <CheckSquare size={16} className="text-primary flex-shrink-0" />
                                         ) : (
-                                            <Square size={16} className="text-muted-foreground" />
+                                            <Square size={16} className="text-muted-foreground flex-shrink-0" />
                                         )}
-                                        <div
-                                            style={{ backgroundColor: cluster.color }}
-                                            className="w-4 h-4 rounded-full border border-border"
-                                            aria-label={`Cluster ${cluster.id} color indicator`}
-                                        ></div>
-                                        <span className="text-sm">Cluster {cluster.id}</span>
+                                        <div style={{ backgroundColor: cluster.color }} className="w-4 h-4 rounded-full border border-border flex-shrink-0" aria-label={`Cluster ${cluster.id} color indicator`}></div>
+                                        <span className="text-sm truncate">Cluster {cluster.id}</span>
                                     </div>
-                                    <div className="text-sm font-medium">{formatPrice(cluster.avgPrice)}</div>
+                                    <div className="text-sm font-medium flex-shrink-0">{formatPrice(cluster.avgPrice)}</div>
                                 </div>
                             ))}
                         </div>
-                        <div className="mt-3 text-xs text-muted-foreground">
-                            Click clusters to select/deselect
+                        <div className="text-xs text-muted-foreground mb-3">
+                            Click clusters to filter map
                         </div>
                     </>
                 )}
@@ -864,8 +850,11 @@ export function Map() {
                 {renderLegend()}
             </div>
             <div className="text-sm text-muted-foreground space-y-1">
-                <p>Use the map to explore housing clusters in Reno. Each color represents a group of houses with similar prices.</p>
-                <p>Click on a house circle <span className="inline-block w-3 h-3 rounded-full bg-blue-500 border border-black dark:border-white" aria-hidden="true"></span> to see details. Hover over the legend <span className="inline-block w-3 h-3 rounded-full bg-red-500" aria-hidden="true"></span><span className="inline-block w-3 h-3 rounded-full bg-green-500" aria-hidden="true"></span><span className="inline-block w-3 h-3 rounded-full bg-purple-500" aria-hidden="true"></span> (bottom-right) to view and select clusters.</p>
+                <p>Use the map to explore housing clusters zones in Reno.</p>
+                <p>
+                    House colors <span className="inline-block w-3 h-3 rounded-full bg-red-500" aria-hidden="true"></span><span className="inline-block w-3 h-3 rounded-full bg-green-500" aria-hidden="true"></span><span className="inline-block w-3 h-3 rounded-full bg-purple-500" aria-hidden="true"></span> indicate price clusters.
+                </p>
+                <p>Click on a house circle <span className="inline-block w-3 h-3 rounded-full bg-blue-500 border border-black dark:border-white" aria-hidden="true"></span> to see details. Hover over the legend <Layers size={14} className="inline-block -mt-1" /> (bottom-right) to view options.</p>
                 <p>Use the dropdown above to search for a specific property by address.</p>
             </div>
         </div>
