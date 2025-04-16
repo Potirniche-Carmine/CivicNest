@@ -850,9 +850,9 @@ export function Map() {
                 {renderLegend()}
             </div>
             <div className="text-sm text-muted-foreground space-y-1">
-                <p>Use the map to explore housing clusters and employment zones in Reno.</p>
+                <p>Use the map to explore housing clusters zones in Reno.</p>
                 <p>
-                    House colors <span className="inline-block w-3 h-3 rounded-full bg-red-500" aria-hidden="true"></span><span className="inline-block w-3 h-3 rounded-full bg-green-500" aria-hidden="true"></span><span className="inline-block w-3 h-3 rounded-full bg-purple-500" aria-hidden="true"></span> indicate price clusters. Zone colors indicate employment growth trends (Green=Growth, Red=Decline).
+                    House colors <span className="inline-block w-3 h-3 rounded-full bg-red-500" aria-hidden="true"></span><span className="inline-block w-3 h-3 rounded-full bg-green-500" aria-hidden="true"></span><span className="inline-block w-3 h-3 rounded-full bg-purple-500" aria-hidden="true"></span> indicate price clusters.
                 </p>
                 <p>Click on a house circle <span className="inline-block w-3 h-3 rounded-full bg-blue-500 border border-black dark:border-white" aria-hidden="true"></span> to see details. Hover over the legend <Layers size={14} className="inline-block -mt-1" /> (bottom-right) to view options.</p>
                 <p>Use the dropdown above to search for a specific property by address.</p>
