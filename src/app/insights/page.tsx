@@ -8,7 +8,7 @@ import { TrendingUp, Home, BarChart2, Info, Loader2, AlertTriangle } from 'lucid
 interface InsightData {
   cluster_id: number;
   avg_payroll: string;
-  avg_price: string;
+  median_price: string;
   affordability_ratio: number;
   employment_growth: string;
 }
@@ -121,7 +121,7 @@ export default function Insights() {
                   <tr className="border-b border-border">
                     <th className="p-3 text-left font-medium text-muted-foreground">Cluster</th>
                     <th className="p-3 text-left font-medium text-muted-foreground">Avg Payroll</th>
-                    <th className="p-3 text-left font-medium text-muted-foreground">Avg House Price</th>
+                    <th className="p-3 text-left font-medium text-muted-foreground">Median House Price</th>
                     <th className="p-3 text-left font-medium text-muted-foreground">Affordability Ratio</th>
                   </tr>
                 </thead>
@@ -137,7 +137,7 @@ export default function Insights() {
                       <tr key={`payroll-${item.cluster_id}`} className="border-b border-border hover:bg-muted/50">
                         <td className="p-3 font-medium">Cluster {item.cluster_id}</td>
                         <td className="p-3">{formatCurrency(item.avg_payroll)}</td>
-                        <td className="p-3">{formatCurrency(item.avg_price)}</td>
+                        <td className="p-3">{formatCurrency(item.median_price)}</td>
                         <td className={`p-3 ${ratioColorClass}`}>{item.affordability_ratio}</td>
                       </tr>
                     );

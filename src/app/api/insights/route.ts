@@ -4,7 +4,7 @@ import { pool } from "@/lib/db";
 interface InsightDataFromDB {
     cluster_id: number;
     avg_payroll: string;
-    avg_price: string;
+    median_price: string;
     affordability_ratio: number;
     employment_growth: string; 
 }
@@ -23,7 +23,7 @@ export async function GET() {
             SELECT
                 cluster_id,
                 avg_payroll::text,  
-                avg_price::text,   
+                median_price::text,   
                 affordability_ratio,
                 employment_growth   
             FROM insights_table    
@@ -34,7 +34,7 @@ export async function GET() {
         const insightsData = numericalResult.rows.map(row => ({
             cluster_id: row.cluster_id, 
             avg_payroll: row.avg_payroll,
-            avg_price: row.avg_price,
+            median_price: row.median_price,
             affordability_ratio: row.affordability_ratio, 
             employment_growth: row.employment_growth,
         }));
