@@ -510,7 +510,7 @@ export function Map() {
     const renderLegend = () => {
         const clusterGroups = clusters.map((cluster, index) => ({
             id: cluster.cluster_id,
-            avgPrice: cluster.avg_price,
+            name: cluster.display_name,
             color: clusterColors[index % clusterColors.length],
             count: cluster.houses?.length || 0
         })).sort((a, b) => a.id - b.id);
@@ -545,9 +545,8 @@ export function Map() {
                                             <Square size={16} className="text-muted-foreground flex-shrink-0" />
                                         )}
                                         <div style={{ backgroundColor: cluster.color }} className="w-4 h-4 rounded-full border border-border flex-shrink-0" aria-label={`Cluster ${cluster.id} color indicator`}></div>
-                                        <span className="text-sm truncate">Cluster {cluster.id}</span>
+                                        <span className="text-sm truncate">{cluster.name}</span>
                                     </div>
-                                    <div className="text-sm font-medium flex-shrink-0">{formatPrice(cluster.avgPrice)}</div>
                                 </div>
                             ))}
                         </div>

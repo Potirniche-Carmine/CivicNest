@@ -3,6 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { TrendingUp, Home, BarChart2, Info, Loader2, AlertTriangle } from 'lucide-react';
 
 interface InsightData {
@@ -110,41 +118,48 @@ export default function Insights() {
           Market Insights
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          <section className="p-6 rounded-xl bg-card shadow-lg border border-border">
+        <section className="p-6 rounded-xl bg-card shadow-lg border border-border">
             <div className="flex items-center mb-4">
               <Home className="mr-3 text-sky-500 dark:text-sky-400" size={24} />
-              <h2 className="text-2xl font-semibold">Housing Affordability</h2>
+              <h2 className="text-2xl font-semibold">Zip Code Cluster Insights</h2>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="p-3 text-left font-medium text-muted-foreground">Cluster</th>
-                    <th className="p-3 text-left font-medium text-muted-foreground">Avg Payroll</th>
-                    <th className="p-3 text-left font-medium text-muted-foreground">Median House Price</th>
-                    <th className="p-3 text-left font-medium text-muted-foreground">Affordability Ratio</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {insightsData.map((item) => {
-                    let ratioColorClass = "";
-                    if (item.affordability_ratio >= 0.15) ratioColorClass = "text-emerald-600 dark:text-emerald-400 font-medium";
-                    else if (item.affordability_ratio >= 0.1) ratioColorClass = "text-blue-600 dark:text-blue-400 font-medium";
-                    else if (item.affordability_ratio >= 0.07) ratioColorClass = "text-amber-600 dark:text-amber-400 font-medium";
-                    else ratioColorClass = "text-rose-600 dark:text-rose-400 font-medium";
 
-                    return (
-                      <tr key={`payroll-${item.cluster_id}`} className="border-b border-border hover:bg-muted/50">
-                        <td className="p-3 font-medium">Cluster {item.cluster_id}</td>
-                        <td className="p-3">{formatCurrency(item.avg_payroll)}</td>
-                        <td className="p-3">{formatCurrency(item.median_price)}</td>
-                        <td className={`p-3 ${ratioColorClass}`}>{item.affordability_ratio}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-left font-medium text-muted-foreground">Zip code</TableHead>
+                  <TableHead className="text-left font-medium text-muted-foreground">Average House Price</TableHead>
+                  <TableHead className="text-left font-medium text-muted-foreground">Affordability Ratio</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {insightsData.map((item) => {
+                  let ratioColorClass = "";
+                  if (item.affordability_ratio >= 0.15) ratioColorClass = "text-emerald-600 dark:text-emerald-400 font-medium";
+                  else if (item.affordability_ratio >= 0.1) ratioColorClass = "text-blue-600 dark:text-blue-400 font-medium";
+                  else if (item.affordability_ratio >= 0.07) ratioColorClass = "text-amber-600 dark:text-amber-400 font-medium";
+                  else ratioColorClass = "text-rose-600 dark:text-rose-400 font-medium";
+
+                  return (
+                    <TableRow key={`payroll-${item.cluster_id}`} className="hover:bg-muted/50">
+                      <TableCell className="font-medium">
+                        <Link
+                          href={`/insights/${item.cluster_id}`}
+                          className="hover:underline text-primary cursor-pointer" 
+                        >
+                          Cluster {item.cluster_id}
+                        </Link>
+                      </TableCell>
+                      <TableCell>{formatCurrency(item.median_price)}</TableCell>
+                      <TableCell>{}</TableCell>
+                      <TableCell className={ratioColorClass}>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+
             <div className="mt-4 text-sm text-muted-foreground flex items-start">
               <Info className="mr-2 mt-0.5 flex-shrink-0" size={14} />
               <p>A higher Payroll-to-Price Ratio suggests greater housing affordability relative to local wages.</p>
