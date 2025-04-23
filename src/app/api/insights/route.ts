@@ -1,21 +1,11 @@
 import { NextResponse } from 'next/server';
 import { pool } from "@/lib/db";
+import { ZipInsightData, ClusterInsightData, GeneratedInsight } from "@/lib/types";
 
-interface InsightDataFromDB {
-    zipcode: number;
-    pct_cluster_1: string;
-    pct_cluster_2: string;
-    pct_cluster_3: string;
-    pct_cluster_4: string;
-    assigned_cluster: number;
-    median_price: string;
-    affordability_ratio: number;
-    employment_growth: string; 
-}
-
-interface GeneratedInsight {
-    title: string;
-    explanation: string;
+const parseSafeFloat = (value: any): number | null => {
+    if (value === null || value === undefined) return null;
+    const num = parseFloat(String(value));
+    return isNaN(num) ? null : num;
 }
 
 export async function GET() {
@@ -23,7 +13,7 @@ export async function GET() {
 
     try {
         client = await pool.connect();
-        const numericalQuery = `
+        const zipQuery = `
             SELECT
                 zipcode,
                 pct_cluster_1,
@@ -38,18 +28,38 @@ export async function GET() {
             WHERE zipcode IS NOT NULL
             ORDER BY zipcode;
         `;
-        const numericalResult = await client.query<InsightDataFromDB>(numericalQuery);
-        const insightsData = numericalResult.rows.map(row => ({
+        const zipResult = await client.query<ZipInsightData>(zipQuery);
+        const zipInsights = zipResult.rows.map(row => ({
             zipcode: row.zipcode, 
-            pct_cluster_1: parseFloat(row.pct_cluster_1),
-            pct_cluster_2: parseFloat(row.pct_cluster_2),
-            pct_cluster_3: parseFloat(row.pct_cluster_3),
-            pct_cluster_4: parseFloat(row.pct_cluster_4),
+            pct_cluster_1: parseSafeFloat(row.pct_cluster_1),
+            pct_cluster_2: parseSafeFloat(row.pct_cluster_2),
+            pct_cluster_3: parseSafeFloat(row.pct_cluster_3),
+            pct_cluster_4: parseSafeFloat(row.pct_cluster_4),
             assigned_cluster: row.assigned_cluster,
             median_price: row.median_price,
             affordability_ratio: row.affordability_ratio, 
             employment_growth: row.employment_growth,
         }));
+        const clusterQuery = `
+            SELECT
+                cluster_id,
+                avg_payroll::text,
+                median_price::text,
+                affordability_ratio,
+                employment_growth
+            FROM cluster_insights
+            WHERE cluster_id IS NOT NULL
+            ORDER BY cluster_id;
+        `;
+        const clusterResult = await client.query<ClusterInsightData>(clusterQuery);
+        const clusterInsights = clusterResult.rows.map(row => ({
+            cluster_id: row.cluster_id,
+            avg_payroll: parseSafeFloat(row.avg_payroll),
+            median_price: parseSafeFloat(row.median_price),
+            affordability_ratio: row.affordability_ratio,
+            employment_growth: row.employment_growth,
+        }));
+
         const generatedQuery = `
             SELECT insights_content
             FROM generated_market_insights
@@ -76,7 +86,8 @@ export async function GET() {
 
         client.release();
         return NextResponse.json({
-            insights: insightsData, 
+            insights: zipInsights, 
+            clusterInsights: clusterInsights,
             generatedInsights: generatedInsights, 
         });
 

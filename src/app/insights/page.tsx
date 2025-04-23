@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,26 +12,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TrendingUp, Home, BarChart2, Info, Loader2, AlertTriangle } from 'lucide-react';
-
-interface InsightData {
-  zipcode: number;
-  pct_cluster_1: string;
-  pct_cluster_2: string;
-  pct_cluster_3: string;
-  pct_cluster_4: string;
-  assigned_cluster: number;
-  median_price: string;
-  affordability_ratio: number;
-  employment_growth: string;
-}
-
-interface GeneratedInsight {
-  title: string;
-  explanation: string;
-}
+import { ZipInsightData, ClusterInsightData, GeneratedInsight } from '@/lib/types';
 
 export default function Insights() {
-  const [insightsData, setInsightsData] = useState<InsightData[]>([]);
+  const [zipInsightsData, setzipInsightsData] = useState<ZipInsightData[]>([]);
+  const [clusterInsightsData, setClusterInsightsData] = useState<ClusterInsightData[]>([]);
   const [generatedInsights, setGeneratedInsights] = useState<GeneratedInsight[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,7 +25,8 @@ export default function Insights() {
     const fetchCombinedData = async () => {
       setIsLoading(true);
       setError(null);
-      setInsightsData([]);
+      setzipInsightsData([]);
+      setClusterInsightsData([]);
       setGeneratedInsights([]);
       try {
         const response = await fetch('/api/insights');
@@ -64,7 +50,8 @@ export default function Insights() {
           data.generatedInsights = [];
         }
 
-        setInsightsData(data.insights);
+        setzipInsightsData(data.insights);
+        setClusterInsightsData(data.clusterInsights);
         setGeneratedInsights(data.generatedInsights);
 
       } catch (err: unknown) {
@@ -78,6 +65,14 @@ export default function Insights() {
 
     fetchCombinedData();
   }, []);
+
+  const clusterPriceMap = useMemo(() => {
+    const map = new Map<number, string>();
+    clusterInsightsData.forEach(cluster => {
+      map.set(cluster.cluster_id, cluster.median_price);
+    });
+    return map;
+  }, [clusterInsightsData]);
 
   if (isLoading) {
     return (
@@ -103,17 +98,23 @@ export default function Insights() {
     );
   }
 
-  const formatCurrency = (value: string): string => {
+  const formatCurrency = (value: string | number | null | undefined): string => {
+    if (value === null || value === undefined) return 'N/A';
     try {
-      const numericString = String(value).replace(/[^0-9.]/g, '');
+      const numericString = String(value).replace(/[^0-9.-]+/g, '');
       const number = parseFloat(numericString);
-      if (isNaN(number)) return value;
+      if (isNaN(number)) return String(value);
       return `$${number.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
     } catch (error) {
       console.error("Error formatting currency:", error, "Value:", value);
-      return value;
+      return String(value);
     }
   };
+
+  const approxRowHeight = 50;
+  const maxVisibleRows = 7;
+  const tableMaxHeight = approxRowHeight * maxVisibleRows;
+
 
   return (
     <main className="flex-1 bg-background min-h-screen">
@@ -127,43 +128,59 @@ export default function Insights() {
               <Home className="mr-3 text-sky-500 dark:text-sky-400" size={24} />
               <h2 className="text-2xl font-semibold">Zip Code Cluster Insights</h2>
             </div>
-
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-left font-medium text-muted-foreground">Zip code</TableHead>
-                  <TableHead className="text-left font-medium text-muted-foreground">Median House Price</TableHead>
-                  <TableHead className="text-left font-medium text-muted-foreground">Dominant Cluster</TableHead>
-                  <TableHead className="text-left font-medium text-muted-foreground">Affordability Ratio</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {insightsData.map((item) => {
-                  let ratioColorClass = "";
-                  if (item.affordability_ratio >= 0.15) ratioColorClass = "text-emerald-600 dark:text-emerald-400 font-medium";
-                  else if (item.affordability_ratio >= 0.1) ratioColorClass = "text-blue-600 dark:text-blue-400 font-medium";
-                  else if (item.affordability_ratio >= 0.07) ratioColorClass = "text-amber-600 dark:text-amber-400 font-medium";
-                  else ratioColorClass = "text-rose-600 dark:text-rose-400 font-medium";
-
-                  return (
-                    <TableRow key={`payroll-${item.zipcode}`} className="hover:bg-muted/50">
-                      <TableCell className="font-medium">
-                        <Link
-                          href={`/insights/${item.zipcode}`}
-                          className="hover:underline text-primary cursor-pointer"
-                        >
-                          {item.zipcode}
-                        </Link>
-                      </TableCell>
-                      <TableCell>{formatCurrency(item.median_price)}</TableCell>
-                      <TableCell>{item.assigned_cluster}</TableCell>
-                      <TableCell className={ratioColorClass}> {item.affordability_ratio ? item.affordability_ratio : 'N/A'}
-                      </TableCell>
+            <div className="flex-grow overflow-hidden">
+              <div className="overflow-y-auto" style={{ maxHeight: `${tableMaxHeight}px` }}>
+                <Table>
+                  <TableHeader className="sticky top-0 bg-card z-10">
+                    <TableRow>
+                      <TableHead className="text-left font-medium text-muted-foreground">Zip code</TableHead>
+                      <TableHead className="text-left font-medium text-muted-foreground">Median House Price</TableHead>
+                      <TableHead className="text-left font-medium text-muted-foreground">Dominant Cluster</TableHead>
+                      <TableHead className="text-left font-medium text-muted-foreground">Affordability Ratio</TableHead>
                     </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {zipInsightsData.length > 0 ? zipInsightsData.map((item) => {
+                       let ratioColorClass = "";
+                       const ratio = item.affordability_ratio;
+                       if (ratio === null) ratioColorClass = "text-muted-foreground";
+                       else if (ratio >= 0.15) ratioColorClass = "text-emerald-600 dark:text-emerald-400 font-medium";
+                       else if (ratio >= 0.1) ratioColorClass = "text-blue-600 dark:text-blue-400 font-medium";
+                       else if (ratio >= 0.07) ratioColorClass = "text-amber-600 dark:text-amber-400 font-medium";
+                       else ratioColorClass = "text-rose-600 dark:text-rose-400 font-medium";
+
+                      const clusterPrice = clusterPriceMap.get(item.assigned_cluster);
+
+                      const dominantClusterDisplay = clusterPrice !== undefined
+                        ? `Cluster ${formatCurrency(clusterPrice)}` 
+                        : `ID: ${item.assigned_cluster}`; 
+
+                      return (
+                        <TableRow key={`zip-${item.zipcode}`} className="hover:bg-muted/50">
+                          <TableCell className="font-medium">
+                            <Link
+                              href={`/insights/${item.zipcode}`} 
+                              className="hover:underline text-primary cursor-pointer"
+                            >
+                              {item.zipcode}
+                            </Link>
+                          </TableCell>
+                          <TableCell>{formatCurrency(item.median_price)}</TableCell>
+                          <TableCell>{dominantClusterDisplay}</TableCell>
+                          <TableCell className={ratioColorClass}>
+                            {ratio !== null && ratio !== undefined ? Number(ratio).toFixed(3) : 'N/A'}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    }) : (
+                      <TableRow>
+                        <TableCell colSpan={4} className="text-center text-muted-foreground">No zip code data available.</TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
 
             <div className="mt-4 text-sm text-muted-foreground flex items-start">
               <Info className="mr-2 mt-0.5 flex-shrink-0" size={14} />
@@ -174,42 +191,51 @@ export default function Insights() {
           <section className="p-6 rounded-xl bg-card shadow-lg border border-border">
             <div className="flex items-center mb-4">
               <TrendingUp className="mr-3 text-sky-500 dark:text-sky-400" size={24} />
-              <h2 className="text-2xl font-semibold">Employment Growth</h2>
+              <h2 className="text-2xl font-semibold">Employment Growth by Cluster</h2>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              {insightsData.map((item) => {
-                const growthValue = parseFloat(String(item.employment_growth || '0').replace(/[^0-9.-]/g, ''));
-                let growthColorClass = "", textColorClass = "";
+            {clusterInsightsData.length > 0 ? (
+                <div className="grid grid-cols-2 gap-4">
+                {clusterInsightsData.map((item) => {
+                    const growthStr = String(item.employment_growth || '0').replace(/[^0-9.-]/g, '');
+                    const growthValue = parseFloat(growthStr);
+                    let growthColorClass = "", textColorClass = "";
 
-                if (isNaN(growthValue)) {
-                  growthColorClass = "bg-muted border-border";
-                  textColorClass = "text-foreground";
-                } else if (growthValue >= 4) {
-                  growthColorClass = "bg-emerald-100/80 dark:bg-emerald-900/30 border-emerald-300 dark:border-emerald-700"; textColorClass = "text-emerald-700 dark:text-emerald-300";
-                } else if (growthValue >= 3) {
-                  growthColorClass = "bg-blue-100/80 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700"; textColorClass = "text-blue-700 dark:text-blue-300";
-                } else if (growthValue >= 2.5) {
-                  growthColorClass = "bg-muted border-border"; textColorClass = "text-foreground";
-                } else {
-                  growthColorClass = "bg-amber-100/80 dark:bg-amber-900/30 border-amber-300 dark:border-amber-700"; textColorClass = "text-amber-700 dark:text-amber-300";
-                }
+                    // ... (color logic remains the same)
+                    if (isNaN(growthValue)) {
+                        growthColorClass = "bg-muted border-border"; textColorClass = "text-foreground";
+                    } else if (growthValue >= 4) {
+                        growthColorClass = "bg-emerald-100/80 dark:bg-emerald-900/30 border-emerald-300 dark:border-emerald-700"; textColorClass = "text-emerald-700 dark:text-emerald-300";
+                    } else if (growthValue >= 3) {
+                        growthColorClass = "bg-blue-100/80 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700"; textColorClass = "text-blue-700 dark:text-blue-300";
+                    } else if (growthValue >= 2.5) {
+                        growthColorClass = "bg-muted border-border"; textColorClass = "text-foreground";
+                    } else {
+                         growthColorClass = "bg-amber-100/80 dark:bg-amber-900/30 border-amber-300 dark:border-amber-700"; textColorClass = "text-amber-700 dark:text-amber-300";
+                    }
 
-                return (
-                  <div key={`emp-${item.cluster_id}`} className={`p-4 rounded-lg border ${growthColorClass} flex flex-col items-center`}>
-                    <h3 className="text-lg font-medium">Cluster {item.cluster_id}</h3>
-                    <p className={`text-2xl font-bold ${textColorClass}`}>{item.employment_growth || 'N/A'}%</p>
-                    <p className="text-sm text-muted-foreground mt-1">Annual Growth</p>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="mt-4 text-sm text-muted-foreground flex items-start">
+
+                    return (
+                    <div key={`emp-cluster-${item.cluster_id}`} className={`p-4 rounded-lg border ${growthColorClass} flex flex-col items-center`}>
+                        <h3 className="text-lg font-medium text-center">
+                            Cluster <br/> ({formatCurrency(item.median_price)})
+                        </h3>
+                        <p className={`text-2xl font-bold mt-2 ${textColorClass}`}>
+                             {!isNaN(growthValue) ? `${growthValue.toFixed(1)}%` : 'N/A'}
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-1">Annual Growth</p>
+                    </div>
+                    );
+                })}
+                </div>
+            ) : (
+                <p className="text-muted-foreground text-center p-4">No cluster employment growth data available.</p>
+            )}
+             <div className="mt-4 text-sm text-muted-foreground flex items-start">
               <Info className="mr-2 mt-0.5 flex-shrink-0" size={14} />
-              <p>Employment growth indicates economic health and future housing demand.</p>
+              <p>Employment growth indicates economic health and potential future housing demand within each market cluster (identified by median price).</p>
             </div>
           </section>
         </div>
-
         <section className="p-6 rounded-xl bg-card shadow-lg border border-border mb-12">
           <div className="flex items-center mb-6">
             <BarChart2 className="mr-3 text-sky-500 dark:text-sky-400" size={24} />
@@ -260,7 +286,7 @@ export default function Insights() {
             </Link>
           </div>
         </div>
-      </div>
-    </main>
+      </div >
+    </main >
   );
 };
