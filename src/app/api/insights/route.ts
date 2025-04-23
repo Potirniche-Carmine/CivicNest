@@ -2,8 +2,12 @@ import { NextResponse } from 'next/server';
 import { pool } from "@/lib/db";
 
 interface InsightDataFromDB {
-    cluster_id: number;
-    avg_payroll: string;
+    zipcode: number;
+    pct_cluster_1: string;
+    pct_cluster_2: string;
+    pct_cluster_3: string;
+    pct_cluster_4: string;
+    assigned_cluster: number;
     median_price: string;
     affordability_ratio: number;
     employment_growth: string; 
@@ -21,19 +25,27 @@ export async function GET() {
         client = await pool.connect();
         const numericalQuery = `
             SELECT
-                cluster_id,
-                avg_payroll::text,  
-                median_price::text,   
+                zipcode,
+                pct_cluster_1,
+                pct_cluster_2,
+                pct_cluster_3,
+                pct_cluster_4,  
+                assigned_cluster,   
+                median_price,
                 affordability_ratio,
-                employment_growth   
-            FROM insights_table    
-            WHERE cluster_id IS NOT NULL
-            ORDER BY cluster_id;
+                employment_growth
+            FROM final_insights_table    
+            WHERE zipcode IS NOT NULL
+            ORDER BY zipcode;
         `;
         const numericalResult = await client.query<InsightDataFromDB>(numericalQuery);
         const insightsData = numericalResult.rows.map(row => ({
-            cluster_id: row.cluster_id, 
-            avg_payroll: row.avg_payroll,
+            zipcode: row.zipcode, 
+            pct_cluster_1: parseFloat(row.pct_cluster_1),
+            pct_cluster_2: parseFloat(row.pct_cluster_2),
+            pct_cluster_3: parseFloat(row.pct_cluster_3),
+            pct_cluster_4: parseFloat(row.pct_cluster_4),
+            assigned_cluster: row.assigned_cluster,
             median_price: row.median_price,
             affordability_ratio: row.affordability_ratio, 
             employment_growth: row.employment_growth,

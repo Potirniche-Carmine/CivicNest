@@ -14,8 +14,12 @@ import {
 import { TrendingUp, Home, BarChart2, Info, Loader2, AlertTriangle } from 'lucide-react';
 
 interface InsightData {
-  cluster_id: number;
-  avg_payroll: string;
+  zipcode: number;
+  pct_cluster_1: string;
+  pct_cluster_2: string;
+  pct_cluster_3: string;
+  pct_cluster_4: string;
+  assigned_cluster: number;
   median_price: string;
   affordability_ratio: number;
   employment_growth: string;
@@ -118,7 +122,7 @@ export default function Insights() {
           Market Insights
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-        <section className="p-6 rounded-xl bg-card shadow-lg border border-border">
+          <section className="p-6 rounded-xl bg-card shadow-lg border border-border">
             <div className="flex items-center mb-4">
               <Home className="mr-3 text-sky-500 dark:text-sky-400" size={24} />
               <h2 className="text-2xl font-semibold">Zip Code Cluster Insights</h2>
@@ -128,7 +132,8 @@ export default function Insights() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="text-left font-medium text-muted-foreground">Zip code</TableHead>
-                  <TableHead className="text-left font-medium text-muted-foreground">Average House Price</TableHead>
+                  <TableHead className="text-left font-medium text-muted-foreground">Median House Price</TableHead>
+                  <TableHead className="text-left font-medium text-muted-foreground">Dominant Cluster</TableHead>
                   <TableHead className="text-left font-medium text-muted-foreground">Affordability Ratio</TableHead>
                 </TableRow>
               </TableHeader>
@@ -141,18 +146,18 @@ export default function Insights() {
                   else ratioColorClass = "text-rose-600 dark:text-rose-400 font-medium";
 
                   return (
-                    <TableRow key={`payroll-${item.cluster_id}`} className="hover:bg-muted/50">
+                    <TableRow key={`payroll-${item.zipcode}`} className="hover:bg-muted/50">
                       <TableCell className="font-medium">
                         <Link
-                          href={`/insights/${item.cluster_id}`}
-                          className="hover:underline text-primary cursor-pointer" 
+                          href={`/insights/${item.zipcode}`}
+                          className="hover:underline text-primary cursor-pointer"
                         >
-                          Cluster {item.cluster_id}
+                          {item.zipcode}
                         </Link>
                       </TableCell>
                       <TableCell>{formatCurrency(item.median_price)}</TableCell>
-                      <TableCell>{}</TableCell>
-                      <TableCell className={ratioColorClass}>
+                      <TableCell>{item.assigned_cluster}</TableCell>
+                      <TableCell className={ratioColorClass}> {item.affordability_ratio ? item.affordability_ratio : 'N/A'}
                       </TableCell>
                     </TableRow>
                   );
@@ -215,14 +220,14 @@ export default function Insights() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {generatedInsights.map((insight, index) => (
                 <div key={index} className={`p-4 rounded-lg border ${index % 4 === 0 ? 'bg-blue-50/50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800' :
-                    index % 4 === 1 ? 'bg-emerald-50/50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800' :
-                      index % 4 === 2 ? 'bg-amber-50/50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800' :
-                        'bg-purple-50/50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800'
+                  index % 4 === 1 ? 'bg-emerald-50/50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800' :
+                    index % 4 === 2 ? 'bg-amber-50/50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800' :
+                      'bg-purple-50/50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800'
                   }`}>
                   <h3 className={`font-semibold mb-2 ${index % 4 === 0 ? 'text-blue-700 dark:text-blue-300' :
-                      index % 4 === 1 ? 'text-emerald-700 dark:text-emerald-300' :
-                        index % 4 === 2 ? 'text-amber-700 dark:text-amber-300' :
-                          'text-purple-700 dark:text-purple-300'
+                    index % 4 === 1 ? 'text-emerald-700 dark:text-emerald-300' :
+                      index % 4 === 2 ? 'text-amber-700 dark:text-amber-300' :
+                        'text-purple-700 dark:text-purple-300'
                     }`}>{insight.title || `Insight ${index + 1}`}</h3>
                   {insight.explanation ? (
                     <p
