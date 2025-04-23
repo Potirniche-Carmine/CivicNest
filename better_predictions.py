@@ -82,9 +82,9 @@ def calculate_price_distribution_stats(cursor):
         print(f"Cluster {cluster_id} | Median: ${median_price}, IQR: ${iqr}, Range: ${total_range}")
     return stats_by_cluster
 
-def update_insights_table(cursor, connection, insight_data):
+def update_cluster_insights(cursor, connection, insight_data):
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS insights_table (
+    CREATE TABLE IF NOT EXISTS cluster_insights (
         cluster_id INTEGER PRIMARY KEY,
         median_price NUMERIC,
         avg_payroll NUMERIC,
@@ -94,10 +94,10 @@ def update_insights_table(cursor, connection, insight_data):
         total_range NUMERIC
     )
     """)
-    cursor.execute("DELETE FROM insights_table")
+    cursor.execute("DELETE FROM cluster_insights")
 
     insert_query = """
-    INSERT INTO insights_table (
+    INSERT INTO cluster_insights (
         cluster_id, median_price, avg_payroll,
         affordability_ratio, employment_growth, iqr_price, total_range
     ) VALUES (%s, %s, %s, %s, %s, %s, %s)
@@ -136,7 +136,7 @@ def better_predictions():
             price_range
         ))
 
-    update_insights_table(cursor, connection, combined_insights)
+    update_cluster_insights(cursor, connection, combined_insights)
     close_connection(cursor, connection)
 
 if __name__ == "__main__": # This is in case I don't want to run from main
