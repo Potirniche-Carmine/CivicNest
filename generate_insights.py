@@ -259,7 +259,7 @@ def fetch_zipcode_specific_data(conn, zipcode):
                 zip_data["affordability_ratio"] = format_decimal_or_float(final_row[2], 4)
 
             cur.execute("""
-                SELECT col_index, medain_age, enrollment, num_of_schools,
+                SELECT col_index, median_age, enrollment, num_of_schools,
                        schools_rated_1_or_2, num_of_1_or_2_es, num_of_1_or_2_ms, num_of_1_or_2_hs
                 FROM non_census_data WHERE zipcode = %s;
             """, (zipcode,))
