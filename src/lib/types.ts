@@ -42,3 +42,21 @@ export interface GeneratedInsight {
     title: string;
     explanation: string;
 }
+
+export interface GeneratedZipInsight {
+    title: string;
+    explanation: string;
+}
+
+export interface ZipcodeSpecificData {
+  col_index: number | null;
+  demographics: {
+    median_age: number | null;
+    school_enrollment_total: number | null;
+  };
+  schoolRatings: {
+    poorly_rated_elementary: number | null;
+    poorly_rated_middle: number | null;
+    poorly_rated_high: number | null;
+  };
+}

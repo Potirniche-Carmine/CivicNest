@@ -144,7 +144,7 @@ export default function Insights() {
                       let ratioColorClass = "";
                       const ratio = item.affordability_ratio;
                       if (ratio === null) ratioColorClass = "text-muted-foreground";
-                      else if (ratio >= 0.15) ratioColorClass = "text-emerald-600 dark:text-emerald-400 font-medium";
+                      else if (ratio >= 0.1) ratioColorClass = "text-emerald-600 dark:text-emerald-400 font-medium";
                       else if (ratio >= 0.1) ratioColorClass = "text-blue-600 dark:text-blue-400 font-medium";
                       else if (ratio >= 0.07) ratioColorClass = "text-amber-600 dark:text-amber-400 font-medium";
                       else ratioColorClass = "text-rose-600 dark:text-rose-400 font-medium";

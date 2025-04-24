@@ -44,6 +44,8 @@ export function Map({ zipcode }: MapProps) {
     const [mapCenter, setMapCenter] = useState<[number, number]>(DEFAULT_RENO_CENTER);
     const [isLegendVisible, setIsLegendVisible] = useState<boolean>(false);
     const [legendTimeoutId, setLegendTimeoutId] = useState<NodeJS.Timeout | null>(null);
+    const [mapStyleLoaded, setMapStyleLoaded] = useState(false);
+
 
     const { theme, systemTheme } = useTheme();
     const isDarkMode = theme === "system" ? systemTheme === "dark" : theme === "dark";
@@ -390,63 +392,174 @@ export function Map({ zipcode }: MapProps) {
 
     useEffect(() => {
         if (!mapRef.current || isLoading || !clusterColors.length) return;
-
-        const initializeMap = () => {
-            if (!mapInstanceRef.current) {
-                mapInstanceRef.current = new mapboxgl.Map({
-                    container: mapRef.current as HTMLElement,
-                    style: isDarkMode ? "mapbox://styles/mapbox/dark-v11" : "mapbox://styles/mapbox/light-v11",
-                    center: mapCenter,
-                    zoom: DEFAULT_ZOOM,
-                });
-
-                mapInstanceRef.current.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), 'top-right');
-
-                const keyboardTips = document.createElement('div');
-                keyboardTips.className = 'keyboard-tips';
-                keyboardTips.style.position = 'absolute';
-                keyboardTips.style.top = '10px';
-                keyboardTips.style.left = '10px';
-                keyboardTips.style.zIndex = '1';
-                keyboardTips.style.backgroundColor = isDarkMode ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.7)';
-                keyboardTips.style.padding = '5px 10px';
-                keyboardTips.style.borderRadius = '4px';
-                keyboardTips.style.fontSize = '12px';
-                keyboardTips.style.pointerEvents = 'none';
-                keyboardTips.style.transition = 'opacity 0.3s';
-                keyboardTips.style.opacity = '0';
-                keyboardTips.innerText = 'Use ← → ↑ ↓ to navigate, +/- to zoom';
-                if (mapRef.current) {
-                    mapRef.current.appendChild(keyboardTips);
+    
+        const setupMapLayers = () => {
+            if (!mapInstanceRef.current) return;
+            console.log('Setting up map layers'); // Add logging
+    
+            try {
+                // Always remove existing layers and sources first to prevent conflicts
+                if (mapInstanceRef.current.getLayer('houses-layer')) {
+                    mapInstanceRef.current.removeLayer('houses-layer');
                 }
-                mapInstanceRef.current.getCanvas().addEventListener('focus', () => {
-                    keyboardTips.style.opacity = '1';
-                    setTimeout(() => {
-                        keyboardTips.style.opacity = '0';
-                    }, 5000);
+                
+                if (mapInstanceRef.current.getSource('houses')) {
+                    mapInstanceRef.current.removeSource('houses');
+                }
+                
+                // Re-add the source and layer
+                mapInstanceRef.current.addSource('houses', {
+                    type: 'geojson',
+                    data: getHousesGeoJSON(),
                 });
-
-                mapInstanceRef.current.on('load', () => {
-                    if (!mapInstanceRef.current) return;
-
-                    const canvas = mapInstanceRef.current.getCanvas();
-                    canvas.setAttribute('aria-label', `Interactive map of housing in zipcode ${zipcode}`);
-                    canvas.setAttribute('role', 'application');
-                    canvas.setAttribute('tabindex', '0');
-
-                    const style = document.createElement('style');
-                    style.textContent = `
-                        .custom-mapbox-popup .mapboxgl-popup-content { padding: 0; overflow: visible; background: transparent; border-radius: 8px; box-shadow: none; }
-                        .custom-mapbox-popup .mapboxgl-popup-tip { border-top-color: ${isDarkMode ? '#1a2335' : '#f5f7fa'}; }
-                        .mapboxgl-ctrl button { width: 36px !important; height: 36px !important; }
-                    `;
-                    document.head.appendChild(style);
-
+                
+                mapInstanceRef.current.addLayer({
+                    id: 'houses-layer',
+                    type: 'circle',
+                    source: 'houses',
+                    paint: {
+                        'circle-radius': 6,
+                        'circle-color': ['get', 'color'],
+                        'circle-stroke-width': 1.2,
+                        'circle-stroke-color': isDarkMode ? '#ffffff' : '#000000',
+                        'circle-opacity': 0.9,
+                    },
+                });
+                
+                // Add event listeners
+                mapInstanceRef.current.on('click', 'houses-layer', (e) => {
+                    if (e.features && e.features[0] && e.features[0].properties) {
+                        const coordinates = (e.features[0].geometry as GeoJSON.Point).coordinates.slice();
+                        const props = e.features[0].properties;
+                        createCustomPopup(coordinates as [number, number], props);
+                    }
+                });
+                
+                mapInstanceRef.current.on('mouseenter', 'houses-layer', () => {
+                    if (mapInstanceRef.current) mapInstanceRef.current.getCanvas().style.cursor = 'pointer';
+                });
+                
+                mapInstanceRef.current.on('mouseleave', 'houses-layer', () => {
+                    if (mapInstanceRef.current) mapInstanceRef.current.getCanvas().style.cursor = '';
+                });
+                
+                console.log('Successfully set up layers and sources');
+            } catch (err) {
+                console.error('Error setting up map layers:', err);
+            }
+        };
+    
+        if (!mapInstanceRef.current) {
+            // Initial map creation
+            console.log('Creating new map instance');
+            mapInstanceRef.current = new mapboxgl.Map({
+                container: mapRef.current as HTMLElement,
+                style: isDarkMode ? "mapbox://styles/mapbox/dark-v11" : "mapbox://styles/mapbox/light-v11",
+                center: mapCenter,
+                zoom: DEFAULT_ZOOM,
+            });
+    
+            mapInstanceRef.current.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), 'top-right');
+    
+            // Set up keyboard tips
+            const keyboardTips = document.createElement('div');
+            keyboardTips.className = 'keyboard-tips';
+            keyboardTips.style.position = 'absolute';
+            keyboardTips.style.top = '10px';
+            keyboardTips.style.left = '10px';
+            keyboardTips.style.zIndex = '1';
+            keyboardTips.style.backgroundColor = isDarkMode ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.7)';
+            keyboardTips.style.padding = '5px 10px';
+            keyboardTips.style.borderRadius = '4px';
+            keyboardTips.style.fontSize = '12px';
+            keyboardTips.style.pointerEvents = 'none';
+            keyboardTips.style.transition = 'opacity 0.3s';
+            keyboardTips.style.opacity = '0';
+            keyboardTips.innerText = 'Use ← → ↑ ↓ to navigate, +/- to zoom';
+            if (mapRef.current) {
+                mapRef.current.appendChild(keyboardTips);
+            }
+            
+            mapInstanceRef.current.getCanvas().addEventListener('focus', () => {
+                keyboardTips.style.opacity = '1';
+                setTimeout(() => {
+                    keyboardTips.style.opacity = '0';
+                }, 5000);
+            });
+    
+            // Critical - listen to the load event
+            mapInstanceRef.current.on('load', () => {
+                console.log('Map initially loaded');
+                if (!mapInstanceRef.current) return;
+    
+                const canvas = mapInstanceRef.current.getCanvas();
+                canvas.setAttribute('aria-label', `Interactive map of housing in zipcode ${zipcode}`);
+                canvas.setAttribute('role', 'application');
+                canvas.setAttribute('tabindex', '0');
+    
+                const style = document.createElement('style');
+                style.textContent = `
+                    .custom-mapbox-popup .mapboxgl-popup-content { padding: 0; overflow: visible; background: transparent; border-radius: 8px; box-shadow: none; }
+                    .custom-mapbox-popup .mapboxgl-popup-tip { border-top-color: ${isDarkMode ? '#1a2335' : '#f5f7fa'}; }
+                    .mapboxgl-ctrl button { width: 36px !important; height: 36px !important; }
+                `;
+                document.head.appendChild(style);
+    
+                setMapStyleLoaded(true);
+                setupMapLayers();
+                mapInstanceRef.current.flyTo({ center: mapCenter, zoom: DEFAULT_ZOOM });
+            });
+    
+        } else {
+            // Handle theme changes
+            console.log('Updating map style due to theme change');
+            mapInstanceRef.current.setStyle(
+                isDarkMode ? "mapbox://styles/mapbox/dark-v11" : "mapbox://styles/mapbox/light-v11"
+            );
+            
+            // This is crucial - use the style.load event
+            mapInstanceRef.current.once('style.load', () => {
+                console.log('Map style reloaded');
+                setMapStyleLoaded(true);
+                setupMapLayers();
+            });
+        }
+    
+        return () => {
+            if (activePopupRef.current) {
+                activePopupRef.current.remove();
+                activePopupRef.current = null;
+            }
+        };
+    }, [isDarkMode, mapCenter, zipcode]);
+    
+    // Add this separate useEffect that responds to data changes
+    useEffect(() => {
+        if (
+            mapInstanceRef.current && 
+            mapStyleLoaded &&  // Only proceed if map style is loaded
+            !isLoading && 
+            filteredHouses.length > 0 && 
+            clusterColors.length > 0
+        ) {
+            console.log('Updating map data source');
+            
+            try {
+                // Try to update existing source
+                if (mapInstanceRef.current.getSource('houses')) {
+                    console.log('Updating existing source');
+                    (mapInstanceRef.current.getSource('houses') as mapboxgl.GeoJSONSource).setData(getHousesGeoJSON());
+                } 
+                // If source doesn't exist but map is ready, try to add it
+                else if (mapInstanceRef.current.isStyleLoaded()) {
+                    console.log('Source missing but map ready - adding source and layer');
+                    
+                    // Add source and layer if they don't exist
                     mapInstanceRef.current.addSource('houses', {
                         type: 'geojson',
                         data: getHousesGeoJSON(),
                     });
-
+                    
                     mapInstanceRef.current.addLayer({
                         id: 'houses-layer',
                         type: 'circle',
@@ -459,7 +572,8 @@ export function Map({ zipcode }: MapProps) {
                             'circle-opacity': 0.9,
                         },
                     });
-
+                    
+                    // Add event listeners
                     mapInstanceRef.current.on('click', 'houses-layer', (e) => {
                         if (e.features && e.features[0] && e.features[0].properties) {
                             const coordinates = (e.features[0].geometry as GeoJSON.Point).coordinates.slice();
@@ -467,66 +581,20 @@ export function Map({ zipcode }: MapProps) {
                             createCustomPopup(coordinates as [number, number], props);
                         }
                     });
-
+                    
                     mapInstanceRef.current.on('mouseenter', 'houses-layer', () => {
                         if (mapInstanceRef.current) mapInstanceRef.current.getCanvas().style.cursor = 'pointer';
                     });
+                    
                     mapInstanceRef.current.on('mouseleave', 'houses-layer', () => {
                         if (mapInstanceRef.current) mapInstanceRef.current.getCanvas().style.cursor = '';
                     });
-
-                     mapInstanceRef.current.flyTo({ center: mapCenter, zoom: DEFAULT_ZOOM });
-
-                });
-
-            } else {
-                mapInstanceRef.current.setStyle(
-                    isDarkMode ? "mapbox://styles/mapbox/dark-v11" : "mapbox://styles/mapbox/light-v11"
-                );
-                mapInstanceRef.current.once('style.load', () => {
-                    if (!mapInstanceRef.current) return;
-                    const source = mapInstanceRef.current.getSource('houses');
-                    if (source) {
-                        (source as mapboxgl.GeoJSONSource).setData(getHousesGeoJSON());
-                    } else {
-                         mapInstanceRef.current.addSource('houses', {
-                             type: 'geojson',
-                             data: getHousesGeoJSON(),
-                         });
-                         mapInstanceRef.current.addLayer({
-                             id: 'houses-layer',
-                             type: 'circle',
-                             source: 'houses',
-                             paint: {
-                                 'circle-radius': 6,
-                                 'circle-color': ['get', 'color'],
-                                 'circle-stroke-width': 1.2,
-                                 'circle-stroke-color': isDarkMode ? '#ffffff' : '#000000',
-                                 'circle-opacity': 0.9,
-                             },
-                         });
-                    }
-                    mapInstanceRef.current.flyTo({ center: mapCenter, zoom: DEFAULT_ZOOM });
-                });
+                }
+            } catch (err) {
+                console.error('Error updating map data:', err);
             }
-        };
-
-        initializeMap();
-
-        return () => {
-            if (activePopupRef.current) {
-                activePopupRef.current.remove();
-                activePopupRef.current = null;
-            }
-        };
-    }, [isDarkMode, isLoading, filteredHouses, relevantClusters, clusterColors, mapCenter, zipcode]);
-
-     useEffect(() => {
-         if (mapInstanceRef.current && mapInstanceRef.current.getSource('houses') && !isLoading) {
-              (mapInstanceRef.current.getSource('houses') as mapboxgl.GeoJSONSource).setData(getHousesGeoJSON());
-         }
-     }, [filteredHouses, relevantClusters, clusterColors, isLoading]);
-
+        }
+    }, [mapStyleLoaded, isLoading, filteredHouses, relevantClusters, clusterColors]);
 
     if (isLoading) {
         return (
