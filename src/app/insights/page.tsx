@@ -130,51 +130,61 @@ export default function Insights() {
             </div>
             <div className="flex-grow overflow-hidden">
               <div className="overflow-y-auto" style={{ maxHeight: `${tableMaxHeight}px` }}>
-                <Table>
-                  <TableHeader className="sticky top-0 bg-card z-10">
-                    <TableRow>
-                      <TableHead className="text-left font-medium text-muted-foreground">Zip code</TableHead>
-                      <TableHead className="text-left font-medium text-muted-foreground">Median House Price</TableHead>
-                      <TableHead className="text-left font-medium text-muted-foreground">Dominant Cluster</TableHead>
-                      <TableHead className="text-left font-medium text-muted-foreground">Affordability Ratio</TableHead>
+                <Table className="w-full border-collapse">
+                  <TableHeader className="sticky top-0 bg-card z-10 shadow-sm">
+                    <TableRow className="border-b border-border">
+                      <TableHead className="py-3 px-4 text-left font-semibold text-primary">Zip Code</TableHead>
+                      <TableHead className="py-3 px-4 text-left font-semibold text-primary">Median House Price</TableHead>
+                      <TableHead className="py-3 px-4 text-left font-semibold text-primary">Dominant Cluster</TableHead>
+                      <TableHead className="py-3 px-4 text-left font-semibold text-primary">Affordability Ratio</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {zipInsightsData.length > 0 ? zipInsightsData.map((item) => {
-                       let ratioColorClass = "";
-                       const ratio = item.affordability_ratio;
-                       if (ratio === null) ratioColorClass = "text-muted-foreground";
-                       else if (ratio >= 0.15) ratioColorClass = "text-emerald-600 dark:text-emerald-400 font-medium";
-                       else if (ratio >= 0.1) ratioColorClass = "text-blue-600 dark:text-blue-400 font-medium";
-                       else if (ratio >= 0.07) ratioColorClass = "text-amber-600 dark:text-amber-400 font-medium";
-                       else ratioColorClass = "text-rose-600 dark:text-rose-400 font-medium";
+                      let ratioColorClass = "";
+                      const ratio = item.affordability_ratio;
+                      if (ratio === null) ratioColorClass = "text-muted-foreground";
+                      else if (ratio >= 0.15) ratioColorClass = "text-emerald-600 dark:text-emerald-400 font-medium";
+                      else if (ratio >= 0.1) ratioColorClass = "text-blue-600 dark:text-blue-400 font-medium";
+                      else if (ratio >= 0.07) ratioColorClass = "text-amber-600 dark:text-amber-400 font-medium";
+                      else ratioColorClass = "text-rose-600 dark:text-rose-400 font-medium";
 
                       const clusterPrice = clusterPriceMap.get(item.assigned_cluster);
-
                       const dominantClusterDisplay = clusterPrice !== undefined
-                        ? `Cluster ${formatCurrency(clusterPrice)}` 
-                        : `ID: ${item.assigned_cluster}`; 
+                        ? `Cluster ${formatCurrency(clusterPrice)}`
+                        : `ID: ${item.assigned_cluster}`;
 
                       return (
-                        <TableRow key={`zip-${item.zipcode}`} className="hover:bg-muted/50">
-                          <TableCell className="font-medium">
-                            <Link
-                              href={`/insights/${item.zipcode}`} 
-                              className="hover:underline text-primary cursor-pointer"
-                            >
-                              {item.zipcode}
-                            </Link>
+                        <TableRow
+                          key={`zip-${item.zipcode}`}
+                          className="border-b border-border transition-colors hover:bg-primary/5 dark:hover:bg-primary/10 cursor-pointer group relative"
+                          onClick={() => window.location.href = `/insights/${item.zipcode}`}
+                        >
+                          <TableCell className="py-3 px-4 font-medium">
+                            <div className="flex items-center">
+                              <span className="text-primary group-hover:text-primary/80 group-hover:underline">
+                                {item.zipcode}
+                              </span>
+                              <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">
+                                →
+                              </span>
+                            </div>
                           </TableCell>
-                          <TableCell>{formatCurrency(item.median_price)}</TableCell>
-                          <TableCell>{dominantClusterDisplay}</TableCell>
-                          <TableCell className={ratioColorClass}>
+                          <TableCell className="py-3 px-4">{formatCurrency(item.median_price)}</TableCell>
+                          <TableCell className="py-3 px-4">{dominantClusterDisplay}</TableCell>
+                          <TableCell className={`py-3 px-4 ${ratioColorClass}`}>
                             {ratio !== null && ratio !== undefined ? Number(ratio).toFixed(3) : 'N/A'}
                           </TableCell>
                         </TableRow>
                       );
                     }) : (
                       <TableRow>
-                        <TableCell colSpan={4} className="text-center text-muted-foreground">No zip code data available.</TableCell>
+                        <TableCell colSpan={4} className="py-8 text-center text-muted-foreground">
+                          <div className="flex flex-col items-center justify-center space-y-2">
+                            <span className="text-lg">No zip code data available</span>
+                            <span className="text-sm text-muted-foreground">Try adjusting your filters or importing data</span>
+                          </div>
+                        </TableCell>
                       </TableRow>
                     )}
                   </TableBody>
@@ -194,43 +204,42 @@ export default function Insights() {
               <h2 className="text-2xl font-semibold">Employment Growth by Cluster</h2>
             </div>
             {clusterInsightsData.length > 0 ? (
-                <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 {clusterInsightsData.map((item) => {
-                    const growthStr = String(item.employment_growth || '0').replace(/[^0-9.-]/g, '');
-                    const growthValue = parseFloat(growthStr);
-                    let growthColorClass = "", textColorClass = "";
+                  const growthStr = String(item.employment_growth || '0').replace(/[^0-9.-]/g, '');
+                  const growthValue = parseFloat(growthStr);
+                  let growthColorClass = "", textColorClass = "";
 
-                    // ... (color logic remains the same)
-                    if (isNaN(growthValue)) {
-                        growthColorClass = "bg-muted border-border"; textColorClass = "text-foreground";
-                    } else if (growthValue >= 4) {
-                        growthColorClass = "bg-emerald-100/80 dark:bg-emerald-900/30 border-emerald-300 dark:border-emerald-700"; textColorClass = "text-emerald-700 dark:text-emerald-300";
-                    } else if (growthValue >= 3) {
-                        growthColorClass = "bg-blue-100/80 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700"; textColorClass = "text-blue-700 dark:text-blue-300";
-                    } else if (growthValue >= 2.5) {
-                        growthColorClass = "bg-muted border-border"; textColorClass = "text-foreground";
-                    } else {
-                         growthColorClass = "bg-amber-100/80 dark:bg-amber-900/30 border-amber-300 dark:border-amber-700"; textColorClass = "text-amber-700 dark:text-amber-300";
-                    }
+                  if (isNaN(growthValue)) {
+                    growthColorClass = "bg-muted border-border"; textColorClass = "text-foreground";
+                  } else if (growthValue >= 4) {
+                    growthColorClass = "bg-emerald-100/80 dark:bg-emerald-900/30 border-emerald-300 dark:border-emerald-700"; textColorClass = "text-emerald-700 dark:text-emerald-300";
+                  } else if (growthValue >= 3) {
+                    growthColorClass = "bg-blue-100/80 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700"; textColorClass = "text-blue-700 dark:text-blue-300";
+                  } else if (growthValue >= 2.5) {
+                    growthColorClass = "bg-muted border-border"; textColorClass = "text-foreground";
+                  } else {
+                    growthColorClass = "bg-amber-100/80 dark:bg-amber-900/30 border-amber-300 dark:border-amber-700"; textColorClass = "text-amber-700 dark:text-amber-300";
+                  }
 
 
-                    return (
+                  return (
                     <div key={`emp-cluster-${item.cluster_id}`} className={`p-4 rounded-lg border ${growthColorClass} flex flex-col items-center`}>
-                        <h3 className="text-lg font-medium text-center">
-                            Cluster <br/> ({formatCurrency(item.median_price)})
-                        </h3>
-                        <p className={`text-2xl font-bold mt-2 ${textColorClass}`}>
-                             {!isNaN(growthValue) ? `${growthValue.toFixed(1)}%` : 'N/A'}
-                        </p>
-                        <p className="text-sm text-muted-foreground mt-1">Annual Growth</p>
+                      <h3 className="text-lg font-medium text-center">
+                        Cluster <br /> ({formatCurrency(item.median_price)})
+                      </h3>
+                      <p className={`text-2xl font-bold mt-2 ${textColorClass}`}>
+                        {!isNaN(growthValue) ? `${growthValue.toFixed(1)}%` : 'N/A'}
+                      </p>
+                      <p className="text-sm text-muted-foreground mt-1">Annual Growth</p>
                     </div>
-                    );
+                  );
                 })}
-                </div>
+              </div>
             ) : (
-                <p className="text-muted-foreground text-center p-4">No cluster employment growth data available.</p>
+              <p className="text-muted-foreground text-center p-4">No cluster employment growth data available.</p>
             )}
-             <div className="mt-4 text-sm text-muted-foreground flex items-start">
+            <div className="mt-4 text-sm text-muted-foreground flex items-start">
               <Info className="mr-2 mt-0.5 flex-shrink-0" size={14} />
               <p>Employment growth indicates economic health and potential future housing demand within each market cluster (identified by median price).</p>
             </div>
