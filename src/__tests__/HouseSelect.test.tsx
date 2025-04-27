@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+/*import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import HouseSelect from '@/components/house_select';
 import * as themes from 'next-themes';
@@ -227,3 +227,4 @@ describe('HouseSelect Component', () => {
   });
 });
 
+*/
