@@ -45,7 +45,6 @@ export async function GET() {
                 cluster_id,
                 avg_payroll::text,
                 median_price::text,
-                affordability_ratio,
                 employment_growth
             FROM cluster_insights
             WHERE cluster_id IS NOT NULL

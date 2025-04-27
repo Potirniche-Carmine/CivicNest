@@ -134,7 +134,7 @@ export default function Insights() {
                   <TableHeader className="sticky top-0 bg-card z-10 shadow-sm">
                     <TableRow className="border-b border-border">
                       <TableHead className="py-3 px-4 text-left font-semibold text-primary">Zip Code</TableHead>
-                      <TableHead className="py-3 px-4 text-left font-semibold text-primary">Median House Price</TableHead>
+                      <TableHead className="py-3 px-4 text-left font-semibold text-primary">Average House Price</TableHead>
                       <TableHead className="py-3 px-4 text-left font-semibold text-primary">Dominant Cluster</TableHead>
                       <TableHead className="py-3 px-4 text-left font-semibold text-primary">Affordability Ratio</TableHead>
                     </TableRow>
@@ -144,9 +144,8 @@ export default function Insights() {
                       let ratioColorClass = "";
                       const ratio = item.affordability_ratio;
                       if (ratio === null) ratioColorClass = "text-muted-foreground";
-                      else if (ratio >= 0.1) ratioColorClass = "text-emerald-600 dark:text-emerald-400 font-medium";
-                      else if (ratio >= 0.1) ratioColorClass = "text-blue-600 dark:text-blue-400 font-medium";
-                      else if (ratio >= 0.07) ratioColorClass = "text-amber-600 dark:text-amber-400 font-medium";
+                      else if (ratio >= 0.12) ratioColorClass = "text-emerald-600 dark:text-emerald-400 font-medium";
+                      else if (ratio >= 0.08) ratioColorClass = "text-amber-600 dark:text-amber-400 font-medium";
                       else ratioColorClass = "text-rose-600 dark:text-rose-400 font-medium";
 
                       const clusterPrice = clusterPriceMap.get(item.assigned_cluster);
@@ -194,7 +193,7 @@ export default function Insights() {
 
             <div className="mt-4 text-sm text-muted-foreground flex items-start">
               <Info className="mr-2 mt-0.5 flex-shrink-0" size={14} />
-              <p>A higher Payroll-to-Price Ratio suggests greater housing affordability relative to local wages.</p>
+              <p>Affordability: Green (Better), Yellow (Average), Red (Worse).</p>
             </div>
           </section>
 

@@ -16,10 +16,10 @@ export function Footer() {
   const { setTheme } = useTheme();
 
   return (
-    <footer className="w-full border-t bg-zinc-600 dark:bg-zinc-800 p-4">
+    <footer className="w-full border-t bg-backgroung p-4">
       <div className="relative w-full max-w-[2560px] mx-auto h-9 flex items-center">
         <div className="absolute left-1/2 -translate-x-1/2">
-          <p className="text-sm text-white">
+          <p className="text-sm text-black/70 dark:text-white/70">
             <Link href='/policy'>
               &copy; 2025 CivicNest. All rights reserved.
             </Link>
@@ -28,7 +28,7 @@ export function Footer() {
         <div className="flex justify-end w-full px-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon">
+              <Button variant="ghost" size="icon">
                 <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                 <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                 <span className="sr-only">Toggle theme</span>

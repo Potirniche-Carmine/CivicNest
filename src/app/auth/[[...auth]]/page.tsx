@@ -52,14 +52,14 @@ export default function AuthPage() {
             path="/auth/sign-in"
             routing="path"
             appearance={clerkAppearance}
-            forceRedirectUrl="/home"
+            forceRedirectUrl="/insights"
           />
         ) : (
           <SignUp
             path="/auth/sign-up"
             routing="path"
             appearance={clerkAppearance}
-            forceRedirectUrl="/home"
+            forceRedirectUrl="/insights"
           />
         )}
       </div>

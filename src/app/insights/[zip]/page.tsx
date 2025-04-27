@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { Map } from '@/components/zipcodemap';
 import {
   Card,
   CardContent,
@@ -12,6 +11,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Loader2, AlertTriangle, Users, School, MapPin, BrainCircuit, DollarSign, TrendingUp, TrendingDown, Home, Info } from 'lucide-react';
 import { ZipcodeSpecificData, GeneratedZipInsight } from "@/lib/types";
+import { ZipcodeMap } from '@/components/zipcodemap';
 
 const RENO_COL_MIN = 94.5;
 const RENO_COL_MAX = 103.0;
@@ -25,7 +25,7 @@ export default function ZipcodePage() {
   const [generatedInsights, setGeneratedInsights] = useState<GeneratedZipInsight[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [mapKey, setMapKey] = useState<number>(0);
+  const [, setMapKey] = useState<number>(0);
 
   useEffect(() => {
     if (!zip) return;
@@ -44,7 +44,7 @@ export default function ZipcodePage() {
           try {
             const errorData = await response.json();
             errorMsg = errorData.error || errorData.message || errorMsg;
-          } catch (parseError) { /* Ignore */ }
+          } catch (parseError) { }
           throw new Error(errorMsg);
         }
 
@@ -162,30 +162,30 @@ export default function ZipcodePage() {
             <h2 className="text-2xl font-semibold">Key Statistics</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="shadow-sm dark:shadow-none border border-border overflow-hidden h-full">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-card">
-                  <CardTitle className="text-lg font-semibold">Demographics</CardTitle>
-                  <Users className="h-5 w-5 text-sky-500 dark:text-sky-400" />
+          <Card className="shadow-lg border-border overflow-hidden h-full dark:!bg-[#020817]">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-background">
+                <CardTitle className="text-lg font-semibold">Demographics</CardTitle>
+                <Users className="h-5 w-5 text-sky-500 dark:text-sky-400" />
               </CardHeader>
-              <CardContent className="space-y-3 pt-4 bg-card flex-1 pb-6">
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground text-sm">Median Age:</span>
-                    <span className="font-medium">{formatAge(zipcodeData.demographics.median_age)}</span>
-                  </div>
-                  <Separator />
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground text-sm">Total School Enrollment:</span>
-                    <span className="font-medium">{formatNumber(zipcodeData.demographics.school_enrollment_total)}</span>
-                  </div>
+              <CardContent className="space-y-3 pt-4 bg-background flex-1 pb-6">
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground text-sm">Median Age:</span>
+                  <span className="font-medium">{formatAge(zipcodeData.demographics.median_age)}</span>
+                </div>
+                <Separator />
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground text-sm">Total School Enrollment:</span>
+                  <span className="font-medium">{formatNumber(zipcodeData.demographics.school_enrollment_total)}</span>
+                </div>
               </CardContent>
             </Card>
 
-            <Card className="shadow-lg border border-border overflow-hidden">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-card">
+            <Card className="shadow-lg border-border overflow-hidden h-full dark:!bg-[#020817]">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-background">
                 <CardTitle className="text-lg font-semibold">Poorly Rated Schools</CardTitle>
                 <School className="h-5 w-5 text-sky-500 dark:text-sky-400" />
               </CardHeader>
-              <CardContent className="space-y-3 pt-4 bg-card">
+              <CardContent className="space-y-3 pt-4 bg-background">
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground text-sm">Elementary:</span>
                   <span className="font-medium">{formatNumber(zipcodeData.schoolRatings.poorly_rated_elementary)}</span>
@@ -207,12 +207,12 @@ export default function ZipcodePage() {
               </CardContent>
             </Card>
 
-            <Card className="shadow-lg border border-border overflow-hidden">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-card">
+            <Card className="shadow-lg border-border overflow-hidden h-full dark:!bg-[#020817]">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-background">
                 <CardTitle className="text-lg font-semibold">Cost of Living</CardTitle>
                 <ColIcon className={`h-5 w-5 ${colIndexValue === null || colIndexValue === undefined ? 'text-muted-foreground' : colClassName.split(' ').find(c => c.startsWith('text-'))}`} />
               </CardHeader>
-              <CardContent className="space-y-3 pt-4 bg-card">
+              <CardContent className="space-y-3 pt-4 bg-background">
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground text-sm">COL Index:</span>
                   <span className={colClassName}>
@@ -240,10 +240,10 @@ export default function ZipcodePage() {
         <section className="mb-8">
           <div className="flex items-center mb-6">
             <MapPin className="mr-3 text-sky-500 dark:text-sky-400" size={24} />
-            <h2 className="text-2xl font-semibold">Location Map</h2>
+            <h2 className="text-2xl font-semibold">Location Map {zip}</h2>
           </div>
           <div className="w-full h-96 md:h-[500px] bg-muted rounded-lg shadow-lg border border-border overflow-hidden">
-            <Map key={mapKey} zipcode={zip} />
+            <ZipcodeMap zipcode={zip} />
           </div>
         </section>
 
@@ -252,26 +252,28 @@ export default function ZipcodePage() {
             <BrainCircuit className="mr-3 text-sky-500 dark:text-sky-400" size={24} />
             <h2 className="text-2xl font-semibold">AI-Generated Market Analysis</h2>
           </div>
-          <Card className="border border-border overflow-hidden shadow-sm dark:shadow-none">
-            <CardContent className="p-6 bg-card"> {/* Added bg-card here for consistency */}
+          <Card className="border border-border overflow-hidden shadow-sm dark:shadow-none bg-background">
+            <CardContent className="p-6 bg-background">
+
               {generatedInsights.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {generatedInsights.map((insight, index) => (
                     <div
                       key={index}
                       className={`p-4 rounded-lg border ${index % 4 === 0 ? 'bg-blue-50/50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800' :
-                          index % 4 === 1 ? 'bg-emerald-50/50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800' :
-                            index % 4 === 2 ? 'bg-amber-50/50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800' :
-                              'bg-purple-50/50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800'
+                        index % 4 === 1 ? 'bg-emerald-50/50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800' :
+                          index % 4 === 2 ? 'bg-amber-50/50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800' :
+                            'bg-purple-50/50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800'
                         }`}
                     >
-                      <h3 className={`font-semibold mb-2 ${index % 4 === 0 ? 'text-blue-700 dark:text-blue-300' :
+                      <h3
+                        className={`font-semibold mb-2 ${index % 4 === 0 ? 'text-blue-700 dark:text-blue-300' :
                           index % 4 === 1 ? 'text-emerald-700 dark:text-emerald-300' :
                             index % 4 === 2 ? 'text-amber-700 dark:text-amber-300' :
                               'text-purple-700 dark:text-purple-300'
-                        }`}>
-                        {insight.title || `Market Insight ${index + 1}`}
-                      </h3>
+                          }`}
+                        dangerouslySetInnerHTML={{ __html: insight.title || `Market Insight ${index + 1}` }}
+                      />
                       {insight.explanation ? (
                         <div
                           className="text-foreground/90 text-sm space-y-2"
