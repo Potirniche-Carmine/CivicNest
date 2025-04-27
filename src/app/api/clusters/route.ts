@@ -1,16 +1,35 @@
 import { NextResponse } from 'next/server';
 import { pool } from "@/lib/db";
 
+interface House {
+    zpid: string;
+    lat: number;
+    long: number;
+    bathrooms: string;
+    bedrooms: string;
+}
 interface Cluster {
     cluster_id: number;
+    display_name: string;
     avg_price: number;
-    houses: Array<{
-        zpid: string;
-        lat: number;
-        long: number;
-        bathrooms: string;
-        bedrooms: string;
-    }>;
+    houses: House[];
+}
+
+function formatCurrency(price: number | null | undefined): string {
+    if (price == null) {
+        return 'N/A'; 
+    }
+    const numericPrice = Number(price);
+     if (isNaN(numericPrice)) {
+        return 'Invalid Price'; 
+    }
+    return numericPrice.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+        minimumFractionDigits: 0,
+    });
+
 }
 
 export async function GET() {
@@ -41,17 +60,21 @@ export async function GET() {
         const result = await client.query(query);
         client.release();
         
-        const clustersMap: Record<string, Cluster> = {};
+        const clustersMap: Record<number, Cluster> = {};
+
         result.rows.forEach(row => {
-            if (!clustersMap[row.cluster_id]) {
-                clustersMap[row.cluster_id] = {
-                    cluster_id: row.cluster_id,
-                    avg_price: row.cluster_avg_price,
-                    houses: []
+            const clusterId: number = row.cluster_id;
+
+            if (!clustersMap[clusterId]) {
+                clustersMap[clusterId] = {
+                    cluster_id: clusterId, 
+                    display_name: `Cluster ${formatCurrency(row.cluster_avg_price)}`,
+                    avg_price: row.cluster_avg_price, 
+                    houses: [] 
                 };
             }
-            
-            clustersMap[row.cluster_id].houses.push({
+
+            clustersMap[clusterId].houses.push({
                 zpid: row.zpid,
                 lat: row.lat,
                 long: row.long,
@@ -60,16 +83,19 @@ export async function GET() {
             });
         });
 
-        const clusters = Object.values(clustersMap);
+        const clusters: Cluster[] = Object.values(clustersMap);
 
         return NextResponse.json({ clusters });
+
     } catch (err) {
         console.error('Error fetching clusters and houses:', err);
 
+        const message = err instanceof Error ? err.message : 'An unknown error occurred';
+
         return NextResponse.json({
             error: 'Database Query Error',
-            message: err instanceof Error ? err.message : 'Unknown error',
-            details: 'Error retrieving cluster and house data'
+            message: message, 
+            details: 'Error retrieving cluster and house data',
         }, { status: 500 });
-    } 
+    }
 }

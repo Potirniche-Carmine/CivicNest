@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from "@/components/ui/button";
-import Image from "next/image"; ''
+import Image from "next/image";
 import Link from "next/link";
 
 export default function LandingPage() {
@@ -15,41 +15,55 @@ export default function LandingPage() {
               Welcome to CivicNest
             </h1>
             <p className="text-xl mb-8 text-muted-foreground">
-              Discover your perfect neighborhood with comprehensive property insights.
-              Make confident real estate decisions with detailed analytics beyond traditional listings.
+              Revolutionizing property search with comprehensive neighborhood analytics and AI-powered insights.
+              Go beyond listings: explore price clusters, employment trends, cost of living, school data, and make confident investment decisions.
             </p>
-            <div className="flex flex-colsm:flex-row gap-4 justify-center lg:justify-start">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              {/* Updated Primary CTA to explore the map */}
+              <Link href="/home">
+                <Button
+                  variant="default" // Make primary CTA more prominent
+                  size="lg"
+                  className="text-lg px-8 py-6 bg-blue-600 hover:bg-blue-700 text-white" // Style primary CTA
+                >
+                  Explore the Map
+                </Button>
+              </Link>
+              {/* Secondary CTAs for sign-up/sign-in */}
               <Link href="/auth/sign-up">
                 <Button
                   variant="outline"
                   size="lg"
                   className="text-lg px-8 py-6"
                 >
-                  Create an Account
+                  Sign Up for Insights
                 </Button>
               </Link>
-              <Link href="/auth/sign-in">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="text-lg px-8 py-6"
-                >
-                  Sign In
-                </Button>
-              </Link>
+               <Link href="/auth/sign-in">
+                 <Button
+                   variant="outline"
+                   size="lg"
+                   className="text-lg px-8 py-6"
+                 >
+                   Sign In
+                 </Button>
+               </Link>
             </div>
+             <p className="text-sm mt-4 text-muted-foreground text-center lg:text-left">
+                Explore the interactive map freely. Sign up or sign in to access detailed AI-generated market insights.
+             </p>
           </div>
           <div className="flex-1 relative w-full max-w-xl h-[400px]">
             <Image
-              src="/hero-image-light.png"
-              alt="CivicNest Platform Preview"
+              src="/hero-image-light.png" // Assuming this is the map screenshot
+              alt="CivicNest Interactive Map Preview"
               fill
               className="object-contain dark:hidden"
               priority
             />
             <Image
-              src="/hero-image-dark.png"
-              alt="CivicNest Platform Preview"
+              src="/hero-image-dark.png" // Assuming this is the map screenshot
+              alt="CivicNest Interactive Map Preview"
               fill
               className="hidden dark:block object-contain"
               priority
@@ -57,39 +71,41 @@ export default function LandingPage() {
           </div>
         </div>
 
+        {/* Updated Feature Highlights */}
         <div className="mt-24 grid md:grid-cols-3 gap-8">
-          <div className="p-6 rounded-xl bg-card shadow-lg">
-            <h3 className="text-xl font-semibold mb-3">Interactive Mapping</h3>
+          <div className="p-6 rounded-xl bg-card shadow-lg border border-border">
+            <h3 className="text-xl font-semibold mb-3">Interactive Price Cluster Map</h3>
             <p className="text-muted-foreground">
-              Explore neighborhoods with our color-coded map interface showing walkability, food access, crime rates, and school ratings.
+              Visualize property values with color-coded price clusters. Instantly understand market segmentation and identify comparable homes.
             </p>
           </div>
-          <div className="p-6 rounded-xl bg-card shadow-lg">
-            <h3 className="text-xl font-semibold mb-3">Comprehensive Analytics</h3>
+          <div className="p-6 rounded-xl bg-card shadow-lg border border-border">
+            <h3 className="text-xl font-semibold mb-3">Neighborhood & Economic Data</h3>
             <p className="text-muted-foreground">
-              Access detailed neighborhood insights and property value trends to make informed real estate decisions.
+              Access vital insights like projected employment trends, cost of living indices, school ratings, and demographics for any zip code.
             </p>
           </div>
-          <div className="p-6 rounded-xl bg-card shadow-lg">
-            <h3 className="text-xl font-semibold mb-3">Smart Property Search</h3>
+          <div className="p-6 rounded-xl bg-card shadow-lg border border-border">
+            <h3 className="text-xl font-semibold mb-3">AI-Generated Market Summaries</h3>
             <p className="text-muted-foreground">
-              Find your ideal home with advanced filters and real-time market data beyond traditional listing platforms.
+              Get key market insights automatically generated by AI using property and economic data for a deeper understanding (requires account).
             </p>
           </div>
         </div>
 
+        {/* Updated Final CTA */}
         <div className="mt-24 text-center">
-          <h2 className="text-3xl font-bold mb-6">Ready to Find Your Perfect Neighborhood?</h2>
+          <h2 className="text-3xl font-bold mb-6">Ready to Make Data-Driven Decisions?</h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Join CivicNest today and gain access to comprehensive neighborhood analytics that help you make confident property decisions.
+            Start exploring property clusters and neighborhood data on the map now, or sign up to unlock powerful AI-driven market analysis.
           </p>
           <Link href="/home">
             <Button
-              variant="outline"
+              variant="default" // Match primary CTA style
               size="lg"
-              className="text-lg px-8 py-6"
+              className="text-lg px-8 py-6 bg-blue-600 hover:bg-blue-700 text-white" // Match primary CTA style
             >
-              Start Your Property Search
+              Explore Neighborhood Analytics
             </Button>
           </Link>
         </div>
