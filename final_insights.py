@@ -1,6 +1,6 @@
 from db_connection import connect_to_db, close_connection
 
-def make_schema(c):
+def update_table(c):
     c.execute("""
         CREATE TABLE IF NOT EXISTS final_insights_table (
             zipcode            INTEGER PRIMARY KEY,
@@ -14,11 +14,7 @@ def make_schema(c):
             employment_growth  NUMERIC
         );
     """)
-
-def truncate_table(c):
-    c.execute("TRUNCATE TABLE final_insights_table;")
-
-def populate_table(c):
+    c.execute("DELETE FROM final_insights_table;")
     c.execute("""
         WITH cluster_zip_counts AS (
             SELECT h.zipcode::INT AS zipcode, ct.cluster_id, COUNT(*) AS house_count
@@ -47,11 +43,13 @@ def populate_table(c):
             GROUP BY zipcode
         ),
         with_cluster AS (
-            SELECT *, CASE
-                       WHEN pct1 >= GREATEST(pct2, pct3, pct4) THEN 1
-                       WHEN pct2 >= GREATEST(pct1, pct3, pct4) THEN 2
-                       WHEN pct3 >= GREATEST(pct1, pct2, pct4) THEN 3
-                       ELSE 4 END AS cluster_id
+            SELECT *, 
+                   CASE
+                     WHEN pct1 >= GREATEST(pct2, pct3, pct4) THEN 1
+                     WHEN pct2 >= GREATEST(pct1, pct3, pct4) THEN 2
+                     WHEN pct3 >= GREATEST(pct1, pct2, pct4) THEN 3
+                     ELSE 4
+                   END AS cluster_id
             FROM pivoted
         )
         INSERT INTO final_insights_table
@@ -95,9 +93,7 @@ def final_insights():
     if not conn:
         return
     cur = conn.cursor()
-    make_schema(cur)
-    truncate_table(cur)
-    populate_table(cur)
+    update_table(cur)
     merge_non_census(cur)
     conn.commit()
     close_connection(conn, cur)
