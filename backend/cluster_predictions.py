@@ -49,7 +49,7 @@ def display_cluster_zipcode_percentages(cursor):
             assigned_zips.add(zipcode)
     print("\nAssigned ZIP → Cluster:")
     for z,c in zip_to_cluster.items():
-        print(f"{z} → {c}")
+        print(f"{z} : {c}")
 
 def cluster_house_counts(cursor):
     cursor.execute("""
