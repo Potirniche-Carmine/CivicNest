@@ -204,36 +204,51 @@ export default function Insights() {
             </div>
             {clusterInsightsData.length > 0 ? (
               <div className="grid grid-cols-2 gap-4">
-                {clusterInsightsData.map((item) => {
-                  const growthStr = String(item.employment_growth || '0').replace(/[^0-9.-]/g, '');
-                  const growthValue = parseFloat(growthStr);
-                  let growthColorClass = "", textColorClass = "";
+                {[...clusterInsightsData]
+                  .sort((a, b) => {
+                    const growthA = parseFloat(String(a.employment_growth || '0').replace(/[^0-9.-]/g, ''));
+                    const growthB = parseFloat(String(b.employment_growth || '0').replace(/[^0-9.-]/g, ''));
 
-                  if (isNaN(growthValue)) {
-                    growthColorClass = "bg-muted border-border"; textColorClass = "text-foreground";
-                  } else if (growthValue >= 4) {
-                    growthColorClass = "bg-emerald-100/80 dark:bg-emerald-900/30 border-emerald-300 dark:border-emerald-700"; textColorClass = "text-emerald-700 dark:text-emerald-300";
-                  } else if (growthValue >= 3) {
-                    growthColorClass = "bg-blue-100/80 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700"; textColorClass = "text-blue-700 dark:text-blue-300";
-                  } else if (growthValue >= 2.5) {
-                    growthColorClass = "bg-muted border-border"; textColorClass = "text-foreground";
-                  } else {
-                    growthColorClass = "bg-amber-100/80 dark:bg-amber-900/30 border-amber-300 dark:border-amber-700"; textColorClass = "text-amber-700 dark:text-amber-300";
-                  }
+                    if (isNaN(growthA) && isNaN(growthB)) return 0;
+                    if (isNaN(growthA)) return 1;
+                    if (isNaN(growthB)) return -1;
 
+                    return growthB - growthA;
+                  })
+                  .map((item) => {
+                    const growthStr = String(item.employment_growth || '0').replace(/[^0-9.-]/g, '');
+                    const growthValue = parseFloat(growthStr);
+                    let growthColorClass = "", textColorClass = "";
 
-                  return (
-                    <div key={`emp-cluster-${item.cluster_id}`} className={`p-4 rounded-lg border ${growthColorClass} flex flex-col items-center`}>
-                      <h3 className="text-lg font-medium text-center">
-                        Cluster <br /> ({formatCurrency(item.median_price)})
-                      </h3>
-                      <p className={`text-2xl font-bold mt-2 ${textColorClass}`}>
-                        {!isNaN(growthValue) ? `${growthValue.toFixed(1)}%` : 'N/A'}
-                      </p>
-                      <p className="text-sm text-muted-foreground mt-1">Annual Growth</p>
-                    </div>
-                  );
-                })}
+                    if (isNaN(growthValue)) {
+                      growthColorClass = "bg-muted border-border";
+                      textColorClass = "text-foreground";
+                    } else if (growthValue >= 4) {
+                      growthColorClass = "bg-emerald-100/80 dark:bg-emerald-900/30 border-emerald-300 dark:border-emerald-700";
+                      textColorClass = "text-emerald-700 dark:text-emerald-300";
+                    } else if (growthValue >= 3) {
+                      growthColorClass = "bg-blue-100/80 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700";
+                      textColorClass = "text-blue-700 dark:text-blue-300";
+                    } else if (growthValue >= 2.5) {
+                      growthColorClass = "bg-muted border-border";
+                      textColorClass = "text-foreground";
+                    } else {
+                      growthColorClass = "bg-amber-100/80 dark:bg-amber-900/30 border-amber-300 dark:border-amber-700";
+                      textColorClass = "text-amber-700 dark:text-amber-300";
+                    }
+
+                    return (
+                      <div key={`emp-cluster-${item.cluster_id}`} className={`p-4 rounded-lg border ${growthColorClass} flex flex-col items-center`}>
+                        <h3 className="text-lg font-medium text-center">
+                          Cluster <br /> ({formatCurrency(item.median_price)})
+                        </h3>
+                        <p className={`text-2xl font-bold mt-2 ${textColorClass}`}>
+                          {!isNaN(growthValue) ? `${growthValue.toFixed(1)}%` : 'N/A'}
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-1">Annual Growth</p>
+                      </div>
+                    );
+                  })}
               </div>
             ) : (
               <p className="text-muted-foreground text-center p-4">No cluster employment growth data available.</p>
