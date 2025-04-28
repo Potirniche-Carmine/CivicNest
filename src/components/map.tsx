@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from 'mapbox-gl';
 import { useTheme } from "next-themes";
-import { Info, CheckSquare, Square, House, Layers } from 'lucide-react';
+import { Info, CheckSquare, Square, House, Layers, X } from 'lucide-react';
 import ReactDOM from 'react-dom/client';
 import HouseSelect from './house_select';
 import { Skeleton } from "./ui/skeleton";
@@ -63,6 +63,18 @@ export function Map() {
     const [isLegendVisible, setIsLegendVisible] = useState<boolean>(false);
     const [legendTimeoutId, setLegendTimeoutId] = useState<NodeJS.Timeout | null>(null);
     const { theme, systemTheme } = useTheme();
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkIsMobile = () => {
+            setIsMobile(window.innerWidth < 700);
+        };
+        
+        checkIsMobile();
+        
+        window.addEventListener('resize', checkIsMobile);
+        return () => window.removeEventListener('resize', checkIsMobile);
+    }, []);
 
     const isDarkMode = theme === "system"
         ? systemTheme === "dark"
@@ -231,39 +243,41 @@ export function Map() {
             activePopupRef.current.remove();
             activePopupRef.current = null;
         }
-
+    
         const formattedPrice = formatPrice(properties.price);
         const formattedClusterAvgPrice = formatPrice(properties.cluster_avg_price);
-
+    
         const popupContainer = document.createElement('div');
         popupContainer.className = `popup-container ${isDarkMode ? 'dark-popup' : 'light-popup'}`;
         popupContainer.setAttribute('role', 'dialog');
         popupContainer.setAttribute('aria-label', 'House Information');
-
+    
         const popupContent = document.createElement('div');
         popupContent.className = 'popup-content';
         popupContent.style.position = 'relative';
-        popupContent.style.padding = '16px';
+        popupContent.style.padding = isMobile ? '12px' : '16px';
         popupContent.style.borderRadius = '10px';
-        popupContent.style.minWidth = '300px';
+        popupContent.style.minWidth = isMobile ? '220px' : '300px';
+        popupContent.style.maxWidth = isMobile ? '280px' : '300px';
         popupContent.style.backgroundColor = isDarkMode ? '#1a2335' : '#f5f7fa';
         popupContent.style.color = isDarkMode ? '#f3f4f6' : '#1e293b';
         popupContent.style.boxShadow = isDarkMode
-            ? '0 8px 16px rgba(0, 0, 0, 0.35)'
-            : '0 8px 16px rgba(0, 0, 0, 0.15)';
-
+            ? '0 6px 12px rgba(0, 0, 0, 0.35)'
+            : '0 6px 12px rgba(0, 0, 0, 0.15)';
+    
         const addressElement = document.createElement('h3');
         addressElement.innerText = properties.address;
         addressElement.style.fontWeight = '600';
-        addressElement.style.marginBottom = '12px';
+        addressElement.style.marginBottom = isMobile ? '8px' : '12px';
         addressElement.style.paddingRight = '24px';
-        addressElement.style.fontSize = '16px';
-
+        addressElement.style.fontSize = isMobile ? '14px' : '16px';
+        addressElement.style.lineHeight = '1.2';
+    
         const closeButton = document.createElement('button');
         closeButton.setAttribute('aria-label', 'Close popup');
         closeButton.style.position = 'absolute';
-        closeButton.style.top = '12px';
-        closeButton.style.right = '12px';
+        closeButton.style.top = '8px';
+        closeButton.style.right = '8px';
         closeButton.style.background = isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)';
         closeButton.style.border = 'none';
         closeButton.style.borderRadius = '4px';
@@ -271,10 +285,10 @@ export function Map() {
         closeButton.style.display = 'flex';
         closeButton.style.alignItems = 'center';
         closeButton.style.justifyContent = 'center';
-        closeButton.style.width = '24px';
-        closeButton.style.height = '24px';
+        closeButton.style.width = isMobile ? '16px' : '24px';
+        closeButton.style.height = isMobile ? '16px' : '24px';
         closeButton.style.padding = '0';
-        closeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${isDarkMode ? '#e5e7eb' : '#4b5563'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+        closeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="${isMobile ? '10' : '16'}" height="${isMobile ? '10' : '16'}" viewBox="0 0 24 24" fill="none" stroke="${isDarkMode ? '#e5e7eb' : '#4b5563'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
         closeButton.onclick = () => {
             if (activePopupRef.current) {
                 activePopupRef.current.remove();
@@ -283,56 +297,65 @@ export function Map() {
         };
         popupContent.appendChild(closeButton);
         popupContent.appendChild(addressElement);
-
+    
         const detailsGrid = document.createElement('div');
         detailsGrid.style.display = 'grid';
-        detailsGrid.style.gridTemplateColumns = 'repeat(2, 1fr)';
-        detailsGrid.style.gap = '12px';
-        detailsGrid.style.marginBottom = '16px';
-
+        detailsGrid.style.gridTemplateColumns = isMobile ? '1fr' : 'repeat(2, 1fr)';
+        detailsGrid.style.gap = isMobile ? '6px' : '12px';
+        detailsGrid.style.marginBottom = isMobile ? '12px' : '16px';
+    
         const createDetailItem = (label: string, value: string | number, valueStyle: React.CSSProperties = {}) => {
             const element = document.createElement('div');
+            
+            if (isMobile) {
+                element.style.display = 'flex';
+                element.style.justifyContent = 'space-between';
+                element.style.alignItems = 'center';
+            }
+            
             const labelDiv = document.createElement('div');
             labelDiv.innerText = label;
             labelDiv.style.fontWeight = '600';
-            labelDiv.style.fontSize = '14px';
+            labelDiv.style.fontSize = isMobile ? '12px' : '14px';
             labelDiv.style.opacity = '0.8';
+            
             const valueDiv = document.createElement('div');
             valueDiv.innerText = String(value);
-            valueDiv.style.fontSize = '15px';
-            valueDiv.style.marginTop = '2px';
+            valueDiv.style.fontSize = isMobile ? '13px' : '15px';
+            valueDiv.style.marginTop = isMobile ? '0' : '2px';
             Object.assign(valueDiv.style, valueStyle);
+            
             element.appendChild(labelDiv);
             element.appendChild(valueDiv);
             return element;
         };
-
+    
         detailsGrid.appendChild(createDetailItem('Price', formattedPrice));
         detailsGrid.appendChild(createDetailItem('Cluster Avg', formattedClusterAvgPrice));
-
+    
         const isBedMissingOrZero = properties.bedrooms == null || Number(properties.bedrooms) === 0;
         const isBathMissingOrZero = properties.bathrooms == null || Number(properties.bathrooms) === 0;
-
+    
         if (isBedMissingOrZero && isBathMissingOrZero) {
             const lotElement = createDetailItem('Property Type', 'Lot');
-            lotElement.style.gridColumn = 'span 2';
+            if (!isMobile) lotElement.style.gridColumn = 'span 2';
             detailsGrid.appendChild(lotElement);
         } else {
             if (properties.bedrooms != null && Number(properties.bedrooms) > 0) {
                 detailsGrid.appendChild(createDetailItem('Bedrooms', properties.bedrooms));
-            } else {
+            } else if (!isMobile) {
                 detailsGrid.appendChild(document.createElement('div'));
             }
-
+    
             if (properties.bathrooms != null && Number(properties.bathrooms) > 0) {
                 detailsGrid.appendChild(createDetailItem('Bathrooms', properties.bathrooms));
-            } else {
+            } else if (!isMobile) {
                 detailsGrid.appendChild(document.createElement('div'));
             }
         }
-
+    
         detailsGrid.appendChild(createDetailItem('Zipcode', properties.zipcode));
-
+    
         let employmentValue = 'N/A';
         let employmentStyle = {};
         if (properties.employment_prediction !== null &&
@@ -346,48 +369,46 @@ export function Map() {
             };
         }
         detailsGrid.appendChild(createDetailItem('Employment Trend', employmentValue, employmentStyle));
-
+    
         popupContent.appendChild(detailsGrid);
-
+    
         const divider = document.createElement('div');
         divider.style.height = '1px';
         divider.style.backgroundColor = isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
-        divider.style.margin = '12px 0';
+        divider.style.margin = isMobile ? '8px 0' : '12px 0';
         popupContent.appendChild(divider);
-
+    
         const actionsContainer = document.createElement('div');
         actionsContainer.style.display = 'flex';
         actionsContainer.style.flexDirection = 'column';
-        actionsContainer.style.gap = '10px';
-
+        actionsContainer.style.gap = isMobile ? '6px' : '10px';
+    
         const clusterButtonContainer = document.createElement('div');
-
         const zillowLinkContainer = document.createElement('div');
-
         const zillowLinkReactContainer = document.createElement('div');
         zillowLinkContainer.appendChild(zillowLinkReactContainer);
-
+    
         actionsContainer.appendChild(clusterButtonContainer);
         actionsContainer.appendChild(zillowLinkContainer);
         popupContent.appendChild(actionsContainer);
         popupContainer.appendChild(popupContent);
-
+    
         const popup = new mapboxgl.Popup({
             closeButton: false,
             closeOnClick: false,
-            maxWidth: '300px',
+            maxWidth: isMobile ? '100px' : '300px',
             className: 'custom-mapbox-popup'
         })
             .setLngLat(coordinates)
             .setDOMContent(popupContainer)
             .addTo(mapInstanceRef.current);
-
+    
         if (clusterButtonContainer) {
             const toggleRoot = ReactDOM.createRoot(clusterButtonContainer);
             toggleRoot.render(
                 <React.StrictMode>
                     <button
-                        className="flex items-center justify-center gap-2 py-2 px-4 bg-primary/90 hover:bg-primary text-primary-foreground text-sm font-medium rounded-md w-full"
+                        className={`flex items-center justify-center gap-1 py-${isMobile ? '1' : '2'} px-${isMobile ? '3' : '4'} bg-primary/90 hover:bg-primary text-primary-foreground text-${isMobile ? 'xs' : 'sm'} font-medium rounded-md w-full`}
                         onClick={() => {
                             const clusterId = properties.cluster_id;
                             if (setSelectedClusterIds) setSelectedClusterIds([clusterId]);
@@ -398,7 +419,7 @@ export function Map() {
                         }}
                         aria-label="Show only this cluster"
                     >
-                        <Info size={16} />
+                        <Info size={isMobile ? 14 : 16} />
                         Show Only This Cluster
                     </button>
                 </React.StrictMode>
@@ -406,6 +427,7 @@ export function Map() {
         } else {
             console.error("Cluster button container not found!");
         }
+        
         const zillowLinkRoot = ReactDOM.createRoot(zillowLinkReactContainer);
         zillowLinkRoot.render(
             <a
@@ -413,17 +435,18 @@ export function Map() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`View ${properties.address} on Zillow`}
-                className={`flex items-center justify-center gap-2 py-2 px-4 text-sm font-medium rounded-md w-full ${isDarkMode ? 'bg-blue-900/20 hover:bg-blue-900/30' : 'bg-blue-100/50 hover:bg-blue-100/80'}`}
+                className={`flex items-center justify-center gap-1 py-${isMobile ? '1' : '2'} px-${isMobile ? '3' : '4'} text-${isMobile ? 'xs' : 'sm'} font-medium rounded-md w-full ${isDarkMode ? 'bg-blue-900/20 hover:bg-blue-900/30' : 'bg-blue-100/50 hover:bg-blue-100/80'}`}
                 style={{
                     color: '#006aff',
                     textDecoration: 'none',
                     boxSizing: 'border-box'
                 }}
             >
-                <House size={16} color="#006aff" />
+                <House size={isMobile ? 14 : 16} color="#006aff" />
                 <span>View on Zillow</span>
             </a>
         );
+        
         activePopupRef.current = popup;
         return popup;
     };
@@ -499,14 +522,21 @@ export function Map() {
         }
         setIsLegendVisible(true);
     };
-
+    
     const handleLegendLeave = () => {
-        const timeoutId = setTimeout(() => {
-            setIsLegendVisible(false);
-        }, 1000);
-        setLegendTimeoutId(timeoutId);
+        if (!isMobile) {
+            const timeoutId = setTimeout(() => {
+                setIsLegendVisible(false);
+            }, 1000);
+            setLegendTimeoutId(timeoutId);
+        }
     };
-
+    
+    const handleCloseLegend = (e: React.MouseEvent): void => {
+        e.stopPropagation();
+        setIsLegendVisible(false);
+    };
+    
     const renderLegend = () => {
         const clusterGroups = clusters.map((cluster, index) => ({
             id: cluster.cluster_id,
@@ -514,24 +544,37 @@ export function Map() {
             color: clusterColors[index % clusterColors.length],
             count: cluster.houses?.length || 0
         })).sort((a, b) => a.id - b.id);
-
-        const isCompact = !isLegendVisible;
-
+    
+        const isCompact = !isLegendVisible;    
         return (
             <div
-                className={`bg-card rounded-md border border-border absolute bottom-6 right-6 z-10 shadow-md transition-all duration-300 ease-in-out ${isCompact ? 'w-12 h-12 p-2 hover:scale-105 cursor-pointer' : 'w-72 p-4'}`}
-                onMouseEnter={handleLegendHover}
-                onMouseLeave={handleLegendLeave}
+                className={`bg-card rounded-md border border-border absolute z-10 shadow-md transition-all duration-300 ease-in-out 
+                    ${isCompact ? 'w-10 h-10 p-1.5 hover:scale-105 cursor-pointer' : ''}
+                    ${isMobile ? 
+                        (isCompact ? 'bottom-4 right-4' : 'bottom-4 right-4 left-4 max-h-48 overflow-y-auto p-3') : 
+                        (isCompact ? 'bottom-6 right-6' : 'bottom-6 right-6 w-72 p-4')}`
+                }
+                onMouseEnter={!isMobile ? handleLegendHover : undefined}
+                onMouseLeave={!isMobile ? handleLegendLeave : undefined}
                 onClick={isCompact ? handleLegendHover : undefined}
             >
                 {isCompact ? (
                     <div className="w-full h-full flex items-center justify-center">
-                        <Layers size={20} className="text-muted-foreground" />
+                        <Layers size={18} className="text-muted-foreground" />
                     </div>
                 ) : (
                     <>
-                        <h3 className="text-base font-medium mb-2">Price Clusters</h3>
-                        <div className="space-y-1.5 max-h-32 overflow-y-auto mb-3 pr-1">
+                        <div className="flex items-center justify-between mb-2">
+                            <h3 className="text-base font-medium">Price Clusters</h3>
+                            <button 
+                                onClick={handleCloseLegend} 
+                                className="text-muted-foreground hover:text-foreground p-1 rounded-full hover:bg-accent/50"
+                                aria-label="Close legend"
+                            >
+                                <X size={16} />
+                            </button>
+                        </div>
+                        <div className={`space-y-1.5 ${isMobile ? 'max-h-24' : 'max-h-32'} overflow-y-auto mb-2 pr-1`}>
                             {clusterGroups.map(cluster => (
                                 <div
                                     key={cluster.id}
@@ -544,15 +587,17 @@ export function Map() {
                                         ) : (
                                             <Square size={16} className="text-muted-foreground flex-shrink-0" />
                                         )}
-                                        <div style={{ backgroundColor: cluster.color }} className="w-4 h-4 rounded-full border border-border flex-shrink-0" aria-label={`Cluster ${cluster.id} color indicator`}></div>
+                                        <div style={{ backgroundColor: cluster.color }} className="w-3 h-3 rounded-full border border-border flex-shrink-0" aria-label={`Cluster ${cluster.id} color indicator`}></div>
                                         <span className="text-sm truncate">{cluster.name}</span>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        <div className="text-xs text-muted-foreground mb-3">
-                            Click clusters to filter map
-                        </div>
+                        {!isMobile && (
+                            <div className="text-xs text-muted-foreground">
+                                Click clusters to filter map
+                            </div>
+                        )}
                     </>
                 )}
             </div>

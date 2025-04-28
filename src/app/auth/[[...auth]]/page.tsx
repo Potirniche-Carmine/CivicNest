@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 export default function AuthPage() {
   const pathname = usePathname();
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -17,19 +17,19 @@ export default function AuthPage() {
     return null;
   }
 
-  const isDarkMode = theme === 'dark';
+  const isDarkMode = resolvedTheme === 'dark';
 
   const clerkAppearance = {
     variables: {
-      colorPrimary: '#3b82f6', 
-      colorText: isDarkMode ? '#f3f4f6' : '#1f2937', 
-      colorBackground: isDarkMode ? '#1e293b' : '#ffffff', 
-      colorInputBackground: isDarkMode ? '#334155' : '#f8fafc', 
-      colorInputText: isDarkMode ? '#f3f4f6' : '#1f2937', 
-      colorAlphaShade: isDarkMode ? '#94a3b8' : '#475569', 
+      colorPrimary: '#3b82f6',
+      colorText: isDarkMode ? '#f3f4f6' : '#1f2937',
+      colorBackground: isDarkMode ? '#1e293b' : '#ffffff',
+      colorInputBackground: isDarkMode ? '#334155' : '#f8fafc',
+      colorInputText: isDarkMode ? '#f3f4f6' : '#1f2937',
+      colorAlphaShade: isDarkMode ? '#94a3b8' : '#475569',
     },
     elements: {
-      card: `shadow-lg ${isDarkMode ? 'bg-zinc-600' : 'bg-white'}`,  
+      card: `shadow-lg ${isDarkMode ? 'bg-zinc-600' : 'bg-white'}`,
       headerTitle: isDarkMode ? 'text-gray-100' : 'text-gray-900',
       headerSubtitle: isDarkMode ? 'text-gray-300' : 'text-gray-600',
       socialButtonsBlockButton: isDarkMode ? 'bg-slate-700 hover:bg-slate-600' : 'bg-gray-50 hover:bg-gray-100',
@@ -52,14 +52,14 @@ export default function AuthPage() {
             path="/auth/sign-in"
             routing="path"
             appearance={clerkAppearance}
-            forceRedirectUrl="/insights"
+            forceRedirectUrl="/insights" 
           />
         ) : (
           <SignUp
             path="/auth/sign-up"
             routing="path"
             appearance={clerkAppearance}
-            forceRedirectUrl="/insights"
+            forceRedirectUrl="/insights" 
           />
         )}
       </div>
