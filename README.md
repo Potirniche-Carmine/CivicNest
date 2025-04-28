@@ -19,7 +19,7 @@ Our interactive map interface uses color-coded markers to visualize properties g
 
 ## Live Demo
 
-Access the live application here: **[https://civicnest-03dbc0b45eef.herokuapp.com/](https://civicnest-03dbc0b45eef.herokuapp.com/)**
+Access the live application here: **[https://civicnest.carmine.live](https://civicnest.carmine.live/)**
 
 ## Key Features
 
