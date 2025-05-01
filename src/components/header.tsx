@@ -20,7 +20,11 @@ export function Header() {
   const navLinks = [
     { href: "/home", label: "Map & Listings" },
     { href: "/insights", label: "Market Insights" },
-    { href: "/features", label: "Features" },  ];
+    { href: "/features", label: "Features" },
+    { href: "/our-data", label: "Our Data" },
+    { href: "/policy", label: "Privacy" },
+    { href: "/contact", label: "Contact" },
+  ];
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

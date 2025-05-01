@@ -8,7 +8,7 @@ export default function LandingPage() {
 
   return (
     <main className="flex-1 bg-background">
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-8 py-16">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
           <div className="flex-1 text-center lg:text-left">
             <h1 className="text-4xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-sky-600 inline-block text-transparent bg-clip-text">

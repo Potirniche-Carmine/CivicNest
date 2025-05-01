@@ -8,7 +8,7 @@ export default function FeaturesPage() {
 
   return (
     <main className="flex-1 bg-background">
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-8 py-16">
 
         <div className="text-center mb-16 pb-8 border-b">
           <h1 className="text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-sky-600 inline-block text-transparent bg-clip-text">
