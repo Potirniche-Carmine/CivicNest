@@ -18,9 +18,9 @@ export const metadata: Metadata = {
     siteName: 'CivicNest',
     images: [
       {
-        url: '/icons/icon-192x192.png', 
-        width: 192,
-        height: 192,
+        url: '/icons/favicon-32x32.png', 
+        width: 32,
+        height: 32,
         alt: 'CivicNest'
       }
     ]
